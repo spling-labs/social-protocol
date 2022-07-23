@@ -25,3 +25,9 @@ export enum TipSize {
   Medium,
   Big,
 }
+export interface FileData {
+  name: string;
+  type: string;
+  size: string;
+  base64: string;
+}

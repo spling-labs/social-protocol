@@ -5,7 +5,7 @@ import { User } from "../../types";
 
 /**
  * @category User
- * @param publicKey - the PublicKey of the user
+ * @param publicKey - The PublicKey of the user.
  */
 export default async function getUser(
   publicKey: web3.PublicKey

@@ -1,4 +1,5 @@
 import { Program, web3 } from "@project-serum/anchor";
+import { ShdwDrive } from "@shadow-drive/sdk";
 import {
   createPost,
   createReply,
@@ -24,6 +25,7 @@ import { SocialProtocol } from "./utils/idl";
 
 export class SplingProtocol {
   private anchorProgram: Program<SocialProtocol>;
+  private shadowDrive: ShdwDrive;
 
   // USER METHODS
   createUser = (user: User) => createUser;
@@ -58,8 +60,8 @@ export class SplingProtocol {
 
   /**
    *
-   * @param connection the connection object
-   * @param wallet - the user public key
+   * @param connection The web3 connection object.
+   * @param wallet - The wallet of the current user.
    */
   constructor(private connection: web3.Connection, private wallet: any) {
     this.connection = connection;
@@ -69,6 +71,7 @@ export class SplingProtocol {
 
   public async init(): Promise<SplingProtocol> {
     if (!this.wallet && !this.wallet.publicKey) return;
+    this.shadowDrive = await new ShdwDrive(this.connection, this.wallet).init();
     return this;
   }
 }
