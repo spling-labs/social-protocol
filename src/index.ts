@@ -1,4 +1,4 @@
-import { web3 } from "@project-serum/anchor";
+import { Program, web3 } from "@project-serum/anchor";
 import {
   createPost,
   createReply,
@@ -19,8 +19,12 @@ import {
   updateUser,
 } from "./methods";
 import { Post, Reply, Spling, TipSize, User } from "./types";
+import { createSocialProtocolProgram } from "./utils/helpers";
+import { SocialProtocol } from "./utils/idl";
 
 export class SplingProtocol {
+  private anchorProgram: Program<SocialProtocol>;
+
   // USER METHODS
   createUser = (user: User) => createUser;
   updateUser = (user: User) => updateUser;
@@ -52,9 +56,19 @@ export class SplingProtocol {
     tipSize: TipSize
   ) => sendTip;
 
-  constructor() {}
+  /**
+   *
+   * @param connection the connection object
+   * @param wallet - the user public key
+   */
+  constructor(private connection: web3.Connection, private wallet: any) {
+    this.connection = connection;
+    this.wallet = wallet;
+    this.anchorProgram = createSocialProtocolProgram(connection, wallet);
+  }
 
   public async init(): Promise<SplingProtocol> {
+    if (!this.wallet && !this.wallet.publicKey) return;
     return this;
   }
 }

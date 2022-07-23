@@ -1,5 +1,7 @@
 import { web3 } from "@project-serum/anchor";
 
-export const programAddress = new web3.PublicKey(
-  "2e1wdyNhUvE76y6yUCvah2KaviavMJYKoRun8acMRBZZ"
+export const programId = new web3.PublicKey(
+  "8eAoUBuospHHkz8CuVPSzTBenjadL5SS4GHeEDkBvAjp"
 );
+
+export const shadowDriveDomain: string = "https://shdw-drive.genesysgo.net/";
