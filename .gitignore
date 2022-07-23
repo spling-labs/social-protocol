@@ -3,3 +3,4 @@ examples/
 dist
 .env
 .parcel-cache
+docs
