@@ -2,6 +2,7 @@ import * as anchor from "@project-serum/anchor";
 import { web3 } from "@project-serum/anchor";
 import { programId, shadowDriveDomain } from "../../utils/constants";
 import { User } from "../../types";
+import { UserNotFoundError, InvalidHashError } from "../../utils/errors";
 
 /**
  * @category User
@@ -21,11 +22,12 @@ export default async function getUser(
     const result = await this.anchorProgram.account.item.fetch(ItemPDA);
 
     // Get user profile json file from the shadow drive.
-    const response = await fetch(
+    const response: Response = await fetch(
       `${shadowDriveDomain}${(result.shdw as web3.PublicKey).toString()}/${
         result.index
       }.json`
     );
+    if (response.status == 404) throw new UserNotFoundError();
     const userProfileJson = await response.json();
 
     const hex = new Uint8Array(
@@ -36,11 +38,7 @@ export default async function getUser(
     const hash = web3.Keypair.fromSeed(hex).publicKey;
     if (hash.toString() == (result.hash as web3.PublicKey).toString()) {
       return Promise.resolve(userProfileJson as User);
-    } else {
-      throw new Error(
-        "On-chain hash does not match with hash in json file on the shadow drive!"
-      );
-    }
+    } else throw new InvalidHashError();
   } catch (error) {
     return Promise.reject(error);
   }

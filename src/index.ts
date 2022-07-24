@@ -22,6 +22,7 @@ import {
 import { FileData, Post, Reply, Spling, TipSize, User } from "./types";
 import { createSocialProtocolProgram } from "./utils/helpers";
 import { SocialProtocol } from "./utils/idl";
+import { UserNotFoundError, InvalidHashError } from "./utils/errors";
 
 interface Protocol {
   // USER METHODS
@@ -115,3 +116,4 @@ export class SplingProtocol implements Protocol {
 }
 
 export { User, TipSize, Post, Spling, Reply, FileData };
+export { UserNotFoundError, InvalidHashError };
