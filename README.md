@@ -4,6 +4,9 @@
   <h1>Social Protocol</h1>
    <p>
     <a href="https://spling.app/protocol"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
+    <a href="https://www.npmjs.com/package/@solana/web3.js"><img alt="Downloads" src="https://img.shields.io/npm/v/@spling/protocol"/></a>
+    <a href="https://www.npmjs.com/package/@solana/web3.js"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/protocol" /></a>
+    <img alt="Downloads" src="https://img.shields.io/npm/l/@spling/protocol" />
 	</p>
 </div>
 
