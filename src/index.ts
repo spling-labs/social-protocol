@@ -19,44 +19,82 @@ import {
   updateSpling,
   updateUser,
 } from "./methods";
-import { Post, Reply, Spling, TipSize, User } from "./types";
+import { FileData, Post, Reply, Spling, TipSize, User } from "./types";
 import { createSocialProtocolProgram } from "./utils/helpers";
 import { SocialProtocol } from "./utils/idl";
 
-export class SplingProtocol {
+interface Protocol {
+  // USER METHODS
+  createUser(
+    username: string,
+    avatar: FileData,
+    biography: string
+  ): Promise<User>;
+  updateUser(
+    username: string,
+    avatar: FileData,
+    biography: string,
+    index: number
+  ): Promise<User>;
+  getUser(publicKey: web3.PublicKey): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+
+  // SPLING METHODS
+  createSpling(spling: Spling): Promise<Spling>;
+  updateSpling(spling: Spling): Promise<Spling>;
+  getSpling(publicKey: web3.PublicKey): Promise<Spling>;
+  getAllSplings(): Promise<Spling[]>;
+
+  // POST METHODS
+  createPost(post: Post): Promise<Post>;
+  updatePost(post: Post): Promise<Post>;
+  getPost(publicKey: web3.PublicKey): Promise<Post>;
+  getAllPosts(): Promise<Post[]>;
+
+  // REPLY METHODS
+  createReply(reply: Reply): Promise<Reply>;
+  updateReply(reply: Reply): Promise<Reply>;
+  getReply(publicKey: web3.PublicKey): Promise<Reply>;
+  getAllReplies(): Promise<Reply[]>;
+
+  // TIP METHODS
+  sendTip(
+    senderPublicKey: web3.PublicKey,
+    receiverPublicKey: web3.PublicKey,
+    tipSize: TipSize
+  ): Promise<void>;
+}
+
+export class SplingProtocol implements Protocol {
   private anchorProgram: Program<SocialProtocol>;
   private shadowDrive: ShdwDrive;
 
   // USER METHODS
-  createUser = (user: User) => createUser;
-  updateUser = (user: User) => updateUser;
-  getUser = (publicKey: web3.PublicKey) => getUser;
-  getAllUsers = () => getAllUsers;
+  createUser = createUser;
+  updateUser = updateUser;
+  getUser = getUser;
+  getAllUsers = getAllUsers;
 
   // SPLING METHODS
-  createSpling = (spling: Spling) => createSpling;
-  updateSpling = (spling: Spling) => updateSpling;
-  getSpling = (publicKey: web3.PublicKey) => getSpling;
-  getAllSplings = () => getAllSplings;
+  createSpling = createSpling;
+  updateSpling = updateSpling;
+  getSpling = getSpling;
+  getAllSplings = getAllSplings;
 
   // POST METHODS
-  createPost = (post: Post) => createPost;
-  updatePost = (post: Post) => updatePost;
-  getPost = (publicKey: web3.PublicKey) => getPost;
-  getAllPosts = () => getAllPosts;
+  createPost = createPost;
+  updatePost = updatePost;
+  getPost = getPost;
+  getAllPosts = getAllPosts;
 
   // REPLY METHODS
-  createReply = (reply: Reply) => createReply;
-  updateReply = (reply: Reply) => updateReply;
-  getReply = (publicKey: web3.PublicKey) => getReply;
-  getAllReplies = () => getAllReplies;
+  createReply = createReply;
+  updateReply = updateReply;
+  getReply = getReply;
+  getAllReplies = getAllReplies;
 
   // TIP METHODS
-  sendTip = (
-    senderPublicKey: web3.PublicKey,
-    receiverPublicKey: web3.PublicKey,
-    tipSize: TipSize
-  ) => sendTip;
+  sendTip = sendTip;
 
   /**
    *
@@ -76,4 +114,4 @@ export class SplingProtocol {
   }
 }
 
-export { User, TipSize, Post, Spling, Reply };
+export { User, TipSize, Post, Spling, Reply, FileData };

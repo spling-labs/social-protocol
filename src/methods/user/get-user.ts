@@ -12,7 +12,10 @@ export default async function getUser(
 ): Promise<User> {
   try {
     const [ItemPDA, _] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode("item"), this.publicKey.toBuffer()],
+      [
+        anchor.utils.bytes.utf8.encode("item"),
+        this.wallet.publicKey.toBuffer(),
+      ],
       programId
     );
     const result = await this.anchorProgram.account.item.fetch(ItemPDA);
