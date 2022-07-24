@@ -47,7 +47,7 @@ interface Protocol {
   getAllSplings(): Promise<Spling[]>;
 
   // POST METHODS
-  createPost(post: Post): Promise<Post>;
+  createPost(text: string, image: FileData, index: number): Promise<Post>;
   updatePost(post: Post): Promise<Post>;
   getPost(publicKey: web3.PublicKey): Promise<Post>;
   getAllPosts(): Promise<Post[]>;

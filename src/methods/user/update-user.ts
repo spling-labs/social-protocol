@@ -3,6 +3,7 @@ import { web3 } from "@project-serum/anchor";
 import { programId } from "../../utils/constants";
 import {
   convertDataUriToBlob,
+  getPublicKeyFromSeed,
   getShadowDriveAccount,
 } from "../../utils/helpers";
 import { FileData, User } from "../../types";
@@ -81,10 +82,7 @@ export default async function updateUser(
     );
 
     // Generate the hash from the username.
-    const hex = new Uint8Array(
-      Buffer.from(Buffer.from(username.toString().padEnd(32, "0")))
-    );
-    const hash = web3.Keypair.fromSeed(hex).publicKey;
+    const hash: web3.PublicKey = getPublicKeyFromSeed(username.toString());
 
     // Submit the user profile to the anchor program.
     const [ItemPDA, _] = await web3.PublicKey.findProgramAddress(
