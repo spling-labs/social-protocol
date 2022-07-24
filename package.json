@@ -1,8 +1,10 @@
 {
   "name": "@spling/protocol",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The official spling social protocol. Create your own solona on-chain social media app with this protocol.",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest --forceExit",
@@ -15,6 +17,15 @@
     "type": "git",
     "url": "https://github.com/spling-protocol/social.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [
     "solana",
     "blockchain",

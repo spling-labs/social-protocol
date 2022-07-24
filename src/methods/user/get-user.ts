@@ -24,7 +24,20 @@ export default async function getUser(
       }.json`
     );
     const userProfileJson = await response.json();
-    return Promise.resolve(userProfileJson as User);
+
+    const hex = new Uint8Array(
+      Buffer.from(
+        Buffer.from(userProfileJson.username!.toString().padEnd(32, "0"))
+      )
+    );
+    const hash = web3.Keypair.fromSeed(hex).publicKey;
+    if (hash.toString() == (result.hash as web3.PublicKey).toString()) {
+      return Promise.resolve(userProfileJson as User);
+    } else {
+      throw new Error(
+        "On-chain hash does not match with hash in json file on the shadow drive!"
+      );
+    }
   } catch (error) {
     return Promise.reject(error);
   }
