@@ -11,7 +11,7 @@ import { programId } from "../../utils/constants";
 /**
  * @category User
  * @param username - The username of the user.
- * @param avatar - The base64 of the user avatar image.
+ * @param avatar - The image FileData of the user avatar.
  * @param biography - The biography of the user.
  */
 export default async function createUser(
@@ -41,10 +41,7 @@ export default async function createUser(
     }
 
     // Find/Create shadow drive account.
-    const account: StorageAccountResponse = await getShadowDriveAccount(
-      false,
-      fileSizeSummarized
-    );
+    const account = await getShadowDriveAccount(false, fileSizeSummarized);
 
     let filesToUpload: File[] = [];
 
@@ -62,7 +59,7 @@ export default async function createUser(
     const userProfileJson: User = {
       username: username,
       bio: userBioFile ? "b0.txt" : "",
-      avatar: userAvatarFile ? `a0.${avatar?.type.split("/")[1]}` : "",
+      avatar: userAvatarFile ? `a0.${avatar!.type.split("/")[1]}` : "",
       index: 0,
     };
 
@@ -81,7 +78,7 @@ export default async function createUser(
 
     // Generate the hash from the username.
     const hex = new Uint8Array(
-      Buffer.from(Buffer.from(username!.toString().padEnd(32, "0")))
+      Buffer.from(Buffer.from(username.toString().padEnd(32, "0")))
     );
     const hash = web3.Keypair.fromSeed(hex).publicKey;
 

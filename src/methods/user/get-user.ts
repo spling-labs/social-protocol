@@ -17,7 +17,7 @@ export default async function getUser(
     );
     const result = await this.anchorProgram.account.item.fetch(ItemPDA);
 
-    // Load user profile json from the shadow drive.
+    // Get user profile json file from the shadow drive.
     const response = await fetch(
       `${shadowDriveDomain}${(result.shdw as web3.PublicKey).toString()}/${
         result.index
