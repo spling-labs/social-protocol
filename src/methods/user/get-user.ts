@@ -3,6 +3,7 @@ import { web3 } from "@project-serum/anchor";
 import { programId, shadowDriveDomain } from "../../utils/constants";
 import { User } from "../../types";
 import { UserNotFoundError, InvalidHashError } from "../../utils/errors";
+import { getPublicKeyFromSeed } from "../../utils/helpers";
 
 /**
  * @category User
@@ -20,24 +21,36 @@ export default async function getUser(
       programId
     );
     const result = await this.anchorProgram.account.item.fetch(ItemPDA);
+    const shdwPublicKey: string = (result.shdw as web3.PublicKey).toString();
 
     // Get user profile json file from the shadow drive.
-    const response: Response = await fetch(
-      `${shadowDriveDomain}${(result.shdw as web3.PublicKey).toString()}/${
-        result.index
-      }.json`
+    const userProfileJsonResponse: Response = await fetch(
+      `${shadowDriveDomain}${shdwPublicKey}/${result.index}.json`
     );
-    if (response.status == 404) throw new UserNotFoundError();
-    const userProfileJson = await response.json();
+    if (userProfileJsonResponse.status == 404) throw new UserNotFoundError();
+    let userProfileJson = await userProfileJsonResponse.json();
 
-    const hex = new Uint8Array(
-      Buffer.from(
-        Buffer.from(userProfileJson.username!.toString().padEnd(32, "0"))
-      )
+    if (userProfileJson.avatar.toString().length > 0) {
+      userProfileJson.avatar = `${shadowDriveDomain}${shdwPublicKey}/${userProfileJson.avatar}`;
+    }
+
+    // Get user biography text from file on the shadow drive.
+    if (userProfileJson.bio.toString().length > 0) {
+      const response: Response = await fetch(
+        `${shadowDriveDomain}${shdwPublicKey}/b${result.index}.txt`
+      );
+      if (response.status == 404) {
+        userProfileJson.bio = "";
+      } else {
+        userProfileJson.bio = await response.text();
+      }
+    }
+
+    const hash: web3.PublicKey = getPublicKeyFromSeed(
+      userProfileJson.username.toString()
     );
-    const hash = web3.Keypair.fromSeed(hex).publicKey;
     if (hash.toString() == (result.hash as web3.PublicKey).toString()) {
-      return Promise.resolve(userProfileJson as User);
+      return Promise.resolve(userProfileJson);
     } else throw new InvalidHashError();
   } catch (error) {
     return Promise.reject(error);

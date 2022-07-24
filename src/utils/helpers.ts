@@ -67,6 +67,11 @@ export async function getShadowDriveAccount(
   }
 }
 
+export function getPublicKeyFromSeed(seed: string): anchor.web3.PublicKey {
+  const hex = new Uint8Array(Buffer.from(Buffer.from(seed.padEnd(32, "0"))));
+  return anchor.web3.Keypair.fromSeed(hex).publicKey;
+}
+
 function convertBytesToHuman(bytes: any, si = false, dp = 1): string {
   const thresh = si ? 1024 : 1024;
 
