@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://pbs.twimg.com/profile_banners/1550448683677880321/1658497849/1500x500" />
+  <img src="https://raw.githubusercontent.com/spling-protocol/social/main/assets/spling_header.jpg" />
 
   <h1>Social Protocol</h1>
    <p>

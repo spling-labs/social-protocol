@@ -6,7 +6,7 @@ import { FileData, User } from "../../types";
 import { StorageAccountResponse } from "@shadow-drive/sdk";
 import * as anchor from "@project-serum/anchor";
 import { web3 } from "@project-serum/anchor";
-import { programId } from "../../utils/constants";
+import { programId, shadowDriveDomain } from "../../utils/constants";
 
 /**
  * @category User
@@ -71,7 +71,7 @@ export default async function createUser(
 
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(
-      account!.publicKey!,
+      account.publicKey,
       filesToUpload,
       "v2"
     );
@@ -98,7 +98,14 @@ export default async function createUser(
       })
       .rpc();
 
-    return Promise.resolve(userProfileJson);
+    return Promise.resolve({
+      username: username,
+      bio: biography ? biography : "",
+      avatar: userAvatarFile
+        ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar}`
+        : "",
+      index: 0,
+    } as User);
   } catch (error) {
     return Promise.reject(error);
   }
