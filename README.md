@@ -3,10 +3,10 @@
 
   <h1>Social Protocol</h1>
    <p>
-    <a href="https://spling.app/protocol"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
-    <a href="https://www.npmjs.com/package/@spling/protocol"><img alt="Downloads" src="https://img.shields.io/npm/v/@spling/protocol"/></a>
-    <a href="https://www.npmjs.com/package/@spling/protocol"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/protocol" /></a>
-    <img alt="Downloads" src="https://img.shields.io/npm/l/@spling/protocol" />
+    <a href="https://spling-protocol.github.io/social/"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
+    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/v/@spling/protocol"/></a>
+    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/protocol" /></a>
+    <img alt="Downloads" src="https://img.shields.io/npm/l/@spling/social-protocol" />
 	</p>
 </div>
 
@@ -21,13 +21,13 @@ Install these dependencies over:
 npm:
 
 ```shell
-npm install @spling/protocol
+npm install @spling/social-protocol
 ```
 
 yarn:
 
 ```shell
-yarn add @spling/protocol
+yarn add @spling/social-protocol
 ```
 
 ### Setup (React Example)
@@ -35,7 +35,7 @@ yarn add @spling/protocol
 ```tsx
 import React, { useEffect } from "react";
 import * as anchor from "@project-serum/anchor";
-import { SplingProtocol } from "@spling/protocol";
+import { SplingProtocol } from "@spling/social-protocol";
 import {
   AnchorWallet,
   useAnchorWallet,
@@ -62,7 +62,7 @@ export default function SplingProtocol() {
 ### Setup (NodeJS Example)
 
 ```js
-import { SplingProtocol } from "@spling/protocol";
+import { SplingProtocol } from "@spling/social-protocol";
 const splingProtocol = await new SplingProtocol(connection, wallet).init();
 ```
 
@@ -84,6 +84,6 @@ git clone https://github.com/spling-protocol/social.git
 2. Install dependencies:
 
 ```shell
-cd spling-protocol
+cd social
 npm install
 ```
