@@ -1,5 +1,5 @@
-import { web3 } from "@project-serum/anchor";
-import { TipSize } from "../../types";
+import { web3 } from '@project-serum/anchor'
+import { TipSize } from '../../types'
 
 /**
  * @category Tip
@@ -10,7 +10,7 @@ import { TipSize } from "../../types";
 export default async function sendTip(
   senderPublicKey: web3.PublicKey,
   receiverPublicKey: web3.PublicKey,
-  tipSize: TipSize
+  tipSize: TipSize,
 ): Promise<void> {
-  return Promise.resolve();
+  return Promise.resolve()
 }

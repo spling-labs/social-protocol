@@ -1,8 +1,8 @@
-import { Post } from "../../types";
+import { Post } from '../../types'
 
 /**
  * @category Post
  */
 export default async function getAllPosts(): Promise<[Post]> {
-  return Promise.resolve([{ text: "", image: "" }]);
+  return Promise.resolve([{ text: '', image: '' }])
 }

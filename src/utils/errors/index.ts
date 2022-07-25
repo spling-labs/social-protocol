@@ -1,4 +1,4 @@
-import UserNotFoundError from "./UserNotFoundError";
-import InvalidHashError from "./InvalidHashError";
+import UserNotFoundError from './UserNotFoundError'
+import InvalidHashError from './InvalidHashError'
 
-export { UserNotFoundError, InvalidHashError };
+export { UserNotFoundError, InvalidHashError }

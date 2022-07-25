@@ -2,11 +2,11 @@ import {
   getShadowDriveAccount,
   convertDataUriToBlob,
   getPublicKeyFromSeed,
-} from "../../utils/helpers";
-import { FileData, User } from "../../types";
-import * as anchor from "@project-serum/anchor";
-import { web3 } from "@project-serum/anchor";
-import { programId, shadowDriveDomain } from "../../utils/constants";
+} from '../../utils/helpers'
+import { FileData, User } from '../../types'
+import * as anchor from '@project-serum/anchor'
+import { web3 } from '@project-serum/anchor'
+import { programId, shadowDriveDomain } from '../../utils/constants'
 
 /**
  * @category User
@@ -17,93 +17,83 @@ import { programId, shadowDriveDomain } from "../../utils/constants";
 export default async function createUser(
   username: string,
   avatar: FileData | null,
-  biography: string | null
+  biography: string | null,
 ): Promise<User> {
   try {
     // Generate files to upload (avatar + biography).
     const userAvatarFile = avatar
-      ? new File(
-          [convertDataUriToBlob(avatar.base64)],
-          "a0." + avatar?.type.split("/")[1]
-        )
-      : null;
+      ? new File([convertDataUriToBlob(avatar.base64)], 'a0.' + avatar?.type.split('/')[1])
+      : null
     const userBioFile = biography
-      ? new File([new Blob([biography], { type: "text/plain" })], "b0.txt")
-      : null;
-    let fileSizeSummarized = 1000; // 1000 bytes will be reserved for the userProfile.json.
+      ? new File([new Blob([biography], { type: 'text/plain' })], 'b0.txt')
+      : null
+    let fileSizeSummarized = 1000 // 1000 bytes will be reserved for the userProfile.json.
 
     // Summarize size of files.
     if (userAvatarFile != null) {
-      fileSizeSummarized += userAvatarFile.size;
+      fileSizeSummarized += userAvatarFile.size
     }
     if (userBioFile != null) {
-      fileSizeSummarized += userBioFile.size;
+      fileSizeSummarized += userBioFile.size
     }
 
     // Find/Create shadow drive account.
-    const account = await getShadowDriveAccount(false, fileSizeSummarized);
+    const account = await getShadowDriveAccount(false, fileSizeSummarized)
 
-    let filesToUpload: File[] = [];
+    const filesToUpload: File[] = []
 
     // Upload image file to shadow drive.
     if (userAvatarFile != null) {
-      filesToUpload.push(userAvatarFile);
+      filesToUpload.push(userAvatarFile)
     }
 
     // Upload biography text file to shadow drive.
     if (userBioFile != null) {
-      filesToUpload.push(userBioFile);
+      filesToUpload.push(userBioFile)
     }
 
     // Generate the user profile json.
     const userProfileJson: User = {
       username: username,
-      bio: userBioFile ? "b0.txt" : "",
-      avatar: userAvatarFile ? `a0.${avatar!.type.split("/")[1]}` : "",
+      bio: userBioFile ? 'b0.txt' : '',
+      avatar: userAvatarFile ? `a0.${avatar.type.split('/')[1]}` : '',
       index: 0,
-    };
+    }
 
     const fileToSave = new Blob([JSON.stringify(userProfileJson)], {
-      type: "application/json",
-    });
-    const userProfileFile = new File([fileToSave], "0.json");
-    filesToUpload.push(userProfileFile);
+      type: 'application/json',
+    })
+    const userProfileFile = new File([fileToSave], '0.json')
+    filesToUpload.push(userProfileFile)
 
     // Upload all files to shadow drive.
-    await this.shadowDrive.uploadMultipleFiles(
-      account.publicKey,
-      filesToUpload,
-      "v2"
-    );
+    await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
     // Generate the hash from the username.
-    const hash: web3.PublicKey = getPublicKeyFromSeed(username.toString());
+    const hash: web3.PublicKey = getPublicKeyFromSeed(username.toString())
 
     // Submit the user profile to the anchor program.
     const [ItemPDA, _] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode("item"),
-        this.wallet.publicKey!.toBuffer(),
-      ],
-      programId
-    );
+      [anchor.utils.bytes.utf8.encode('item'), this.wallet.publicKey.toBuffer()],
+      programId,
+    )
     await this.anchorProgram.methods
-      .submitItem(account!.publicKey, hash, 1)
+      .submitItem(account.publicKey, hash, 1)
       .accounts({
-        user: this.wallet.publicKey!,
+        user: this.wallet.publicKey,
         item: ItemPDA,
       })
-      .rpc();
+      .rpc()
 
     return Promise.resolve({
       username: username,
-      bio: biography ? biography : "",
+      bio: biography ? biography : '',
       avatar: userAvatarFile
         ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar}`
-        : "",
+        : '',
       index: 0,
-    } as User);
+    } as User)
   } catch (error) {
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
 }

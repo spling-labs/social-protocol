@@ -4,9 +4,9 @@
   <h1>Social Protocol</h1>
    <p>
     <a href="https://spling-protocol.github.io/social/"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
-    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/v/@spling/protocol"/></a>
-    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/protocol" /></a>
-    <img alt="Downloads" src="https://img.shields.io/npm/l/@spling/social-protocol" />
+    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Version" src="https://img.shields.io/npm/v/@spling/social-protocol"/></a>
+    <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/social-protocol" /></a>
+    <img alt="License" src="https://img.shields.io/npm/l/@spling/social-protocol" />
 	</p>
 </div>
 
