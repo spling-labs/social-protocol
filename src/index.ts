@@ -32,7 +32,12 @@ interface SplingProtocol {
   getAllUsers(): Promise<User[]>
 
   // SPLING METHODS
-  createSpling(spling: Spling): Promise<Spling>
+  createSpling(
+    index: number,
+    name: string,
+    bio: string | null,
+    image: FileData | null,
+  ): Promise<Spling>
   updateSpling(spling: Spling): Promise<Spling>
   getSpling(publicKey: web3.PublicKey): Promise<Spling>
   getAllSplings(): Promise<Spling[]>
