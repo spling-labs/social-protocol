@@ -1,6 +1,6 @@
 {
   "name": "@spling/social-protocol",
-  "version": "0.1.2",
+  "version": "0.3.1",
   "description": "The official spling social protocol. Create your own solona on-chain social media app with this protocol.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -59,6 +59,8 @@
   },
   "dependencies": {
     "@project-serum/anchor": "^0.25.0",
-    "@shadow-drive/sdk": "^3.0.5"
+    "@shadow-drive/sdk": "^3.0.5",
+    "bs58": "^5.0.0",
+    "dayjs": "^1.11.4"
   }
 }

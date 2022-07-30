@@ -31,7 +31,7 @@ export default async function createPost(
     const fileSizeSummarized = 1000 + postImageFile.size + postTextFile.size // 1000 bytes will be reserved for the post.json.
 
     // Find/Create shadow drive account.
-    const account = await getShadowDriveAccount(false, fileSizeSummarized)
+    const account = await getShadowDriveAccount(this.shadowDrive, false, fileSizeSummarized)
 
     // Generate the post json.
     const postJson: Post = {

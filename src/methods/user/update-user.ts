@@ -40,7 +40,7 @@ export default async function updateUser(
     }
 
     // Find/Create shadow drive account.
-    const account = await getShadowDriveAccount(false, fileSizeSummarized)
+    const account = await getShadowDriveAccount(this.shadowDrive, false, fileSizeSummarized)
 
     const filesToUpload: File[] = []
 

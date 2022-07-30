@@ -1,11 +1,15 @@
-import { getPublicKeyFromSeed, getShadowDriveAccount } from '../../utils/helpers'
+import {
+  convertDataUriToBlob,
+  getPublicKeyFromSeed,
+  getShadowDriveAccount,
+} from '../../utils/helpers'
 import { FileData, Spling } from '../../types'
+import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
-import { programId } from '../../utils/constants'
+import { programId, shadowDriveDomain } from '../../utils/constants'
 
 /**
  * @category Spling
- * @param spling - the spling that will be created
  */
 export default async function createSpling(
   index: number,
@@ -13,35 +17,62 @@ export default async function createSpling(
   bio: string | null,
   image: FileData | null,
 ): Promise<Spling> {
-  // Find/Create shadow drive account.
-  const account = await getShadowDriveAccount(false, 1000)
+  try {
+    // Generate files to upload (avatar + biography).
+    const imageUploadFile = image
+      ? new File([convertDataUriToBlob(image.base64)], 'a0.' + image?.type.split('/')[1])
+      : null
 
-  /* // Increment Group Index
-  await this.anchorProgram.methods
-    .incrementGroupIndex()
-    .accounts({
-      user: this.wallet.publicKey,
-      item: group.publicKey,
+    // Find/Create shadow drive account.
+    const account = await getShadowDriveAccount(this.shadowDrive, false, 0)
+
+    const filesToUpload: File[] = []
+
+    // Upload image file to shadow drive.
+    if (imageUploadFile != null) {
+      filesToUpload.push(imageUploadFile)
+    }
+
+    // Generate the user profile json.
+    const splingJson: Spling = {
+      name: name,
+      bio: bio ? bio : '',
+      image: imageUploadFile ? `a0.${image.type.split('/')[1]}` : '',
+    }
+    const fileToSave = new Blob([JSON.stringify(splingJson)], {
+      type: 'application/json',
     })
-    .rpc()
-    */
+    const splingUploadFile = new File([fileToSave], '0.json')
+    filesToUpload.push(splingUploadFile)
 
-  // Generate the hash from the username.
-  const hash: web3.PublicKey = getPublicKeyFromSeed(name.toString())
+    // Upload all files to shadow drive.
+    await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
-  await this.anchorProgram.methods
-    .submitGroup(account.publicKey, hash, 1)
-    .accounts({
-      user: this.wallet.publicKey,
-    })
-    .rpc()
+    // Generate the hash from the username.
+    const hash: web3.PublicKey = getPublicKeyFromSeed(name)
+    const group: web3.Keypair = web3.Keypair.generate()
 
-  const accounts = await (this.connection as web3.Connection).getParsedProgramAccounts(programId, {
-    commitment: 'confirmed',
-  })
-  accounts.forEach((account) => {
-    // Parse the account data
-    console.log(account)
-  })
-  return Promise.resolve({ name: '', bio: '', avatar: '' })
+    console.log('Wallet publicKey: ' + this.wallet.publicKey.toString())
+    console.log('Group publicKey: ' + group.publicKey.toString())
+    console.log('hash publicKey: ' + hash.toString())
+
+    // Submit the user spling to the anchor program.
+    await this.anchorProgram.methods
+      .submitGroup(account.publicKey, hash, 1)
+      .accounts({
+        group: group.publicKey,
+        user: this.wallet.publicKey,
+        systemProgram: web3.SystemProgram.programId,
+      })
+      .signers([group])
+      .rpc()
+
+    return Promise.resolve({
+      name: name,
+      bio: bio,
+      image: imageUploadFile ? `${shadowDriveDomain}${account.publicKey}/${splingJson.image}` : '',
+    } as Spling)
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }

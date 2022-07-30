@@ -8,7 +8,7 @@ export type User = {
 export type Spling = {
   name: string
   bio: string
-  avatar: string
+  image: string
 }
 
 export type Post = {

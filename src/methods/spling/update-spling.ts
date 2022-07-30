@@ -5,5 +5,5 @@ import { Spling } from '../../types'
  * @param spling - the updated spling
  */
 export default async function updateSpling(spling: Spling): Promise<Spling> {
-  return Promise.resolve({ name: '', bio: '', avatar: '' })
+  return Promise.resolve({ name: '', bio: '', image: '' })
 }

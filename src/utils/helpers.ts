@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
-import { StorageAccountResponse } from '@shadow-drive/sdk'
+import { ShdwDrive, StorageAccountResponse } from '@shadow-drive/sdk'
 import { programId } from './constants'
 import { IDL, SocialIDL } from './idl'
 
@@ -34,12 +34,13 @@ export function convertDataUriToBlob(dataURI: string): Blob {
 }
 
 export async function getShadowDriveAccount(
+  shadowDrive: ShdwDrive,
   immutable: boolean,
   spaceNeeded: number,
 ): Promise<StorageAccountResponse> {
   try {
     // Get a shadow drive account.
-    const storageAccounts = await this.shadowDrive.getStorageAccounts('v2')
+    const storageAccounts = await shadowDrive.getStorageAccounts('v2')
     let account: StorageAccountResponse | null = null
     storageAccounts.forEach((storageAccount: StorageAccountResponse) => {
       if (
@@ -53,15 +54,16 @@ export async function getShadowDriveAccount(
     if (account != null) return Promise.resolve(account)
 
     // Create a shadow drive account.
-    const response = await this.shadowDrive.createStorageAccount(
+    /* const response = await shadowDrive.createStorageAccount(
       'Spling',
       convertBytesToHuman(spaceNeeded, true, 0),
       'v2',
     )
-    account = await this.shadowDrive.getStorageAccount(
+    account = await shadowDrive.getStorageAccount(
       new anchor.web3.PublicKey(response.shdw_bucket),
     )
     return Promise.resolve(account)
+    */
   } catch (error) {
     return Promise.reject(error)
   }

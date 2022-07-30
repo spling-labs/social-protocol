@@ -20,6 +20,7 @@ import {
   updateUser,
 } from './methods'
 import { FileData, Post, Reply, Spling, TipSize, User } from './types'
+import { Spling as SplingClass } from './models'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import { UserNotFoundError, InvalidHashError } from './utils/errors'
@@ -40,7 +41,7 @@ interface SplingProtocol {
   ): Promise<Spling>
   updateSpling(spling: Spling): Promise<Spling>
   getSpling(publicKey: web3.PublicKey): Promise<Spling>
-  getAllSplings(): Promise<Spling[]>
+  getAllSplings(): Promise<SplingClass[]>
 
   // POST METHODS
   createPost(text: string, image: FileData, index: number): Promise<Post>
