@@ -6,37 +6,33 @@ import {
   getPublicKeyFromSeed,
   getShadowDriveAccount,
 } from '../../utils/helpers'
-import { FileData, User } from '../../types'
+import { FileData, User, UserFileData } from '../../types'
 
 /**
  * @category User
  * @param username - The updated username of the user.
  * @param avatar - The updated image FileData of the user avatar.
  * @param biography - The updated biography of the user.
- * @param index - The new profile index.
  */
 export default async function updateUser(
   username: string,
   avatar: FileData | null,
   biography: string | null,
-  index: number,
 ): Promise<User> {
   try {
     // Generate files to upload (avatar + biography).
     const userAvatarFile = avatar
-      ? new File([convertDataUriToBlob(avatar.base64)], `a${index}.${avatar?.type.split('/')[1]}`)
+      ? new File(
+          [convertDataUriToBlob(avatar.base64)],
+          `profile-avatar.${avatar?.type.split('/')[1]}`,
+        )
       : null
-    const userBioFile = biography
-      ? new File([new Blob([biography], { type: 'text/plain' })], `b${index}.txt`)
-      : null
-    let fileSizeSummarized = 1000 // 1000 bytes will be reserved for the userProfile.json.
 
-    // Summarize size of files.
+    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
+
+    // Summarize size of avatar file.
     if (userAvatarFile != null) {
       fileSizeSummarized += userAvatarFile.size
-    }
-    if (userBioFile != null) {
-      fileSizeSummarized += userBioFile.size
     }
 
     // Find/Create shadow drive account.
@@ -49,24 +45,20 @@ export default async function updateUser(
       filesToUpload.push(userAvatarFile)
     }
 
-    // Upload biography text file to shadow drive.
-    if (userBioFile != null) {
-      filesToUpload.push(userBioFile)
-    }
-
     // Generate the user profile json.
-    const userProfileJson: User = {
+    const userProfileJson: UserFileData = {
       username: username,
-      bio: userBioFile ? `b${index}.txt` : '',
-      avatar: userAvatarFile ? `a${index}.${avatar.type.split('/')[1]}` : '',
-      index: index,
+      bio: biography ? biography : '',
+      avatar: userAvatarFile ? `profile-avatar.${avatar.type.split('/')[1]}` : '',
     }
 
     const fileToSave = new Blob([JSON.stringify(userProfileJson)], {
       type: 'application/json',
     })
-    const userProfileFile = new File([fileToSave], `${index}.json`)
+    const userProfileFile = new File([fileToSave], 'profile.json')
     filesToUpload.push(userProfileFile)
+
+    // TODO: Remove all previously uploaded files / or edit current files.
 
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
@@ -76,18 +68,23 @@ export default async function updateUser(
 
     // Submit the user profile to the anchor program.
     const [ItemPDA, _] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('item'), this.wallet.publicKey.toBuffer()],
+      [anchor.utils.bytes.utf8.encode('profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
     await this.anchorProgram.methods
-      .updateItem(hash)
+      .updateProfile(hash)
       .accounts({
         user: this.wallet.publicKey,
         item: ItemPDA,
       })
       .rpc()
 
-    return Promise.resolve(userProfileJson)
+    return Promise.resolve({
+      publicKey: this.wallet.publicKey,
+      shdw: account.publicKey,
+      hash: hash,
+      ...userProfileJson,
+    } as User)
   } catch (error) {
     return Promise.reject(error)
   }

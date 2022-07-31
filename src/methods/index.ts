@@ -1,8 +1,8 @@
 // USER METHODS
 import createUser from './user/create-user'
 import updateUser from './user/update-user'
+import deleteUser from './user/delete-user'
 import getUser from './user/get-user'
-import getAllUsers from './user/get-all-users'
 
 // SPLING METHODS
 import createSpling from './spling/create-spling'
@@ -28,8 +28,8 @@ import sendTip from './tip/send-tip'
 export {
   createUser,
   updateUser,
+  deleteUser,
   getUser,
-  getAllUsers,
   createSpling,
   updateSpling,
   getSpling,

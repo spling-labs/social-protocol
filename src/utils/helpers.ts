@@ -1,6 +1,11 @@
 import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
-import { ShdwDrive, StorageAccountResponse } from '@shadow-drive/sdk'
+import {
+  CreateStorageResponse,
+  ShdwDrive,
+  StorageAccountInfo,
+  StorageAccountResponse,
+} from '@shadow-drive/sdk'
 import { programId } from './constants'
 import { IDL, SocialIDL } from './idl'
 
@@ -33,13 +38,32 @@ export function convertDataUriToBlob(dataURI: string): Blob {
   return new Blob([ab], { type: mimeString })
 }
 
-export async function getShadowDriveAccount(
+export async function getOrCreateShadowDriveAccount(
   shadowDrive: ShdwDrive,
   immutable: boolean,
   spaceNeeded: number,
 ): Promise<StorageAccountResponse> {
   try {
-    // Get a shadow drive account.
+    let account: StorageAccountResponse | null = null
+    account = await getShadowDriveAccount(shadowDrive, immutable, spaceNeeded)
+    if (account != null) return Promise.resolve(account)
+
+    await createShadowDriveAccount(shadowDrive, spaceNeeded)
+
+    account = await getShadowDriveAccount(shadowDrive, immutable, spaceNeeded)
+    if (account != null) return Promise.resolve(account)
+    else throw Error('Storage Account not found!')
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+export async function getShadowDriveAccount(
+  shadowDrive: ShdwDrive,
+  immutable: boolean,
+  spaceNeeded: number,
+): Promise<StorageAccountResponse | null> {
+  try {
     const storageAccounts = await shadowDrive.getStorageAccounts('v2')
     let account: StorageAccountResponse | null = null
     storageAccounts.forEach((storageAccount: StorageAccountResponse) => {
@@ -50,20 +74,23 @@ export async function getShadowDriveAccount(
         account = storageAccount
       }
     })
+    return Promise.resolve(account)
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
 
-    if (account != null) return Promise.resolve(account)
-
-    // Create a shadow drive account.
-    /* const response = await shadowDrive.createStorageAccount(
+export async function createShadowDriveAccount(
+  shadowDrive: ShdwDrive,
+  spaceNeeded: number,
+): Promise<CreateStorageResponse> {
+  try {
+    const response = await shadowDrive.createStorageAccount(
       'Spling',
       convertBytesToHuman(spaceNeeded, true, 0),
       'v2',
     )
-    account = await shadowDrive.getStorageAccount(
-      new anchor.web3.PublicKey(response.shdw_bucket),
-    )
-    return Promise.resolve(account)
-    */
+    return Promise.resolve(response)
   } catch (error) {
     return Promise.reject(error)
   }

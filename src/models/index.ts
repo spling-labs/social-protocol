@@ -1,3 +1,4 @@
-import { Spling } from './Spling'
+import { SplingChain } from './SplingChain'
+import { UserChain } from './UserChain'
 
-export { Spling }
+export { SplingChain, UserChain }

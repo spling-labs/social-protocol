@@ -8,7 +8,6 @@ import {
   getAllPosts,
   getAllReplies,
   getAllSplings,
-  getAllUsers,
   getPost,
   getReply,
   getSpling,
@@ -18,9 +17,9 @@ import {
   updateReply,
   updateSpling,
   updateUser,
+  deleteUser,
 } from './methods'
 import { FileData, Post, Reply, Spling, TipSize, User } from './types'
-import { Spling as SplingClass } from './models'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import { UserNotFoundError, InvalidHashError } from './utils/errors'
@@ -28,20 +27,15 @@ import { UserNotFoundError, InvalidHashError } from './utils/errors'
 interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
-  updateUser(username: string, avatar: FileData, biography: string, index: number): Promise<User>
+  updateUser(username: string, avatar: FileData, biography: string): Promise<User>
+  deleteUser(): Promise<void>
   getUser(publicKey: web3.PublicKey): Promise<User>
-  getAllUsers(): Promise<User[]>
 
   // SPLING METHODS
-  createSpling(
-    index: number,
-    name: string,
-    bio: string | null,
-    image: FileData | null,
-  ): Promise<Spling>
+  createSpling(name: string, bio: string | null, image: FileData | null): Promise<Spling>
   updateSpling(spling: Spling): Promise<Spling>
   getSpling(publicKey: web3.PublicKey): Promise<Spling>
-  getAllSplings(): Promise<SplingClass[]>
+  getAllSplings(): Promise<Spling[]>
 
   // POST METHODS
   createPost(text: string, image: FileData, index: number): Promise<Post>
@@ -70,8 +64,8 @@ export class SocialProtocol implements SplingProtocol {
   // USER METHODS
   createUser = createUser
   updateUser = updateUser
+  deleteUser = deleteUser
   getUser = getUser
-  getAllUsers = getAllUsers
 
   // SPLING METHODS
   createSpling = createSpling

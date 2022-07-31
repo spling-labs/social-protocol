@@ -54,6 +54,22 @@ export type SocialIDL = {
       ]
     },
     {
+      name: 'deleteProfile'
+      accounts: [
+        {
+          name: 'profile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'user'
+          isMut: false
+          isSigner: true
+        },
+      ]
+      args: []
+    },
+    {
       name: 'submitGroup'
       accounts: [
         {
@@ -109,7 +125,7 @@ export type SocialIDL = {
       ]
     },
     {
-      name: 'submitFirstPost'
+      name: 'submitPost'
       accounts: [
         {
           name: 'user'
@@ -118,7 +134,7 @@ export type SocialIDL = {
         },
         {
           name: 'group'
-          isMut: false
+          isMut: true
           isSigner: false
         },
         {
@@ -133,49 +149,6 @@ export type SocialIDL = {
         },
       ]
       args: [
-        {
-          name: 'shdw'
-          type: 'publicKey'
-        },
-        {
-          name: 'parent'
-          type: 'publicKey'
-        },
-        {
-          name: 'hash'
-          type: 'publicKey'
-        },
-      ]
-    },
-    {
-      name: 'submitNextPost'
-      accounts: [
-        {
-          name: 'user'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'group'
-          isMut: false
-          isSigner: false
-        },
-        {
-          name: 'post'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
-      ]
-      args: [
-        {
-          name: 'shdw'
-          type: 'publicKey'
-        },
         {
           name: 'parent'
           type: 'publicKey'
@@ -219,22 +192,6 @@ export type SocialIDL = {
       args: []
     },
     {
-      name: 'incrementProfileIndex'
-      accounts: [
-        {
-          name: 'profile'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'user'
-          isMut: false
-          isSigner: true
-        },
-      ]
-      args: []
-    },
-    {
       name: 'submitReply'
       accounts: [
         {
@@ -244,7 +201,7 @@ export type SocialIDL = {
         },
         {
           name: 'post'
-          isMut: false
+          isMut: true
           isSigner: false
         },
         {
@@ -258,12 +215,7 @@ export type SocialIDL = {
           isSigner: false
         },
       ]
-      args: [
-        {
-          name: 'shdw'
-          type: 'publicKey'
-        },
-      ]
+      args: []
     },
     {
       name: 'updatePost'
@@ -272,6 +224,11 @@ export type SocialIDL = {
           name: 'user'
           isMut: false
           isSigner: true
+        },
+        {
+          name: 'group'
+          isMut: false
+          isSigner: false
         },
         {
           name: 'post'
@@ -302,10 +259,6 @@ export type SocialIDL = {
             type: 'publicKey'
           },
           {
-            name: 'index'
-            type: 'u32'
-          },
-          {
             name: 'hash'
             type: 'publicKey'
           },
@@ -330,7 +283,7 @@ export type SocialIDL = {
             type: 'publicKey'
           },
           {
-            name: 'index'
+            name: 'indexPost'
             type: 'u32'
           },
           {
@@ -354,15 +307,7 @@ export type SocialIDL = {
             type: 'publicKey'
           },
           {
-            name: 'shdw'
-            type: 'publicKey'
-          },
-          {
-            name: 'parent'
-            type: 'publicKey'
-          },
-          {
-            name: 'index'
+            name: 'indexReply'
             type: 'u32'
           },
           {
@@ -458,6 +403,22 @@ export const IDL: SocialIDL = {
       ],
     },
     {
+      name: 'deleteProfile',
+      accounts: [
+        {
+          name: 'profile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'user',
+          isMut: false,
+          isSigner: true,
+        },
+      ],
+      args: [],
+    },
+    {
       name: 'submitGroup',
       accounts: [
         {
@@ -513,7 +474,7 @@ export const IDL: SocialIDL = {
       ],
     },
     {
-      name: 'submitFirstPost',
+      name: 'submitPost',
       accounts: [
         {
           name: 'user',
@@ -522,7 +483,7 @@ export const IDL: SocialIDL = {
         },
         {
           name: 'group',
-          isMut: false,
+          isMut: true,
           isSigner: false,
         },
         {
@@ -537,49 +498,6 @@ export const IDL: SocialIDL = {
         },
       ],
       args: [
-        {
-          name: 'shdw',
-          type: 'publicKey',
-        },
-        {
-          name: 'parent',
-          type: 'publicKey',
-        },
-        {
-          name: 'hash',
-          type: 'publicKey',
-        },
-      ],
-    },
-    {
-      name: 'submitNextPost',
-      accounts: [
-        {
-          name: 'user',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'group',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'post',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: 'shdw',
-          type: 'publicKey',
-        },
         {
           name: 'parent',
           type: 'publicKey',
@@ -623,22 +541,6 @@ export const IDL: SocialIDL = {
       args: [],
     },
     {
-      name: 'incrementProfileIndex',
-      accounts: [
-        {
-          name: 'profile',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'user',
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
-    },
-    {
       name: 'submitReply',
       accounts: [
         {
@@ -648,7 +550,7 @@ export const IDL: SocialIDL = {
         },
         {
           name: 'post',
-          isMut: false,
+          isMut: true,
           isSigner: false,
         },
         {
@@ -662,12 +564,7 @@ export const IDL: SocialIDL = {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'shdw',
-          type: 'publicKey',
-        },
-      ],
+      args: [],
     },
     {
       name: 'updatePost',
@@ -676,6 +573,11 @@ export const IDL: SocialIDL = {
           name: 'user',
           isMut: false,
           isSigner: true,
+        },
+        {
+          name: 'group',
+          isMut: false,
+          isSigner: false,
         },
         {
           name: 'post',
@@ -706,10 +608,6 @@ export const IDL: SocialIDL = {
             type: 'publicKey',
           },
           {
-            name: 'index',
-            type: 'u32',
-          },
-          {
             name: 'hash',
             type: 'publicKey',
           },
@@ -734,7 +632,7 @@ export const IDL: SocialIDL = {
             type: 'publicKey',
           },
           {
-            name: 'index',
+            name: 'indexPost',
             type: 'u32',
           },
           {
@@ -758,15 +656,7 @@ export const IDL: SocialIDL = {
             type: 'publicKey',
           },
           {
-            name: 'shdw',
-            type: 'publicKey',
-          },
-          {
-            name: 'parent',
-            type: 'publicKey',
-          },
-          {
-            name: 'index',
+            name: 'indexReply',
             type: 'u32',
           },
           {

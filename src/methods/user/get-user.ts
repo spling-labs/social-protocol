@@ -1,9 +1,10 @@
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
-import { User } from '../../types'
+import { User, UserFileData } from '../../types'
 import { UserNotFoundError, InvalidHashError } from '../../utils/errors'
 import { getPublicKeyFromSeed } from '../../utils/helpers'
+import { UserChain } from '../../models'
 
 /**
  * @category User
@@ -11,28 +12,42 @@ import { getPublicKeyFromSeed } from '../../utils/helpers'
  */
 export default async function getUser(publicKey: web3.PublicKey): Promise<User> {
   try {
-    const [profilePDA, _] = await web3.PublicKey.findProgramAddress(
+    const [profilePDA] = await web3.PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode('profile'), publicKey.toBuffer()],
       programId,
     )
-    const result = await this.anchorProgram.account.profile.fetch(profilePDA)
-    const shdwPublicKey: string = (result.shdw as web3.PublicKey).toString()
+    const profile = await this.anchorProgram.account.profile.fetch(profilePDA)
+    const userChain = new UserChain(publicKey, profile)
 
     // Get user profile json file from the shadow drive.
     const userProfileJsonResponse: Response = await fetch(
-      `${shadowDriveDomain}${shdwPublicKey}/${result.index}.json`,
+      `${shadowDriveDomain}${userChain.shdw.toString()}/profile.json`,
     )
     if (userProfileJsonResponse.status == 404) throw new UserNotFoundError()
-    const userProfileJson = await userProfileJsonResponse.json()
+    const userProfileJson: UserFileData = await userProfileJsonResponse.json()
 
     // Build user avatar url from shadow drive.
     if (userProfileJson.avatar.toString().length > 0) {
-      userProfileJson.avatar = `${shadowDriveDomain}${shdwPublicKey}/${userProfileJson.avatar}`
+      userProfileJson.avatar = `${shadowDriveDomain}${userChain.shdw.toString()}/${
+        userProfileJson.avatar
+      }`
     }
 
+    // Check if hashes are valid.
     const hash: web3.PublicKey = getPublicKeyFromSeed(userProfileJson.username.toString())
-    if (hash.toString() != (result.hash as web3.PublicKey).toString()) throw new InvalidHashError()
-    return Promise.resolve(userProfileJson)
+    if (hash.toString() != userChain.hash.toString()) throw new InvalidHashError()
+
+    return Promise.resolve({
+      publicKey: publicKey,
+      shdw: userChain.shdw,
+      hash: userChain.hash,
+      username: userProfileJson.username,
+      bio: userProfileJson.bio ? userProfileJson.bio : '',
+      avatar:
+        userProfileJson.avatar.length > 0
+          ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar}`
+          : '',
+    } as User)
   } catch (error) {
     return Promise.reject(error)
   }

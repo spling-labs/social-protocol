@@ -1,12 +1,13 @@
 import {
-  getShadowDriveAccount,
   convertDataUriToBlob,
   getPublicKeyFromSeed,
+  getOrCreateShadowDriveAccount,
 } from '../../utils/helpers'
-import { FileData, User } from '../../types'
+import { FileData, User, UserFileData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
+import { StorageAccountResponse } from '@shadow-drive/sdk'
 
 /**
  * @category User
@@ -22,10 +23,13 @@ export default async function createUser(
   try {
     // Generate files to upload (avatar + biography).
     const userAvatarFile = avatar
-      ? new File([convertDataUriToBlob(avatar.base64)], 'a0.' + avatar?.type.split('/')[1])
+      ? new File(
+          [convertDataUriToBlob(avatar.base64)],
+          'profile-avatar.' + avatar?.type.split('/')[1],
+        )
       : null
 
-    let fileSizeSummarized = 1000 // 1000 bytes will be reserved for the userProfile.json.
+    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
 
     // Summarize size of files.
     if (userAvatarFile != null) {
@@ -33,7 +37,11 @@ export default async function createUser(
     }
 
     // Find/Create shadow drive account.
-    const account = await getShadowDriveAccount(this.shadowDrive, false, fileSizeSummarized)
+    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
+      this.shadowDrive,
+      false,
+      fileSizeSummarized,
+    )
 
     const filesToUpload: File[] = []
 
@@ -43,17 +51,16 @@ export default async function createUser(
     }
 
     // Generate the user profile json.
-    const userProfileJson: User = {
+    const userProfileJson: UserFileData = {
       username: username,
       bio: biography ? biography : '',
-      avatar: userAvatarFile ? `a0.${avatar.type.split('/')[1]}` : '',
-      index: 0,
+      avatar: userAvatarFile ? `profile-avatar.${avatar.type.split('/')[1]}` : '',
     }
 
     const fileToSave = new Blob([JSON.stringify(userProfileJson)], {
       type: 'application/json',
     })
-    const userProfileFile = new File([fileToSave], '0.json')
+    const userProfileFile = new File([fileToSave], 'profile.json')
     filesToUpload.push(userProfileFile)
 
     // Upload all files to shadow drive.
@@ -76,12 +83,14 @@ export default async function createUser(
       .rpc()
 
     return Promise.resolve({
+      publicKey: this.wallet.publicKey,
+      shdw: account.publicKey,
+      hash: hash,
       username: username,
       bio: biography ? biography : '',
       avatar: userAvatarFile
         ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar}`
         : '',
-      index: 0,
     } as User)
   } catch (error) {
     return Promise.reject(error)
