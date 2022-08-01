@@ -40,11 +40,6 @@ export type Reply = {
   text: string
 }
 
-export enum TipSize {
-  Small,
-  Medium,
-  Big,
-}
 export interface FileData {
   name: string
   type: string

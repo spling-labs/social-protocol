@@ -25,7 +25,7 @@ export default async function createUser(
     const userAvatarFile = avatar
       ? new File(
           [convertDataUriToBlob(avatar.base64)],
-          'profile-avatar.' + avatar?.type.split('/')[1],
+          `profile-avatar.${avatar.type.split('/')[1]}`,
         )
       : null
 

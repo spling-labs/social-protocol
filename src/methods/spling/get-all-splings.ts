@@ -1,29 +1,42 @@
+import { shadowDriveDomain } from '../../utils/constants'
 import { SplingChain } from '../../models/SplingChain'
-import { Spling } from '../../types'
+import { Spling, SplingFileData } from '../../types'
+import { getSplingFileData } from './helpers'
 
 /**
  * @category Spling
  */
 export default async function getAllSplings(): Promise<Spling[]> {
-  try {
-    const groups = await this.anchorProgram.account.group.all({})
-    const splings: Spling[] = groups.map((group: any) => {
-      const splingChain = new SplingChain(group.publicKey, group.account)
+  const groups = await this.anchorProgram.account.group.all({})
+  const splings: Spling[] = []
 
-      // TODO: Get name, bio and image from .json file.
+  for (const group of groups) {
+    const splingChain = new SplingChain(group.publicKey, group.account)
 
-      return {
+    try {
+      const splingFileData: SplingFileData = await getSplingFileData(
+        splingChain.publicKey,
+        splingChain.shdw,
+      )
+
+      // Build spling image url from shadow drive.
+      if (splingFileData.image.toString().length > 0) {
+        splingFileData.image = `${shadowDriveDomain}${splingChain.shdw.toString()}/${
+          splingFileData.image
+        }`
+      }
+
+      // Push spling data to array.
+      splings.push({
         publicKey: splingChain.publicKey,
         user: splingChain.user,
         shdw: splingChain.shdw,
         hash: splingChain.hash,
-        name: '',
-        bio: '',
-        image: '',
-      } as Spling
-    })
-    return Promise.resolve(splings)
-  } catch (error) {
-    return Promise.reject(error)
+        ...splingFileData,
+      } as Spling)
+    } catch (error) {
+      // Nothing to do.
+    }
   }
+  return Promise.resolve(splings)
 }

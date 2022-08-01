@@ -2,9 +2,10 @@ import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import { User, UserFileData } from '../../types'
-import { UserNotFoundError, InvalidHashError } from '../../utils/errors'
+import { InvalidHashError } from '../../utils/errors'
 import { getPublicKeyFromSeed } from '../../utils/helpers'
 import { UserChain } from '../../models'
+import { getUserFileData } from './helpers'
 
 /**
  * @category User
@@ -20,11 +21,7 @@ export default async function getUser(publicKey: web3.PublicKey): Promise<User> 
     const userChain = new UserChain(publicKey, profile)
 
     // Get user profile json file from the shadow drive.
-    const userProfileJsonResponse: Response = await fetch(
-      `${shadowDriveDomain}${userChain.shdw.toString()}/profile.json`,
-    )
-    if (userProfileJsonResponse.status == 404) throw new UserNotFoundError()
-    const userProfileJson: UserFileData = await userProfileJsonResponse.json()
+    const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 
     // Build user avatar url from shadow drive.
     if (userProfileJson.avatar.toString().length > 0) {
@@ -41,12 +38,7 @@ export default async function getUser(publicKey: web3.PublicKey): Promise<User> 
       publicKey: publicKey,
       shdw: userChain.shdw,
       hash: userChain.hash,
-      username: userProfileJson.username,
-      bio: userProfileJson.bio ? userProfileJson.bio : '',
-      avatar:
-        userProfileJson.avatar.length > 0
-          ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar}`
-          : '',
+      ...userProfileJson,
     } as User)
   } catch (error) {
     return Promise.reject(error)

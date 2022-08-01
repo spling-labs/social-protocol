@@ -12,14 +12,12 @@ import {
   getReply,
   getSpling,
   getUser,
-  sendTip,
   updatePost,
   updateReply,
-  updateSpling,
   updateUser,
   deleteUser,
 } from './methods'
-import { FileData, Post, Reply, Spling, TipSize, User } from './types'
+import { FileData, Post, Reply, Spling, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import { UserNotFoundError, InvalidHashError } from './utils/errors'
@@ -33,7 +31,6 @@ interface SplingProtocol {
 
   // SPLING METHODS
   createSpling(name: string, bio: string | null, image: FileData | null): Promise<Spling>
-  updateSpling(spling: Spling): Promise<Spling>
   getSpling(publicKey: web3.PublicKey): Promise<Spling>
   getAllSplings(): Promise<Spling[]>
 
@@ -48,13 +45,6 @@ interface SplingProtocol {
   updateReply(reply: Reply): Promise<Reply>
   getReply(publicKey: web3.PublicKey): Promise<Reply>
   getAllReplies(): Promise<Reply[]>
-
-  // TIP METHODS
-  sendTip(
-    senderPublicKey: web3.PublicKey,
-    receiverPublicKey: web3.PublicKey,
-    tipSize: TipSize,
-  ): Promise<void>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -69,7 +59,6 @@ export class SocialProtocol implements SplingProtocol {
 
   // SPLING METHODS
   createSpling = createSpling
-  updateSpling = updateSpling
   getSpling = getSpling
   getAllSplings = getAllSplings
 
@@ -84,9 +73,6 @@ export class SocialProtocol implements SplingProtocol {
   updateReply = updateReply
   getReply = getReply
   getAllReplies = getAllReplies
-
-  // TIP METHODS
-  sendTip = sendTip
 
   /**
    *
@@ -106,5 +92,5 @@ export class SocialProtocol implements SplingProtocol {
   }
 }
 
-export { User, TipSize, Post, Spling, Reply, FileData }
+export { User, Post, Spling, Reply, FileData }
 export { UserNotFoundError, InvalidHashError }

@@ -6,7 +6,6 @@ import getUser from './user/get-user'
 
 // SPLING METHODS
 import createSpling from './spling/create-spling'
-import updateSpling from './spling/update-spling'
 import getSpling from './spling/get-spling'
 import getAllSplings from './spling/get-all-splings'
 
@@ -22,16 +21,12 @@ import updateReply from './reply/update-reply'
 import getReply from './reply/get-reply'
 import getAllReplies from './reply/get-all-replies'
 
-// TIP METHODS
-import sendTip from './tip/send-tip'
-
 export {
   createUser,
   updateUser,
   deleteUser,
   getUser,
   createSpling,
-  updateSpling,
   getSpling,
   getAllSplings,
   createPost,
@@ -42,5 +37,4 @@ export {
   updateReply,
   getReply,
   getAllReplies,
-  sendTip,
 }

@@ -20,6 +20,8 @@ export default async function deleteUser(): Promise<void> {
       })
       .rpc()
 
+    // TODO: Remove profile files from shadow drive.
+
     return Promise.resolve()
   } catch (error) {
     return Promise.reject(error)
