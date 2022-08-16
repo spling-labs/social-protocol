@@ -1,4 +1,5 @@
-import { SplingChain } from './SplingChain'
+import { GroupChain } from './GroupChain'
 import { UserChain } from './UserChain'
+import { PostChain } from './PostChain'
 
-export { SplingChain, UserChain }
+export { GroupChain, UserChain, PostChain }

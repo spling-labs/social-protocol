@@ -1,5 +1,13 @@
 import UserNotFoundError from './UserNotFoundError'
-import SplingNotFoundError from './SplingNotFoundError'
+import GroupNotFoundError from './GroupNotFoundError'
+import PostNotFoundError from './PostNotFoundError'
 import InvalidHashError from './InvalidHashError'
+import StorageAccountNotFoundError from './StorageAccountNotFoundError'
 
-export { UserNotFoundError, SplingNotFoundError, InvalidHashError }
+export {
+  UserNotFoundError,
+  GroupNotFoundError,
+  PostNotFoundError,
+  InvalidHashError,
+  StorageAccountNotFoundError,
+}

@@ -2,11 +2,12 @@ import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
 import {
   CreateStorageResponse,
+  ShadowDriveResponse,
   ShdwDrive,
-  StorageAccountInfo,
   StorageAccountResponse,
 } from '@shadow-drive/sdk'
 import { programId } from './constants'
+import { StorageAccountNotFoundError } from './errors'
 import { IDL, SocialIDL } from './idl'
 
 /**
@@ -40,56 +41,56 @@ export function convertDataUriToBlob(dataURI: string): Blob {
 
 export async function getOrCreateShadowDriveAccount(
   shadowDrive: ShdwDrive,
-  immutable: boolean,
   spaceNeeded: number,
 ): Promise<StorageAccountResponse> {
   try {
     let account: StorageAccountResponse | null = null
-    account = await getShadowDriveAccount(shadowDrive, immutable, spaceNeeded)
-    if (account != null) return Promise.resolve(account)
+    account = await getShadowDriveAccount(shadowDrive)
+    if (account != null) {
+      if (account.account.immutable) throw new Error('Storage account is immutable!')
+      if (account.account.storage.valueOf() >= spaceNeeded) return Promise.resolve(account)
+      await addShadowDriveAccountStorage(shadowDrive, account.publicKey)
+      return Promise.resolve(account)
+    }
 
-    await createShadowDriveAccount(shadowDrive, spaceNeeded)
+    await createShadowDriveAccount(shadowDrive)
 
-    account = await getShadowDriveAccount(shadowDrive, immutable, spaceNeeded)
+    account = await getShadowDriveAccount(shadowDrive)
     if (account != null) return Promise.resolve(account)
-    else throw Error('Storage Account not found!')
+    else throw new StorageAccountNotFoundError()
   } catch (error) {
     return Promise.reject(error)
   }
 }
 
-export async function getShadowDriveAccount(
+async function getShadowDriveAccount(
   shadowDrive: ShdwDrive,
-  immutable: boolean,
-  spaceNeeded: number,
 ): Promise<StorageAccountResponse | null> {
   try {
-    const storageAccounts = await shadowDrive.getStorageAccounts('v2')
-    let account: StorageAccountResponse | null = null
-    storageAccounts.forEach((storageAccount: StorageAccountResponse) => {
-      if (
-        storageAccount.account.immutable == immutable &&
-        storageAccount.account.storage.valueOf() >= spaceNeeded
-      ) {
-        account = storageAccount
-      }
-    })
-    return Promise.resolve(account)
+    const storageAccounts: StorageAccountResponse[] = await shadowDrive.getStorageAccounts('v2')
+    if (storageAccounts.length == 0) return Promise.resolve(null)
+    else if (storageAccounts.length == 1) return Promise.resolve(storageAccounts[0])
+    else throw new Error('To many storage accounts found!')
   } catch (error) {
     return Promise.reject(error)
   }
 }
 
-export async function createShadowDriveAccount(
-  shadowDrive: ShdwDrive,
-  spaceNeeded: number,
-): Promise<CreateStorageResponse> {
+async function createShadowDriveAccount(shadowDrive: ShdwDrive): Promise<CreateStorageResponse> {
   try {
-    const response = await shadowDrive.createStorageAccount(
-      'Spling',
-      convertBytesToHuman(spaceNeeded, true, 0),
-      'v2',
-    )
+    const response = await shadowDrive.createStorageAccount('Spling', '10MB', 'v2')
+    return Promise.resolve(response)
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+async function addShadowDriveAccountStorage(
+  shadowDrive: ShdwDrive,
+  publicKey: anchor.web3.PublicKey,
+): Promise<ShadowDriveResponse> {
+  try {
+    const response = await shadowDrive.addStorage(publicKey, '10MB', 'v2')
     return Promise.resolve(response)
   } catch (error) {
     return Promise.reject(error)
@@ -101,23 +102,32 @@ export function getPublicKeyFromSeed(seed: string): anchor.web3.PublicKey {
   return anchor.web3.Keypair.fromSeed(hex).publicKey
 }
 
-function convertBytesToHuman(bytes: number, si = false, dp = 1): string {
-  const thresh = si ? 1024 : 1024
+export function getKeypairFromSeed(seed: string): anchor.web3.Keypair {
+  const hex = new Uint8Array(Buffer.from(Buffer.from(seed.padEnd(32, '0'))))
+  return anchor.web3.Keypair.fromSeed(hex)
+}
 
-  if (Math.abs(bytes) < thresh) {
-    return bytes + ' B'
+export async function getTextFromFile(url: string): Promise<string | null> {
+  try {
+    const splingJsonResponse: Response = await fetch(url)
+    if (!splingJsonResponse.ok) return Promise.resolve(null)
+
+    const text: string = await splingJsonResponse.text()
+
+    return Promise.resolve(text)
+  } catch (error) {
+    return Promise.resolve(null)
   }
+}
 
-  const units = si
-    ? ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-  let u = -1
-  const r = 10 ** dp
-
-  do {
-    bytes /= thresh
-    ++u
-  } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
-
-  return bytes.toFixed(dp) + ' ' + units[u]
+const alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
+const base = alphabet.length
+export function convertNumberToBase58(number: number): string {
+  var encoded = ''
+  while (number) {
+    var remainder = number % base
+    number = Math.floor(number / base)
+    encoded = alphabet[remainder].toString() + encoded
+  }
+  return encoded
 }

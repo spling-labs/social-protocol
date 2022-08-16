@@ -1,22 +1,20 @@
-import {
-  convertDataUriToBlob,
-  getPublicKeyFromSeed,
-  getOrCreateShadowDriveAccount,
-} from '../../utils/helpers'
-import { FileData, User, UserFileData } from '../../types'
+import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils/helpers'
+import { FileData, MediaData, User, UserFileData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import { StorageAccountResponse } from '@shadow-drive/sdk'
+import { UserChain } from '../../models'
+import dayjs from 'dayjs'
 
 /**
  * @category User
- * @param username - The username of the user.
+ * @param nickname - The nickname of the user.
  * @param avatar - The image FileData of the user avatar.
  * @param biography - The biography of the user.
  */
 export default async function createUser(
-  username: string,
+  nickname: string,
   avatar: FileData | null,
   biography: string | null,
 ): Promise<User> {
@@ -39,7 +37,6 @@ export default async function createUser(
     // Find/Create shadow drive account.
     const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
       this.shadowDrive,
-      false,
       fileSizeSummarized,
     )
 
@@ -52,9 +49,18 @@ export default async function createUser(
 
     // Generate the user profile json.
     const userProfileJson: UserFileData = {
-      username: username,
+      timestamp: dayjs(new Date()).unix.toString(),
+      nickname: nickname,
       bio: biography ? biography : '',
-      avatar: userAvatarFile ? `profile-avatar.${avatar.type.split('/')[1]}` : '',
+      avatar: userAvatarFile
+        ? ({
+            file: `profile-avatar.${avatar.type.split('/')[1]}`,
+            type: avatar.type.split('/')[1],
+          } as MediaData)
+        : null,
+      banner: null,
+      socials: [],
+      license: null,
     }
 
     const fileToSave = new Blob([JSON.stringify(userProfileJson)], {
@@ -66,31 +72,69 @@ export default async function createUser(
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
-    // Generate the hash from the username.
-    const hash: web3.PublicKey = getPublicKeyFromSeed(username.toString())
-
-    // Submit the user profile to the anchor program.
-    const [profilePDA, _] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('profile'), this.wallet.publicKey.toBuffer()],
+    // Find the user id pda.
+    const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('user_id'), this.wallet.publicKey.toBuffer()],
       programId,
     )
+
+    // Find stats pda.
+    const [StatsPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('stats')],
+      programId,
+    )
+
+    // Submit the user id to the anchor program.
     await this.anchorProgram.methods
-      .submitProfile(account.publicKey, hash)
+      .createUserid()
       .accounts({
-        user: this.wallet.publicKey,
-        profile: profilePDA,
+        user: this.wallet.publickey,
+        stats: StatsPDA,
+        userId: UserIdPDA,
       })
       .rpc()
 
+    // Fetch the user id.
+    const user_id_pda = await this.anchorProgram.account.userId.fetch(UserIdPDA)
+    const uid = user_id_pda.uid
+
+    // Find the user profile pda.
+    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('user_profile'),
+        anchor.utils.bytes.utf8.encode(uid.toString()),
+      ],
+      programId,
+    )
+
+    // Submit the user profile to the anchor program.
+    await this.anchorProgram.methods
+      .createUserProfile(account.publicKey)
+      .accounts({
+        user: this.wallet.publicKey,
+        userId: UserIdPDA,
+        userProfile: UserProfilePDA,
+      })
+      .rpc()
+
+    // Fetch the user profile from the anchor program.
+    const userProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+    const userChain = new UserChain(userProfile.publicKey, userProfile)
+
     return Promise.resolve({
+      timestamp: userChain.timestamp,
       publicKey: this.wallet.publicKey,
+      userId: userChain.userId,
+      status: userChain.status,
       shdw: account.publicKey,
-      hash: hash,
-      username: username,
+      nickname: nickname,
       bio: biography ? biography : '',
       avatar: userAvatarFile
-        ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar}`
-        : '',
+        ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar.file}`
+        : null,
+      banner: null,
+      socials: userProfileJson.socials,
+      license: userProfileJson.license,
     } as User)
   } catch (error) {
     return Promise.reject(error)

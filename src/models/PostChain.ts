@@ -1,20 +1,18 @@
 import { web3 } from '@project-serum/anchor'
 
-export class UserChain {
+export class PostChain {
   publicKey: web3.PublicKey
   timestamp: number
-  user: web3.PublicKey
   userId: number
+  groupId: number
   status: number
-  shdw: web3.PublicKey
 
   constructor(publicKey: web3.PublicKey, accountData: any) {
     this.publicKey = publicKey
     this.timestamp = accountData.ts
-    this.user = accountData.user
     this.userId = accountData.uid
+    this.groupId = accountData.gid
     this.status = accountData.st
-    this.shdw = accountData.shdw
   }
 
   get key() {

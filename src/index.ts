@@ -2,49 +2,44 @@ import { Program, web3 } from '@project-serum/anchor'
 import { ShdwDrive } from '@shadow-drive/sdk'
 import {
   createPost,
-  createReply,
-  createSpling,
+  createGroup,
   createUser,
   getAllPosts,
-  getAllReplies,
-  getAllSplings,
+  getAllGroups,
   getPost,
-  getReply,
-  getSpling,
+  getGroup,
   getUser,
-  updatePost,
-  updateReply,
-  updateUser,
-  deleteUser,
+  deleteGroupId,
+  deleteUserId,
 } from './methods'
-import { FileData, Post, Reply, Spling, User } from './types'
+import { FileData, Post, Reply, Group, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
-import { UserNotFoundError, InvalidHashError } from './utils/errors'
+import {
+  UserNotFoundError,
+  GroupNotFoundError,
+  PostNotFoundError,
+  InvalidHashError,
+  StorageAccountNotFoundError,
+} from './utils/errors'
 
 interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
-  updateUser(username: string, avatar: FileData, biography: string): Promise<User>
-  deleteUser(): Promise<void>
-  getUser(publicKey: web3.PublicKey): Promise<User>
+  getUser(userId: string): Promise<User>
 
-  // SPLING METHODS
-  createSpling(name: string, bio: string | null, image: FileData | null): Promise<Spling>
-  getSpling(publicKey: web3.PublicKey): Promise<Spling>
-  getAllSplings(): Promise<Spling[]>
+  // GROUP METHODS
+  createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
+  getGroup(groupId: string): Promise<Group>
+  getAllGroups(): Promise<Group[]>
 
   // POST METHODS
-  createPost(text: string, image: FileData, index: number): Promise<Post>
-  updatePost(post: Post): Promise<Post>
+  createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
   getPost(publicKey: web3.PublicKey): Promise<Post>
-  getAllPosts(): Promise<Post[]>
+  getAllPosts(groupId: string): Promise<Post[]>
 
-  // REPLY METHODS
-  createReply(reply: Reply): Promise<Reply>
-  updateReply(reply: Reply): Promise<Reply>
-  getReply(publicKey: web3.PublicKey): Promise<Reply>
-  getAllReplies(): Promise<Reply[]>
+  deleteGroupId(): Promise<boolean>
+  deleteUserId(): Promise<boolean>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -53,26 +48,21 @@ export class SocialProtocol implements SplingProtocol {
 
   // USER METHODS
   createUser = createUser
-  updateUser = updateUser
-  deleteUser = deleteUser
   getUser = getUser
 
-  // SPLING METHODS
-  createSpling = createSpling
-  getSpling = getSpling
-  getAllSplings = getAllSplings
+  // GROUP METHODS
+  createGroup = createGroup
+  getGroup = getGroup
+  getAllGroups = getAllGroups
 
   // POST METHODS
   createPost = createPost
-  updatePost = updatePost
   getPost = getPost
   getAllPosts = getAllPosts
 
-  // REPLY METHODS
-  createReply = createReply
-  updateReply = updateReply
-  getReply = getReply
-  getAllReplies = getAllReplies
+  // DELETE METHODS
+  deleteGroupId = deleteGroupId
+  deleteUserId = deleteUserId
 
   /**
    *
@@ -92,5 +82,11 @@ export class SocialProtocol implements SplingProtocol {
   }
 }
 
-export { User, Post, Spling, Reply, FileData }
-export { UserNotFoundError, InvalidHashError }
+export { User, Post, Group, Reply, FileData }
+export {
+  UserNotFoundError,
+  GroupNotFoundError,
+  PostNotFoundError,
+  InvalidHashError,
+  StorageAccountNotFoundError,
+}

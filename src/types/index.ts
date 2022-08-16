@@ -1,39 +1,82 @@
 import { web3 } from '@project-serum/anchor'
 
+export type MediaData = {
+  file: string
+  type: string
+}
+
+export type SocialData = {
+  name: string
+  handle: string
+}
+
 export type UserFileData = {
-  username: string
-  avatar: string
+  timestamp: string
+  nickname: string
   bio: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  socials: SocialData[]
+  license: string | null
 }
 
 export type User = {
+  timestamp: number
   publicKey: web3.PublicKey
+  userId: number
+  status: number
   shdw: web3.PublicKey
-  hash: web3.PublicKey
-  username: string
-  avatar: string
+  nickname: string
   bio: string
+  avatar: string | null
+  banner: string | null
+  socials: SocialData[]
+  license: string | null
 }
 
-export type SplingFileData = {
+export type GroupFileData = {
+  timestamp: string
   name: string
   bio: string
-  image: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  license: string | null
 }
 
-export type Spling = {
+export type Group = {
+  timestamp: number
   publicKey: web3.PublicKey
-  user: web3.PublicKey
+  group: web3.PublicKey
+  groupId: number
+  status: number
   shdw: web3.PublicKey
-  hash: web3.PublicKey
   name: string
   bio: string
-  image: string
+  avatar: string | null
+  banner: string | null
+  license: string | null
+}
+
+export type PostFileData = {
+  timestamp: string
+  programId: string
+  userId: string
+  groupId: string
+  text: string | null
+  media: MediaData[]
+  license: string | null
 }
 
 export type Post = {
+  timestamp: number
+  publicKey: web3.PublicKey
+  status: number
+  programId: string
+  userId: string
+  groupId: string
   text: string
-  image: string
+  media: string[]
+  license: string | null
 }
 
 export type Reply = {
