@@ -12,10 +12,6 @@ import createPost from './post/create-post'
 import getPost from './post/get-post'
 import getAllPosts from './post/get-all-posts'
 
-// DELETE METHODS
-import deleteGroupId from './deleteGroupId'
-import deleteUserId from './deleteUserId'
-
 export {
   createUser,
   getUser,
@@ -25,6 +21,4 @@ export {
   createPost,
   getPost,
   getAllPosts,
-  deleteGroupId,
-  deleteUserId,
 }

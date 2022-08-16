@@ -1,0 +1,21 @@
+[features]
+seeds = false
+
+[programs.localnet]
+spling = "28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9"
+
+[programs.devnet]
+spling = "28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9"
+
+[programs.mainnet]
+spling = "28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "mainnet"
+wallet = "/Users/nielsoskam/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

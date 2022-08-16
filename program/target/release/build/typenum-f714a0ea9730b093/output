@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/nielsoskam/Code/social/spling/target/release/build/typenum-f714a0ea9730b093/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/nielsoskam/Code/social/spling/target/release/build/typenum-f714a0ea9730b093/out/op.rs

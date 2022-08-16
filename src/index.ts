@@ -9,8 +9,6 @@ import {
   getPost,
   getGroup,
   getUser,
-  deleteGroupId,
-  deleteUserId,
 } from './methods'
 import { FileData, Post, Reply, Group, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
@@ -37,9 +35,6 @@ interface SplingProtocol {
   createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
   getPost(publicKey: web3.PublicKey): Promise<Post>
   getAllPosts(groupId: string): Promise<Post[]>
-
-  deleteGroupId(): Promise<boolean>
-  deleteUserId(): Promise<boolean>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -59,10 +54,6 @@ export class SocialProtocol implements SplingProtocol {
   createPost = createPost
   getPost = getPost
   getAllPosts = getAllPosts
-
-  // DELETE METHODS
-  deleteGroupId = deleteGroupId
-  deleteUserId = deleteUserId
 
   /**
    *
