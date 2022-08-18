@@ -164,7 +164,7 @@ pub mod spling {
 
     // this submit_post function takes no arguments because the account address == filename of the post
     // the account is kept as light as possible, to make posts as cheap as possible
-    pub fn submit_post(ctx: Context<SubmitPost>, group_id: u32) -> Result<()> {
+    pub fn submit_post(ctx: Context<SubmitPost>, group_id: u32, shdw: Pubkey) -> Result<()> {
         let post: &mut Account<Post> = &mut ctx.accounts.post;
         let user_id: &mut Account<UserId> = &mut ctx.accounts.user_id;
         let _user: &Signer = &ctx.accounts.user;
@@ -183,6 +183,9 @@ pub mod spling {
         // status (st) is standard 1, can have future utility for moderation purposes
         post.st = 1;
 
+        // Post is a PDA, so here we store the bump
+        post.bump = *ctx.bumps.get("post").unwrap();
+
         Ok(())
     }
 
@@ -195,6 +198,7 @@ pub struct Post {
     pub uid: u32,   // 4 byte - user id (max 4,294,967,295)  
     pub gid: u32,   // 4 byte - group id (max 4,294,967,295)
     pub st: u8,     // 1 byte - status (default = 1)
+    pub bump: u8,   // 1 byte - bump
 }
 
 #[account]
@@ -243,12 +247,16 @@ pub struct GroupProfile {
 
 
 #[derive(Accounts)]
+// use function arguments for pda account creation 
+#[instruction(group_id: u32, shdw: Pubkey)]
 pub struct SubmitPost<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // retrieve user id and check if signer is the owner of this user id
     #[account(seeds = [b"user_id", user.key().as_ref()], bump = user_id.bump, has_one = user)]
     pub user_id: Account<'info, UserId>,
-    #[account(init, payer = user, space = 8 + mem::size_of::<Post>())]
+    // create new post account, use shdw argument as seed
+    #[account(init, payer = user, space = 8 + mem::size_of::<Post>(), seeds = [b"post".as_ref(), shdw.as_ref()], bump)]
     pub post: Account<'info, Post>,
     #[account(address = system_program::ID)]
     pub system_program: Program<'info, System>,
@@ -268,8 +276,10 @@ pub struct SetupStats<'info> {
 pub struct CreateUserId<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // retrieve stats account to update number of users
     #[account(mut, seeds = [b"stats"], bump = stats.bump)]
     pub stats: Account<'info, Stats>,
+    // create new user id account
     #[account(init, payer = user, space = 8 + mem::size_of::<UserId>(), seeds = [b"user_id", user.key().as_ref()], bump)]
     pub user_id: Account<'info, UserId>,
     #[account(address = system_program::ID)]
@@ -280,6 +290,7 @@ pub struct CreateUserId<'info> {
 pub struct DeleteUserId<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // close user id account, and send funds back to the user
     #[account(mut, seeds = [b"user_id", user.key().as_ref()], bump = user_id.bump, close = user)]
     pub user_id: Account<'info, UserId>,
     #[account(address = system_program::ID)]
@@ -290,6 +301,7 @@ pub struct DeleteUserId<'info> {
 pub struct DeleteGroupId<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // close group id account, and send funds back to the user
     #[account(mut, seeds = [b"group_id", user.key().as_ref()], bump = group_id.bump, close = user)]
     pub group_id: Account<'info, GroupId>,
     #[account(address = system_program::ID)]
@@ -301,8 +313,10 @@ pub struct DeleteGroupId<'info> {
 pub struct CreateGroupId<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // retrieve stats account to update number of groups
     #[account(mut, seeds = [b"stats"], bump = stats.bump)]
     pub stats: Account<'info, Stats>,
+    // create new group id account
     #[account(init, payer = user, space = 8 + mem::size_of::<GroupId>(), seeds = [b"group_id", user.key().as_ref()], bump)]
     pub group_id: Account<'info, GroupId>,
     #[account(address = system_program::ID)]
@@ -313,8 +327,10 @@ pub struct CreateGroupId<'info> {
 pub struct CreateUserProfile<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // retrieve the user id needed for the user profile
     #[account(mut, seeds = [b"user_id", user.key().as_ref()], bump = user_id.bump)]
     pub user_id: Account<'info, UserId>,
+    // create new user profile account, using the user id as seed
     #[account(init, payer = user, space = 8 + mem::size_of::<UserProfile>(), seeds = [b"user_profile".as_ref(), user_id.uid.to_string().as_ref() ], bump)]
     pub user_profile: Account<'info, UserProfile>,
     #[account(address = system_program::ID)]
@@ -325,8 +341,10 @@ pub struct CreateUserProfile<'info> {
 pub struct CreateGroupProfile<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    // retrieve the group id needed for the group profile
     #[account(mut, seeds = [b"group_id", user.key().as_ref()], bump = group_id.bump)]
     pub group_id: Account<'info, GroupId>,
+    // create new group profile account, using the group id as seed
     #[account(init, payer = user, space = 8 + mem::size_of::<GroupProfile>(), seeds = [b"group_profile".as_ref(), group_id.gid.to_string().as_ref() ], bump)]
     pub group_profile: Account<'info, GroupProfile>,
     #[account(address = system_program::ID)]
@@ -340,9 +358,10 @@ pub struct JoinGroup<'info> {
     pub user: Signer<'info>,
     #[account(mut, seeds = [b"user_id", user.key().as_ref()], bump = user_id.bump, has_one = user)]
     pub user_id: Account<'info, UserId>,
+    // increase user profile account size, with 4 (u32) to accomodate adding the group id to the user's joined groups
     #[account(
         mut, 
-        seeds = [b"user_profile", user_id.uid.to_string().as_ref()],
+        seeds = [b"user_profile", user_id.uid.as_ref()],
         bump = user_profile.bump,
         realloc = 8 + std::mem::size_of::<UserProfile>() + 4,
         realloc::payer = user,
@@ -360,6 +379,7 @@ pub struct FollowUser<'info> {
     pub user: Signer<'info>,
     #[account(mut, seeds = [b"user_id", user.key().as_ref()], bump = user_id.bump, has_one = user)]
     pub user_id: Account<'info, UserId>,
+    // increase user profile account size, with 4 (u32) to accomodate adding the user id to the user's follows
     #[account(
         mut, 
         seeds = [b"user_profile", user_id.uid.to_string().as_ref()],
