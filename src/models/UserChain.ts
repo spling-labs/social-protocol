@@ -7,6 +7,8 @@ export class UserChain {
   userId: number
   status: number
   shdw: web3.PublicKey
+  following: number[]
+  groups: number[]
 
   constructor(publicKey: web3.PublicKey, accountData: any) {
     this.publicKey = publicKey
@@ -15,6 +17,8 @@ export class UserChain {
     this.userId = accountData.uid
     this.status = accountData.st
     this.shdw = accountData.shdw
+    this.following = accountData.following
+    this.groups = accountData.groups
   }
 
   get key() {

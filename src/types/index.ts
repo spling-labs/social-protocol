@@ -26,6 +26,8 @@ export type User = {
   userId: number
   status: number
   shdw: web3.PublicKey
+  following: number[]
+  groups: number[]
   nickname: string
   bio: string
   avatar: string | null

@@ -33,6 +33,8 @@ export default async function getUser(userId: string): Promise<User> {
       userId: Number(userId),
       status: userChain.status,
       shdw: userChain.shdw,
+      following: userChain.following,
+      groups: userChain.groups,
       nickname: userProfileJson.nickname,
       bio: userProfileJson.bio,
       avatar:

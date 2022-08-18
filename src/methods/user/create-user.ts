@@ -127,6 +127,8 @@ export default async function createUser(
       userId: userChain.userId,
       status: userChain.status,
       shdw: account.publicKey,
+      following: [],
+      groups: [],
       nickname: nickname,
       bio: biography ? biography : '',
       avatar: userAvatarFile

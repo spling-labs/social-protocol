@@ -6,9 +6,11 @@ import {
   createUser,
   getAllPosts,
   getAllGroups,
+  joinGroup,
   getPost,
   getGroup,
   getUser,
+  followUser,
 } from './methods'
 import { FileData, Post, Reply, Group, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
@@ -25,11 +27,13 @@ interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
   getUser(userId: string): Promise<User>
+  followUser(userId: string): Promise<void>
 
   // GROUP METHODS
   createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
   getGroup(groupId: string): Promise<Group>
   getAllGroups(): Promise<Group[]>
+  joinGroup(groupId: string): Promise<void>
 
   // POST METHODS
   createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
@@ -44,11 +48,13 @@ export class SocialProtocol implements SplingProtocol {
   // USER METHODS
   createUser = createUser
   getUser = getUser
+  followUser = followUser
 
   // GROUP METHODS
   createGroup = createGroup
   getGroup = getGroup
   getAllGroups = getAllGroups
+  joinGroup = joinGroup
 
   // POST METHODS
   createPost = createPost
