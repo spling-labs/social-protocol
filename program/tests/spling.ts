@@ -180,6 +180,9 @@ describe("spling", () => {
 
   it("Submits a post", async () => {
 
+    const shdw = anchor.web3.Keypair.generate();
+
+
     const [UserIDPDA] = await PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('user_id'),
@@ -187,21 +190,26 @@ describe("spling", () => {
       ],
       program.programId
     )
-  
-    const hash = anchor.web3.Keypair.generate();
+
+    const [PostPDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('post'),
+        shdw.publicKey.toBuffer(),
+      ],
+      program.programId
+    )
 
       await program.methods
-      .submitPost(1)
+      .submitPost(1, shdw.publicKey)
       .accounts({
-        post: hash.publicKey,
         user: provider.wallet.publicKey,
         userId: UserIDPDA,
+        post: PostPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([hash])
       .rpc()
 
-      const post = await program.account.post.fetch(hash.publicKey);
+      const post = await program.account.post.fetch(PostPDA);
       console.log(post);
 
   });
@@ -296,6 +304,14 @@ describe("spling", () => {
       const stats = await program.account.stats.fetch(StatsPDA);
       console.log(stats);
 
+  });
+
+  it("Fetch all PDA's", async () => {
+    const stats = await program.account.post.all();
+    console.log(stats[0].publicKey);
+
+    const test = await program.account.post.fetch(stats[0].publicKey);
+    console.log(test);
   });
 
 
