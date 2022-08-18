@@ -257,7 +257,7 @@ export type SocialIDL = {
         {
           name: 'post'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'systemProgram'
@@ -269,6 +269,10 @@ export type SocialIDL = {
         {
           name: 'groupId'
           type: 'u32'
+        },
+        {
+          name: 'shdw'
+          type: 'publicKey'
         },
       ]
     },
@@ -294,6 +298,34 @@ export type SocialIDL = {
           {
             name: 'st'
             type: 'u8'
+          },
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+        ]
+      }
+    },
+    {
+      name: 'PostPk'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'active'
+            type: 'bool'
+          },
+        ]
+      }
+    },
+    {
+      name: 'PostPkClosed'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'active'
+            type: 'bool'
           },
         ]
       }
@@ -699,7 +731,7 @@ export const IDL: SocialIDL = {
         {
           name: 'post',
           isMut: true,
-          isSigner: true,
+          isSigner: false,
         },
         {
           name: 'systemProgram',
@@ -711,6 +743,10 @@ export const IDL: SocialIDL = {
         {
           name: 'groupId',
           type: 'u32',
+        },
+        {
+          name: 'shdw',
+          type: 'publicKey',
         },
       ],
     },
@@ -736,6 +772,34 @@ export const IDL: SocialIDL = {
           {
             name: 'st',
             type: 'u8',
+          },
+          {
+            name: 'bump',
+            type: 'u8',
+          },
+        ],
+      },
+    },
+    {
+      name: 'PostPk',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'active',
+            type: 'bool',
+          },
+        ],
+      },
+    },
+    {
+      name: 'PostPkClosed',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'active',
+            type: 'bool',
           },
         ],
       },

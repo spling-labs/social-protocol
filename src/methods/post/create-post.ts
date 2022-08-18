@@ -38,17 +38,23 @@ export default async function createPost(
     // Generate the hash from the text.
     const hash: web3.Keypair = getKeypairFromSeed(`${timestamp}${userId.toString()}${groupId}`)
 
+    // Find post pda.
+    const [PostPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('post'), hash.publicKey.toBuffer()],
+      programId,
+    )
+
     // Create image file to upload.
     const postImageFile = image
       ? new File(
           [convertDataUriToBlob(image.base64)],
-          `${hash.publicKey.toString()}.${image?.type.split('/')[1]}`,
+          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
         )
       : null
 
     // Create text tile to upload.
     const postTextFile = text
-      ? new File([new Blob([text], { type: 'text/plain' })], `${hash.publicKey.toString()}.txt`)
+      ? new File([new Blob([text], { type: 'text/plain' })], `${PostPDA.toString()}.txt`)
       : null
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
@@ -73,11 +79,11 @@ export default async function createPost(
       programId: programId.toString(),
       userId: userId,
       groupId: groupId,
-      text: text ? `${hash.publicKey.toString()}.txt` : null,
+      text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
             {
-              file: `${hash.publicKey.toString()}.${image.type.split('/')[1]}`,
+              file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
               type: image.type.split('/')[1],
             } as MediaData,
           ]
@@ -85,29 +91,29 @@ export default async function createPost(
       license: null,
     }
     const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
-    filesToUpload.push(new File([fileToSave], `${hash.publicKey.toString()}.json`))
+    filesToUpload.push(new File([fileToSave], `${PostPDA.toString()}.json`))
 
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
     // Submit the post to the anchor program.
     await this.anchorProgram.methods
-      .submitPost(Number(groupId))
+      .submitPost(Number(groupId), hash.publicKey)
       .accounts({
-        post: hash.publicKey,
         user: this.wallet.publicKey,
         userId: UserIdPDA,
+        post: PostPDA,
+        systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([hash])
       .rpc()
 
     // Fetch the post from the anchor program.
-    const post = await this.anchorProgram.account.post.fetch(hash.publicKey)
-    const postChain = new PostChain(hash.publicKey, post)
+    const post = await this.anchorProgram.account.post.fetch(PostPDA)
+    const postChain = new PostChain(PostPDA, post)
 
     return Promise.resolve({
       timestamp: postChain.timestamp,
-      publicKey: hash.publicKey,
+      publicKey: postChain.publicKey,
       status: postChain.status,
       programId: postJson.programId,
       userId: postJson.userId,
