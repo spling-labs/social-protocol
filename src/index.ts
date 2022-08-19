@@ -66,6 +66,7 @@ export class SocialProtocol implements SplingProtocol {
    * @param connection The web3 connection object.
    * @param wallet - The wallet of the current user.
    */
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   constructor(private connection: web3.Connection, private wallet: any) {
     this.connection = connection
     this.wallet = wallet

@@ -3,7 +3,7 @@ import {
   getKeypairFromSeed,
   getOrCreateShadowDriveAccount,
 } from '../../utils/helpers'
-import { FileData, Post, PostFileData, Group, MediaData } from '../../types'
+import { FileData, Post, PostFileData, MediaData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
@@ -29,8 +29,8 @@ export default async function createPost(
     )
 
     // Fetch the user id.
-    const user_id_pda = await this.anchorProgram.account.userId.fetch(UserIdPDA)
-    const userId = user_id_pda.uid
+    const fetchedUserId = await this.anchorProgram.account.userId.fetch(UserIdPDA)
+    const userId = fetchedUserId.uid
 
     // Get current timestamp.
     const timestamp: string = dayjs().unix().toString()
