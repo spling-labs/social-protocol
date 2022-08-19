@@ -15,14 +15,13 @@ export default async function joinGroup(groupId: string): Promise<void> {
     )
 
     // Fetch the user id.
-    const user_id_pda = await this.anchorProgram.account.userId.fetch(UserIdPDA)
-    const uid = user_id_pda.uid
+    const fetchedUserId = await this.anchorProgram.account.userId.fetch(UserIdPDA)
 
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('user_profile'),
-        anchor.utils.bytes.utf8.encode(uid.toString()),
+        anchor.utils.bytes.utf8.encode(fetchedUserId.uid.toString()),
       ],
       programId,
     )

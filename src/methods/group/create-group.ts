@@ -58,7 +58,7 @@ export default async function createGroup(
     const fileToSave = new Blob([JSON.stringify(groupJson)], {
       type: 'application/json',
     })
-    const groupUploadFile = new File([fileToSave], `group.json`)
+    const groupUploadFile = new File([fileToSave], 'group.json')
     filesToUpload.push(groupUploadFile)
 
     // Upload all files to shadow drive.
