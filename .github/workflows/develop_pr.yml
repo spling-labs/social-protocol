@@ -1,14 +1,13 @@
-name: Publish npm package
+name: PR to develop branch from feature branch.
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - 'develop'
 
 jobs:
-
   build:
-    name: "Install dependencies, lint, test, build and publish package on NPM."
+    name: 'Install dependencies, lint, test and build package.'
     runs-on: ubuntu-latest
 
     steps:
@@ -31,8 +30,3 @@ jobs:
 
       - name: Build package 📦
         run: npm run build
-
-      - name: Publish package on NPM 🚀
-        - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}

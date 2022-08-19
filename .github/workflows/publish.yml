@@ -1,0 +1,38 @@
+name: Publish npm package
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+
+  build:
+    name: "Install dependencies, lint, test, build and publish package on NPM."
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup Node v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies 🔧
+        run: npm install
+
+      - name: Run linter 🔍
+        run: npm run lint
+
+      - name: Run tests 🧪
+        run: npm run test
+
+      - name: Build package 📦
+        run: npm run build
+
+      - name: Publish package on NPM 🚀
+        - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
