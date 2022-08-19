@@ -6,9 +6,8 @@ on:
       - 'main'
 
 jobs:
-
   build:
-    name: "Install dependencies, lint, test, build and publish package on NPM."
+    name: 'Install dependencies, lint, test, build and publish package on NPM.'
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +32,6 @@ jobs:
         run: npm run build
 
       - name: Publish package on NPM 🚀
-        - uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
