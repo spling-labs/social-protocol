@@ -7,10 +7,13 @@ import {
   getAllPosts,
   getAllGroups,
   joinGroup,
+  leaveGroup,
   getPost,
   getGroup,
   getUser,
   followUser,
+  unfollowUser,
+  deletePost,
 } from './methods'
 import { FileData, Post, Reply, Group, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
@@ -28,17 +31,20 @@ interface SplingProtocol {
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
   getUser(userId: string): Promise<User>
   followUser(userId: string): Promise<void>
+  unfollowUser(userId: string): Promise<void>
 
   // GROUP METHODS
   createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
   getGroup(groupId: string): Promise<Group>
   getAllGroups(): Promise<Group[]>
   joinGroup(groupId: string): Promise<void>
+  leaveGroup(groupId: string): Promise<void>
 
   // POST METHODS
   createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
   getPost(publicKey: web3.PublicKey): Promise<Post>
   getAllPosts(groupId: string): Promise<Post[]>
+  deletePost(publicKey: web3.PublicKey): Promise<void>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -49,17 +55,20 @@ export class SocialProtocol implements SplingProtocol {
   createUser = createUser
   getUser = getUser
   followUser = followUser
+  unfollowUser = unfollowUser
 
   // GROUP METHODS
   createGroup = createGroup
   getGroup = getGroup
   getAllGroups = getAllGroups
   joinGroup = joinGroup
+  leaveGroup = leaveGroup
 
   // POST METHODS
   createPost = createPost
   getPost = getPost
   getAllPosts = getAllPosts
+  deletePost = deletePost
 
   /**
    *
