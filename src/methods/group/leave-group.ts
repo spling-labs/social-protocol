@@ -6,7 +6,7 @@ import { programId } from '../../utils/constants'
  * @category Group
  * @param groupId - the id of the group
  */
-export default async function joinGroup(groupId: string): Promise<void> {
+export default async function leaveGroup(groupId: string): Promise<void> {
   try {
     // Find the user id pda.
     const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
@@ -28,7 +28,7 @@ export default async function joinGroup(groupId: string): Promise<void> {
 
     // Send user join group to the anchor program.
     await this.anchorProgram.methods
-      .joinGroup(Number(groupId))
+      .leaveGroup(Number(groupId))
       .accounts({
         user: this.wallet.publicKey,
         userId: UserIdPDA,

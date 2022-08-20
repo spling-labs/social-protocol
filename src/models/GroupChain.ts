@@ -8,6 +8,7 @@ export class GroupChain {
   status: number
   shdw: web3.PublicKey
 
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   constructor(publicKey: web3.PublicKey, accountData: any) {
     this.publicKey = publicKey
     this.timestamp = accountData.ts

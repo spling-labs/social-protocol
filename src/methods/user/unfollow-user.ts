@@ -3,10 +3,10 @@ import { web3 } from '@project-serum/anchor'
 import { programId } from '../../utils/constants'
 
 /**
- * @category Group
- * @param groupId - the id of the group
+ * @category User
+ * @param userId - the id of the user
  */
-export default async function joinGroup(groupId: string): Promise<void> {
+export default async function unfollowUser(userId: string): Promise<void> {
   try {
     // Find the user id pda.
     const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
@@ -26,9 +26,9 @@ export default async function joinGroup(groupId: string): Promise<void> {
       programId,
     )
 
-    // Send user join group to the anchor program.
+    // Send follow user to the anchor program.
     await this.anchorProgram.methods
-      .joinGroup(Number(groupId))
+      .unfollowUser(Number(userId))
       .accounts({
         user: this.wallet.publicKey,
         userId: UserIdPDA,

@@ -81,27 +81,6 @@ export type SocialIDL = {
       ]
     },
     {
-      name: 'deleteUserId'
-      accounts: [
-        {
-          name: 'user'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'userId'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
-      ]
-      args: []
-    },
-    {
       name: 'creategroupid'
       accounts: [
         {
@@ -113,27 +92,6 @@ export type SocialIDL = {
           name: 'stats'
           isMut: true
           isSigner: false
-        },
-        {
-          name: 'groupId'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
-      ]
-      args: []
-    },
-    {
-      name: 'deleteGroupId'
-      accounts: [
-        {
-          name: 'user'
-          isMut: true
-          isSigner: true
         },
         {
           name: 'groupId'
@@ -211,7 +169,69 @@ export type SocialIDL = {
       ]
     },
     {
+      name: 'leaveGroup'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'userId'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'address'
+          type: 'u32'
+        },
+      ]
+    },
+    {
       name: 'followUser'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'userId'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'address'
+          type: 'u32'
+        },
+      ]
+    },
+    {
+      name: 'unfollowUser'
       accounts: [
         {
           name: 'user'
@@ -276,6 +296,107 @@ export type SocialIDL = {
         },
       ]
     },
+    {
+      name: 'deletePost'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'userId'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'post'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'groupId'
+          type: 'u32'
+        },
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
+    {
+      name: 'deleteGroupProfile'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'groupId'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'groupProfile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
+    {
+      name: 'deleteUserProfile'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'userId'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'userId'
+          type: 'u32'
+        },
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
   ]
   accounts: [
     {
@@ -302,30 +423,6 @@ export type SocialIDL = {
           {
             name: 'bump'
             type: 'u8'
-          },
-        ]
-      }
-    },
-    {
-      name: 'PostPk'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'active'
-            type: 'bool'
-          },
-        ]
-      }
-    },
-    {
-      name: 'PostPkClosed'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'active'
-            type: 'bool'
           },
         ]
       }
@@ -555,27 +652,6 @@ export const IDL: SocialIDL = {
       ],
     },
     {
-      name: 'deleteUserId',
-      accounts: [
-        {
-          name: 'user',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'userId',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [],
-    },
-    {
       name: 'creategroupid',
       accounts: [
         {
@@ -587,27 +663,6 @@ export const IDL: SocialIDL = {
           name: 'stats',
           isMut: true,
           isSigner: false,
-        },
-        {
-          name: 'groupId',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: 'deleteGroupId',
-      accounts: [
-        {
-          name: 'user',
-          isMut: true,
-          isSigner: true,
         },
         {
           name: 'groupId',
@@ -685,7 +740,69 @@ export const IDL: SocialIDL = {
       ],
     },
     {
+      name: 'leaveGroup',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'userId',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'address',
+          type: 'u32',
+        },
+      ],
+    },
+    {
       name: 'followUser',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'userId',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'address',
+          type: 'u32',
+        },
+      ],
+    },
+    {
+      name: 'unfollowUser',
       accounts: [
         {
           name: 'user',
@@ -750,6 +867,107 @@ export const IDL: SocialIDL = {
         },
       ],
     },
+    {
+      name: 'deletePost',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'userId',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'post',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'groupId',
+          type: 'u32',
+        },
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
+    {
+      name: 'deleteGroupProfile',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'groupId',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'groupProfile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
+    {
+      name: 'deleteUserProfile',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'userId',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'userId',
+          type: 'u32',
+        },
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
   ],
   accounts: [
     {
@@ -776,30 +994,6 @@ export const IDL: SocialIDL = {
           {
             name: 'bump',
             type: 'u8',
-          },
-        ],
-      },
-    },
-    {
-      name: 'PostPk',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'active',
-            type: 'bool',
-          },
-        ],
-      },
-    },
-    {
-      name: 'PostPkClosed',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'active',
-            type: 'bool',
           },
         ],
       },
