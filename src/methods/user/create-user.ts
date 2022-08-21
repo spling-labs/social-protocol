@@ -19,7 +19,7 @@ export default async function createUser(
   biography: string | null,
 ): Promise<User> {
   try {
-    // Generate files to upload (avatar + biography).
+    // Generate avatar file to upload.
     const userAvatarFile = avatar
       ? new File(
           [convertDataUriToBlob(avatar.base64)],
@@ -72,37 +72,15 @@ export default async function createUser(
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
-    // Find the user id pda.
-    const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('user_id'), this.wallet.publicKey.toBuffer()],
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
-
-    // Find stats pda.
-    const [StatsPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('stats')],
-      programId,
-    )
-
-    // Submit the user id to the anchor program.
-    await this.anchorProgram.methods
-      .createUserid()
-      .accounts({
-        user: this.wallet.publickey,
-        stats: StatsPDA,
-        userId: UserIdPDA,
-      })
-      .rpc()
-
-    // Fetch the user id.
-    const fetchedUserId = await this.anchorProgram.account.userId.fetch(UserIdPDA)
 
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('user_profile'),
-        anchor.utils.bytes.utf8.encode(fetchedUserId.uid.toString()),
-      ],
+      [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
@@ -111,8 +89,9 @@ export default async function createUser(
       .createUserProfile(account.publicKey)
       .accounts({
         user: this.wallet.publicKey,
-        userId: UserIdPDA,
+        spling: SplingPDA,
         userProfile: UserProfilePDA,
+        systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
 

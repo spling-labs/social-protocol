@@ -64,37 +64,15 @@ export default async function createGroup(
     // Upload all files to shadow drive.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
-    // Find the group id pda.
-    const [GroupIdPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('group_id'), this.wallet.publicKey.toBuffer()],
+    // Find the spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
-
-    // Find the stats pda.
-    const [StatsPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('stats')],
-      programId,
-    )
-
-    // Submit the group id to the anchor program.
-    await this.anchorProgram.methods
-      .creategroupid()
-      .accounts({
-        user: this.wallet.publicKey,
-        stats: StatsPDA,
-        groupId: GroupIdPDA,
-      })
-      .rpc()
-
-    // Fetch the group id data.
-    const groupId = await this.anchorProgram.account.groupId.fetch(GroupIdPDA)
 
     // Find the group profile pda.
     const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('group_profile'),
-        anchor.utils.bytes.utf8.encode(groupId.gid.toString()),
-      ],
+      [anchor.utils.bytes.utf8.encode('group_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
@@ -103,8 +81,9 @@ export default async function createGroup(
       .createGroupProfile(account.publicKey)
       .accounts({
         user: this.wallet.publicKey,
-        groupId: GroupIdPDA,
         groupProfile: GroupProfilePDA,
+        spling: SplingPDA,
+        systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
 

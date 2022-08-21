@@ -3,7 +3,7 @@ export type SocialIDL = {
   name: 'spling'
   instructions: [
     {
-      name: 'setupStats'
+      name: 'setupSpling'
       accounts: [
         {
           name: 'user'
@@ -11,33 +11,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'stats'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
-      ]
-      args: []
-    },
-    {
-      name: 'createUserid'
-      accounts: [
-        {
-          name: 'user'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'stats'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -58,7 +32,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -81,32 +55,6 @@ export type SocialIDL = {
       ]
     },
     {
-      name: 'creategroupid'
-      accounts: [
-        {
-          name: 'user'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'stats'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'groupId'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
-      ]
-      args: []
-    },
-    {
       name: 'createGroupProfile'
       accounts: [
         {
@@ -115,7 +63,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'groupId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -146,7 +94,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -177,7 +125,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -208,7 +156,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -239,7 +187,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -270,7 +218,12 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
           isMut: false
           isSigner: false
         },
@@ -305,7 +258,12 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
           isMut: false
           isSigner: false
         },
@@ -340,7 +298,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'groupId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -371,7 +329,7 @@ export type SocialIDL = {
           isSigner: true
         },
         {
-          name: 'userId'
+          name: 'spling'
           isMut: true
           isSigner: false
         },
@@ -428,7 +386,7 @@ export type SocialIDL = {
       }
     },
     {
-      name: 'Stats'
+      name: 'Spling'
       type: {
         kind: 'struct'
         fields: [
@@ -574,7 +532,7 @@ export const IDL: SocialIDL = {
   name: 'spling',
   instructions: [
     {
-      name: 'setupStats',
+      name: 'setupSpling',
       accounts: [
         {
           name: 'user',
@@ -582,33 +540,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'stats',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: 'createUserid',
-      accounts: [
-        {
-          name: 'user',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'stats',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -629,7 +561,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -652,32 +584,6 @@ export const IDL: SocialIDL = {
       ],
     },
     {
-      name: 'creategroupid',
-      accounts: [
-        {
-          name: 'user',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'stats',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'groupId',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [],
-    },
-    {
       name: 'createGroupProfile',
       accounts: [
         {
@@ -686,7 +592,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'groupId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -717,7 +623,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -748,7 +654,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -779,7 +685,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -810,7 +716,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -841,7 +747,12 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
           isMut: false,
           isSigner: false,
         },
@@ -876,7 +787,12 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
           isMut: false,
           isSigner: false,
         },
@@ -911,7 +827,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'groupId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -942,7 +858,7 @@ export const IDL: SocialIDL = {
           isSigner: true,
         },
         {
-          name: 'userId',
+          name: 'spling',
           isMut: true,
           isSigner: false,
         },
@@ -999,7 +915,7 @@ export const IDL: SocialIDL = {
       },
     },
     {
-      name: 'Stats',
+      name: 'Spling',
       type: {
         kind: 'struct',
         fields: [

@@ -1,6 +1,7 @@
 // USER METHODS
 import createUser from './user/create-user'
 import getUser from './user/get-user'
+import deleteUser from './user/delete-user'
 import followUser from './user/follow-user'
 import unfollowUser from './user/unfollow-user'
 
@@ -20,6 +21,7 @@ import deletePost from './post/delete-post'
 export {
   createUser,
   getUser,
+  deleteUser,
   followUser,
   unfollowUser,
   createGroup,
