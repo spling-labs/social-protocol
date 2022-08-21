@@ -523,7 +523,7 @@ export type SocialIDL = {
     },
   ]
   metadata: {
-    address: '28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9'
+    address: '9XXBUPPp5gpsd8ii6NutuyPVQMGJhFSTqcnJawgQenpt'
   }
 }
 
@@ -1052,6 +1052,6 @@ export const IDL: SocialIDL = {
     },
   ],
   metadata: {
-    address: '28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9',
+    address: '9XXBUPPp5gpsd8ii6NutuyPVQMGJhFSTqcnJawgQenpt',
   },
 }
