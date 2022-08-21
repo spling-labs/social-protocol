@@ -1,9 +1,9 @@
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
+import { convertNumberToBase58 } from '../../utils/helpers'
+import { GroupNotFoundError } from '../../utils/errors'
 
 /**
  * @category Group
@@ -11,15 +11,22 @@ import { getGroupFileData } from './helpers'
  */
 export default async function getGroup(groupId: string): Promise<Group> {
   try {
-    // Find the group profile pda.
-    const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('group_profile'), anchor.utils.bytes.utf8.encode(groupId)],
-      programId,
-    )
+    // Fetch the user profile.
+    const onChainGroupProfiles = await this.anchorProgram.account.groupProfile.all([
+      {
+        memcmp: {
+          offset:
+            8 + // Discriminator
+            8 + // Timestamp
+            32, // group
+          bytes: convertNumberToBase58(Number(groupId)),
+        },
+      },
+    ])
+    if (onChainGroupProfiles.length === 0) throw new GroupNotFoundError()
 
-    // Fetch the group profile.
-    const group = await this.anchorProgram.account.groupProfile.fetch(GroupProfilePDA)
-    const groupChain = new GroupChain(GroupProfilePDA, group)
+    const groupProfile = onChainGroupProfiles[0]
+    const groupChain = new GroupChain(groupProfile.publicKey, groupProfile.account)
 
     const groupFileData: GroupFileData = await getGroupFileData(groupChain.shdw)
 

@@ -16,18 +16,9 @@ export default async function deletePost(publicKey: web3.PublicKey): Promise<voi
     const post = await this.anchorProgram.account.post.fetch(publicKey)
     const postChain = new PostChain(publicKey, post)
 
-    // Find user id pda.
-    const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('user_id'), this.wallet.publicKey.toBuffer()],
-      programId,
-    )
-
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('user_profile'),
-        anchor.utils.bytes.utf8.encode(postChain.userId.toString()),
-      ],
+      [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
@@ -72,6 +63,12 @@ export default async function deletePost(publicKey: web3.PublicKey): Promise<voi
       `${postFileData.timestamp}${postChain.userId.toString()}${postChain.groupId.toString()}`,
     )
 
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
+      programId,
+    )
+
     // Find post pda.
     const [PostPDA] = await web3.PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode('post'), hash.publicKey.toBuffer()],
@@ -83,8 +80,9 @@ export default async function deletePost(publicKey: web3.PublicKey): Promise<voi
       .deletePost(postChain.groupId, hash.publicKey)
       .accounts({
         user: this.wallet.publicKey,
-        userId: UserIdPDA,
+        userProfile: UserProfilePDA,
         post: PostPDA,
+        spling: SplingPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()

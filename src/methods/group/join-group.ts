@@ -8,21 +8,15 @@ import { programId } from '../../utils/constants'
  */
 export default async function joinGroup(groupId: string): Promise<void> {
   try {
-    // Find the user id pda.
-    const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('user_id'), this.wallet.publicKey.toBuffer()],
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
-    // Fetch the user id.
-    const fetchedUserId = await this.anchorProgram.account.userId.fetch(UserIdPDA)
-
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('user_profile'),
-        anchor.utils.bytes.utf8.encode(fetchedUserId.uid.toString()),
-      ],
+      [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
@@ -31,8 +25,8 @@ export default async function joinGroup(groupId: string): Promise<void> {
       .joinGroup(Number(groupId))
       .accounts({
         user: this.wallet.publicKey,
-        userId: UserIdPDA,
         userProfile: UserProfilePDA,
+        spling: SplingPDA,
       })
       .rpc()
 
