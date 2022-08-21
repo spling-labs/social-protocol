@@ -11,6 +11,7 @@ import getGroup from './group/get-group'
 import getAllGroups from './group/get-all-groups'
 import joinGroup from './group/join-group'
 import leaveGroup from './group/leave-group'
+import deleteGroup from './group/delete-group'
 
 // POST METHODS
 import createPost from './post/create-post'
@@ -29,6 +30,7 @@ export {
   getAllGroups,
   joinGroup,
   leaveGroup,
+  deleteGroup,
   createPost,
   getPost,
   getAllPosts,
