@@ -10,80 +10,48 @@ describe("spling", () => {
 
   const program = anchor.workspace.Spling as Program<Spling>;
 
+  const shdw = anchor.web3.Keypair.generate();
 
-  it("Sets up stats", async () => {
+
+  it("Sets up spling", async () => {
   
-    const [StatsPDA] = await PublicKey.findProgramAddress(
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('stats'),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
 
       await program.methods
-      .setupStats()
+      .setupSpling()
       .accounts({
         user: provider.wallet.publicKey,
-        stats: StatsPDA,
+        spling: SplingPDA,
       })
       .rpc()
 
-      const stats = await program.account.stats.fetch(StatsPDA);
-      console.log(stats);
+      const spling = await program.account.spling.fetch(SplingPDA);
+      console.log(spling);
 
   });
 
-
-  it("Creates User ID", async () => {
-  
-    const [UserIDPDA] = await PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('user_id'),
-        provider.wallet.publicKey.toBuffer(),
-      ],
-      program.programId
-    )
-
-    const [StatsPDA] = await PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('stats'),
-      ],
-      program.programId
-    )
-
-      await program.methods
-      .createUserid()
-      .accounts({
-        user: provider.wallet.publicKey,
-        stats: StatsPDA,
-        userId: UserIDPDA,
-      })
-      .rpc()
-
-      const user_id = await program.account.userId.fetch(UserIDPDA);
-      console.log(user_id);
-
-  });
 
 
 
   it("Creates User Profile", async () => {
   
-    const [UserIDPDA] = await PublicKey.findProgramAddress(
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('user_id'),
-        provider.wallet.publicKey.toBuffer(),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
 
-    const user_id_pda = await program.account.userId.fetch(UserIDPDA);
-    const uid = user_id_pda.uid;
-
     const [UserProfilePDA] = await PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('user_profile'),
-        uid.toString(),
+        provider.wallet.publicKey.toBuffer(),
       ],
       program.programId
     )
@@ -94,7 +62,7 @@ describe("spling", () => {
       .createUserProfile(shdw.publicKey)
       .accounts({
         user: provider.wallet.publicKey,
-        userId: UserIDPDA,
+        spling: SplingPDA,
         userProfile: UserProfilePDA,
       })
       .rpc()
@@ -106,56 +74,20 @@ describe("spling", () => {
 
 
 
-  it("Creates Group ID", async () => {
-  
-    const [GroupIDPDA] = await PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('group_id'),
-        provider.wallet.publicKey.toBuffer(),
-      ],
-      program.programId
-    )
-
-    const [StatsPDA] = await PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('stats'),
-      ],
-      program.programId
-    )
-
-      await program.methods
-      .creategroupid()
-      .accounts({
-        user: provider.wallet.publicKey,
-        stats: StatsPDA,
-        groupId: GroupIDPDA,
-      })
-      .rpc()
-
-      const group_id = await program.account.groupId.fetch(GroupIDPDA);
-      console.log(group_id);
-
-  });
-
-
   it("Creates Group Profile", async () => {
   
-    const [GroupIDPDA] = await PublicKey.findProgramAddress(
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('group_id'),
-        provider.wallet.publicKey.toBuffer(),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
-
-    const group_id_pda = await program.account.groupId.fetch(GroupIDPDA);
-    const gid = group_id_pda.gid;
-
 
     const [GroupProfilePDA] = await PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('group_profile'),
-        gid.toString(),
+        provider.wallet.publicKey.toBuffer(),
       ],
       program.programId
     )
@@ -166,7 +98,7 @@ describe("spling", () => {
       .createGroupProfile(shdw.publicKey)
       .accounts({
         user: provider.wallet.publicKey,
-        groupId: GroupIDPDA,
+        spling: SplingPDA,
         groupProfile: GroupProfilePDA,
       })
       .rpc()
@@ -174,18 +106,22 @@ describe("spling", () => {
       const group_id = await program.account.groupProfile.fetch(GroupProfilePDA);
       console.log(group_id);
 
-  }); 
+  });
 
 
 
   it("Submits a post", async () => {
 
-    const shdw = anchor.web3.Keypair.generate();
-
-
-    const [UserIDPDA] = await PublicKey.findProgramAddress(
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('user_id'),
+        anchor.utils.bytes.utf8.encode('spling'),
+      ],
+      program.programId
+    )
+
+    const [UserProfilePDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('user_profile'),
         provider.wallet.publicKey.toBuffer(),
       ],
       program.programId
@@ -203,8 +139,9 @@ describe("spling", () => {
       .submitPost(1, shdw.publicKey)
       .accounts({
         user: provider.wallet.publicKey,
-        userId: UserIDPDA,
+        userProfile: UserProfilePDA,
         post: PostPDA,
+        spling: SplingPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
@@ -216,22 +153,18 @@ describe("spling", () => {
 
 
   it("Join a group", async () => {
-  
-    const [UserIDPDA] = await PublicKey.findProgramAddress(
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('user_id'),
-        provider.wallet.publicKey.toBuffer(),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
 
-    const user_id_pda = await program.account.userId.fetch(UserIDPDA);
-    const uid = user_id_pda.uid;
-
     const [UserProfilePDA] = await PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('user_profile'),
-        uid.toString(),
+        provider.wallet.publicKey.toBuffer(),
       ],
       program.programId
     )
@@ -242,8 +175,8 @@ describe("spling", () => {
       .joinGroup(33)
       .accounts({
         user: provider.wallet.publicKey,
-        userId: UserIDPDA,
         userProfile: UserProfilePDA,
+        spling: SplingPDA,
       })
       .rpc()
 
@@ -254,22 +187,18 @@ describe("spling", () => {
 
 
   it("Follow another user", async () => {
-  
-    const [UserIDPDA] = await PublicKey.findProgramAddress(
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('user_id'),
-        provider.wallet.publicKey.toBuffer(),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
 
-    const user_id_pda = await program.account.userId.fetch(UserIDPDA);
-    const uid = user_id_pda.uid;
-
     const [UserProfilePDA] = await PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode('user_profile'),
-        uid.toString(),
+        provider.wallet.publicKey.toBuffer(),
       ],
       program.programId
     )
@@ -280,8 +209,8 @@ describe("spling", () => {
       .followUser(4)
       .accounts({
         user: provider.wallet.publicKey,
-        userId: UserIDPDA,
         userProfile: UserProfilePDA,
+        spling: SplingPDA,
       })
       .rpc()
 
@@ -292,26 +221,139 @@ describe("spling", () => {
 
 
 
-  it("Check stats", async () => {
+  it("Check spling", async () => {
   
-    const [StatsPDA] = await PublicKey.findProgramAddress(
+    const [SplingPDA] = await PublicKey.findProgramAddress(
       [
-        anchor.utils.bytes.utf8.encode('stats'),
+        anchor.utils.bytes.utf8.encode('spling'),
       ],
       program.programId
     )
 
-      const stats = await program.account.stats.fetch(StatsPDA);
-      console.log(stats);
+      // const spling = await program.account.spling.fetch(SplingPDA);
+      // console.log(spling);
 
   });
 
-  it("Fetch all PDA's", async () => {
-    const stats = await program.account.post.all();
-    console.log(stats[0].publicKey);
+  it("Show group membership", async () => {
+    const spling = await program.account.userProfile.all();
+    console.log(spling[0].account.groups);
+  });
 
-    const test = await program.account.post.fetch(stats[0].publicKey);
-    console.log(test);
+
+  it("Unfollow another user", async () => {
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('spling'),
+      ],
+      program.programId
+    )
+
+    const [UserProfilePDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('user_profile'),
+        provider.wallet.publicKey.toBuffer(),
+      ],
+      program.programId
+    )
+
+    const shdw = anchor.web3.Keypair.generate();
+
+      await program.methods
+      .unfollowUser(4)
+      .accounts({
+        user: provider.wallet.publicKey,
+        userProfile: UserProfilePDA,
+        spling: SplingPDA,
+      })
+      .rpc()
+
+      const user_id = await program.account.userProfile.fetch(UserProfilePDA);
+      console.log(user_id);
+
+  });
+
+  it("Leave a group", async () => {
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('spling'),
+      ],
+      program.programId
+    )
+
+    const [UserProfilePDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('user_profile'),
+        provider.wallet.publicKey.toBuffer(),
+      ],
+      program.programId
+    )
+
+    const shdw = anchor.web3.Keypair.generate();
+
+      await program.methods
+      .leaveGroup(33)
+      .accounts({
+        user: provider.wallet.publicKey,
+        userProfile: UserProfilePDA,
+        spling: SplingPDA,
+      })
+      .rpc()
+
+      // const user_id = await program.account.userProfile.fetch(UserProfilePDA);
+      // console.log(user_id);
+
+  });
+
+  it("Show group memberships", async () => {
+    const spling = await program.account.userProfile.all();
+    console.log(spling[0].account.groups);
+  });
+
+
+
+
+  it("Delete a post", async () => {
+
+    const [SplingPDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('spling'),
+      ],
+      program.programId
+    )
+
+    const [UserProfilePDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('user_profile'),
+        provider.wallet.publicKey.toBuffer(),
+      ],
+      program.programId
+    )
+
+    const [PostPDA] = await PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('post'),
+        shdw.publicKey.toBuffer(),
+      ],
+      program.programId
+    )
+
+      await program.methods
+      .deletePost(1, shdw.publicKey)
+      .accounts({
+        user: provider.wallet.publicKey,
+        userProfile: UserProfilePDA,
+        post: PostPDA,
+        spling: SplingPDA,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc()
+
+      // const post = await program.account.post.fetch(PostPDA);
+      // console.log(post);
+
   });
 
 
