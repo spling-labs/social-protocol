@@ -11,6 +11,7 @@ import {
   getPost,
   getGroup,
   getUser,
+  deleteUser,
   followUser,
   unfollowUser,
   deletePost,
@@ -30,6 +31,7 @@ interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
   getUser(userId: string): Promise<User>
+  deleteUser(): Promise<void>
   followUser(userId: string): Promise<void>
   unfollowUser(userId: string): Promise<void>
 
@@ -54,6 +56,7 @@ export class SocialProtocol implements SplingProtocol {
   // USER METHODS
   createUser = createUser
   getUser = getUser
+  deleteUser = deleteUser
   followUser = followUser
   unfollowUser = unfollowUser
 

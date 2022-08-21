@@ -1,9 +1,9 @@
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { shadowDriveDomain } from '../../utils/constants'
 import { User, UserFileData } from '../../types'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
+import { UserNotFoundError } from '../../utils/errors'
+import { convertNumberToBase58 } from '../../utils/helpers'
 
 /**
  * @category User
@@ -11,18 +11,22 @@ import { getUserFileData } from './helpers'
  */
 export default async function getUser(userId: string): Promise<User> {
   try {
-    // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('user_profile'),
-        anchor.utils.bytes.utf8.encode(userId.toString()),
-      ],
-      programId,
-    )
-
     // Fetch the user profile.
-    const profile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(UserProfilePDA, profile)
+    const onChainProfiles = await this.anchorProgram.account.userProfile.all([
+      {
+        memcmp: {
+          offset:
+            8 + // Discriminator
+            8 + // Timestamp
+            32, // user
+          bytes: convertNumberToBase58(Number(userId)),
+        },
+      },
+    ])
+    if (onChainProfiles.length === 0) throw new UserNotFoundError()
+
+    const profile = onChainProfiles[onChainProfiles.length - 1]
+    const userChain = new UserChain(profile.publicKey, profile.account)
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)

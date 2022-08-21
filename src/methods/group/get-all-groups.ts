@@ -1,41 +1,21 @@
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models/GroupChain'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
 
 /**
  * @category Group
  */
 export default async function getAllGroups(): Promise<Group[]> {
   try {
-    // Find the stats pda.
-    const [StatsPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('stats')],
-      programId,
-    )
-
-    // Fetch the stats.
-    const stats = await this.anchorProgram.account.stats.fetch(StatsPDA)
-    const groupsNumber: number = stats.groups
+    // Fetch the groups.
+    const onChainGroups = await this.anchorProgram.account.groupProfile.all()
 
     const groups: Group[] = []
-    for (let groupId = 1; groupId <= groupsNumber; groupId++) {
+    for (const g in onChainGroups) {
       try {
-        // Find the group profile pda.
-        const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
-          [
-            anchor.utils.bytes.utf8.encode('group_profile'),
-            anchor.utils.bytes.utf8.encode(groupId.toString()),
-          ],
-          programId,
-        )
-
-        // Fetch the group profile.
-        const group = await this.anchorProgram.account.groupProfile.fetch(GroupProfilePDA)
-        const groupChain = new GroupChain(GroupProfilePDA, group)
-
+        const onChainGroup = onChainGroups[g]
+        const groupChain = new GroupChain(onChainGroup.publicKey, onChainGroup.account)
         const groupFileData: GroupFileData = await getGroupFileData(groupChain.shdw)
 
         // Push group data to array.

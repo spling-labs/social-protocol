@@ -8,7 +8,7 @@ import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import dayjs from 'dayjs'
-import { PostChain } from '../../models'
+import { PostChain, UserChain } from '../../models'
 
 /**
  * @category Post
@@ -22,21 +22,29 @@ export default async function createPost(
   image: FileData | null,
 ): Promise<Post> {
   try {
-    // Find user id pda.
-    const [UserIdPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('user_id'), this.wallet.publicKey.toBuffer()],
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
+      programId,
+    )
+
+    // Find the user profile pda.
+    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
     // Fetch the user id.
-    const fetchedUserId = await this.anchorProgram.account.userId.fetch(UserIdPDA)
-    const userId = fetchedUserId.uid
+    const fetchedUserProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+    const userChain = new UserChain(UserProfilePDA, fetchedUserProfile)
 
     // Get current timestamp.
     const timestamp: string = dayjs().unix().toString()
 
     // Generate the hash from the text.
-    const hash: web3.Keypair = getKeypairFromSeed(`${timestamp}${userId.toString()}${groupId}`)
+    const hash: web3.Keypair = getKeypairFromSeed(
+      `${timestamp}${userChain.userId.toString()}${groupId}`,
+    )
 
     // Find post pda.
     const [PostPDA] = await web3.PublicKey.findProgramAddress(
@@ -77,7 +85,7 @@ export default async function createPost(
     const postJson: PostFileData = {
       timestamp: timestamp,
       programId: programId.toString(),
-      userId: userId,
+      userId: userChain.userId.toString(),
       groupId: groupId,
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
@@ -101,8 +109,9 @@ export default async function createPost(
       .submitPost(Number(groupId), hash.publicKey)
       .accounts({
         user: this.wallet.publicKey,
-        userId: UserIdPDA,
+        userProfile: UserProfilePDA,
         post: PostPDA,
+        spling: SplingPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
