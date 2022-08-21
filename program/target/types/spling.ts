@@ -3,7 +3,7 @@ export type Spling = {
   "name": "spling",
   "instructions": [
     {
-      "name": "setupStats",
+      "name": "setupSpling",
       "accounts": [
         {
           "name": "user",
@@ -11,33 +11,7 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createUserid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -58,7 +32,7 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -81,74 +55,6 @@ export type Spling = {
       ]
     },
     {
-      "name": "deleteUserId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "creategroupid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "deleteGroupId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "createGroupProfile",
       "accounts": [
         {
@@ -157,7 +63,7 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "groupId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -188,7 +94,38 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "leaveGroup",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -219,7 +156,38 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "unfollowUser",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -250,14 +218,19 @@ export type Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "post",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -269,6 +242,116 @@ export type Spling = {
         {
           "name": "groupId",
           "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deletePost",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "groupId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteGroupProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "groupProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteUserProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "userId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
         }
       ]
     }
@@ -294,12 +377,16 @@ export type Spling = {
           {
             "name": "st",
             "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
     },
     {
-      "name": "stats",
+      "name": "spling",
       "type": {
         "kind": "struct",
         "fields": [
@@ -442,7 +529,7 @@ export const IDL: Spling = {
   "name": "spling",
   "instructions": [
     {
-      "name": "setupStats",
+      "name": "setupSpling",
       "accounts": [
         {
           "name": "user",
@@ -450,33 +537,7 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createUserid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -497,7 +558,7 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -520,74 +581,6 @@ export const IDL: Spling = {
       ]
     },
     {
-      "name": "deleteUserId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "creategroupid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "deleteGroupId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "createGroupProfile",
       "accounts": [
         {
@@ -596,7 +589,7 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "groupId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -627,7 +620,38 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "leaveGroup",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -658,7 +682,38 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "unfollowUser",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -689,14 +744,19 @@ export const IDL: Spling = {
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "post",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -708,6 +768,116 @@ export const IDL: Spling = {
         {
           "name": "groupId",
           "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deletePost",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "groupId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteGroupProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "groupProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteUserProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "userId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
         }
       ]
     }
@@ -733,12 +903,16 @@ export const IDL: Spling = {
           {
             "name": "st",
             "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
     },
     {
-      "name": "stats",
+      "name": "spling",
       "type": {
         "kind": "struct",
         "fields": [

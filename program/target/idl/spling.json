@@ -3,7 +3,7 @@
   "name": "spling",
   "instructions": [
     {
-      "name": "setupStats",
+      "name": "setupSpling",
       "accounts": [
         {
           "name": "user",
@@ -11,33 +11,7 @@
           "isSigner": true
         },
         {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createUserid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -58,7 +32,7 @@
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -81,74 +55,6 @@
       ]
     },
     {
-      "name": "deleteUserId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "creategroupid",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "stats",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "deleteGroupId",
-      "accounts": [
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "groupId",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "createGroupProfile",
       "accounts": [
         {
@@ -157,7 +63,7 @@
           "isSigner": true
         },
         {
-          "name": "groupId",
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -188,7 +94,38 @@
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "leaveGroup",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -219,7 +156,38 @@
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "unfollowUser",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
           "isMut": true,
           "isSigner": false
         },
@@ -250,14 +218,19 @@
           "isSigner": true
         },
         {
-          "name": "userId",
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "post",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -269,6 +242,116 @@
         {
           "name": "groupId",
           "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deletePost",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "groupId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteGroupProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "groupProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "shdw",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "deleteUserProfile",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "spling",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "userId",
+          "type": "u32"
+        },
+        {
+          "name": "shdw",
+          "type": "publicKey"
         }
       ]
     }
@@ -294,12 +377,16 @@
           {
             "name": "st",
             "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
     },
     {
-      "name": "Stats",
+      "name": "Spling",
       "type": {
         "kind": "struct",
         "fields": [
@@ -436,6 +523,6 @@
     }
   ],
   "metadata": {
-    "address": "28fAzkcpA8pgTT8AtJGkWqSRkU8yznhBdEZBCxqRhHR9"
+    "address": "9XXBUPPp5gpsd8ii6NutuyPVQMGJhFSTqcnJawgQenpt"
   }
 }
