@@ -11,7 +11,7 @@ import { GroupNotFoundError } from '../../utils/errors'
  */
 export default async function getGroup(groupId: string): Promise<Group> {
   try {
-    // Fetch the user profile.
+    // Fetch the group by groupId.
     const onChainGroupProfiles = await this.anchorProgram.account.groupProfile.all([
       {
         memcmp: {
