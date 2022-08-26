@@ -1,0 +1,51 @@
+import { programId, shadowDriveDomain } from '../../utils/constants'
+import { User, UserFileData } from '../../types'
+import { UserChain } from '../../models'
+import { getUserFileData } from './helpers'
+import { web3 } from '@project-serum/anchor'
+import * as anchor from '@project-serum/anchor'
+import { UserNotFoundError } from '../../utils/errors'
+
+/**
+ * @category User
+ * @param publicKey - The public key of the user.
+ */
+export default async function getUserByPublicKey(publicKey: web3.PublicKey): Promise<User> {
+  try {
+    // Find the user profile pda.
+    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('user_profile'), publicKey.toBuffer()],
+      programId,
+    )
+
+    // Fetch the user profile from the anchor program.
+    const onChainProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+    const userChain = new UserChain(publicKey, onChainProfile)
+
+    // Get user profile json file from the shadow drive.
+    const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
+
+    return Promise.resolve({
+      timestamp: userChain.timestamp,
+      publicKey: userChain.user,
+      userId: userChain.userId,
+      status: userChain.status,
+      shdw: userChain.shdw,
+      following: userChain.following,
+      groups: userChain.groups,
+      nickname: userProfileJson.nickname,
+      bio: userProfileJson.bio,
+      avatar:
+        userProfileJson.avatar != null
+          ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+          : null,
+      banner: null,
+      socials: userProfileJson.socials,
+      license: userProfileJson.license,
+    } as User)
+  } catch (error) {
+    if (error.message.includes('Account does not exist'))
+      return Promise.reject(new UserNotFoundError())
+    else return Promise.reject(error)
+  }
+}
