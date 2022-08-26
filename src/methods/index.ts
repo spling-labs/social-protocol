@@ -13,6 +13,7 @@ import getAllGroups from './group/get-all-groups'
 import getUserGroup from './group/get-user-group'
 import joinGroup from './group/join-group'
 import leaveGroup from './group/leave-group'
+import deleteGroup from './group/delete-group'
 
 // POST METHODS
 import createPost from './post/create-post'
@@ -33,6 +34,7 @@ export {
   getUserGroup,
   joinGroup,
   leaveGroup,
+  deleteGroup,
   createPost,
   getPost,
   getAllPosts,

@@ -9,6 +9,7 @@ import {
   getUserGroup,
   joinGroup,
   leaveGroup,
+  deleteGroup,
   getPost,
   getGroup,
   getUser,
@@ -45,6 +46,7 @@ interface SplingProtocol {
   getAllGroups(): Promise<Group[]>
   joinGroup(groupId: string): Promise<void>
   leaveGroup(groupId: string): Promise<void>
+  deleteGroup(): Promise<void>
 
   // POST METHODS
   createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
@@ -72,6 +74,7 @@ export class SocialProtocol implements SplingProtocol {
   getAllGroups = getAllGroups
   joinGroup = joinGroup
   leaveGroup = leaveGroup
+  deleteGroup = deleteGroup
 
   // POST METHODS
   createPost = createPost
