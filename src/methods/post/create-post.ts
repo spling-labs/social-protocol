@@ -8,7 +8,7 @@ import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import dayjs from 'dayjs'
-import { PostChain, UserChain } from '../../models'
+import { UserChain } from '../../models'
 
 /**
  * @category Post
@@ -116,14 +116,10 @@ export default async function createPost(
       })
       .rpc()
 
-    // Fetch the post from the anchor program.
-    const post = await this.anchorProgram.account.post.fetch(PostPDA)
-    const postChain = new PostChain(PostPDA, post)
-
     return Promise.resolve({
-      timestamp: postChain.timestamp,
-      publicKey: postChain.publicKey,
-      status: postChain.status,
+      timestamp: Number(timestamp),
+      publicKey: PostPDA,
+      status: 1,
       programId: postJson.programId,
       userId: postJson.userId,
       groupId: postJson.groupId,

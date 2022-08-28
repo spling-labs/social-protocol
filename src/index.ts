@@ -34,7 +34,7 @@ interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
   getUser(userId: string): Promise<User>
-  getUserByPublicKey(publicKey: web3.PublicKey): Promise<User>
+  getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null>
   deleteUser(): Promise<void>
   followUser(userId: string): Promise<void>
   unfollowUser(userId: string): Promise<void>
@@ -42,7 +42,7 @@ interface SplingProtocol {
   // GROUP METHODS
   createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
   getGroup(groupId: string): Promise<Group>
-  getUserGroup(publicKey: web3.PublicKey): Promise<Group>
+  getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
   getAllGroups(): Promise<Group[]>
   joinGroup(groupId: string): Promise<void>
   leaveGroup(groupId: string): Promise<void>
