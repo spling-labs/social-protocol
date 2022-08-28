@@ -43,7 +43,7 @@ export default async function createGroup(
 
     // Generate the group json.
     const groupJson: GroupFileData = {
-      timestamp: dayjs(new Date()).unix.toString(),
+      timestamp: dayjs().unix().toString(),
       name: name,
       bio: bio ? bio : '',
       avatar: avatarUploadFile
