@@ -49,7 +49,7 @@ export default async function createUser(
 
     // Generate the user profile json.
     const userProfileJson: UserFileData = {
-      timestamp: dayjs(new Date()).unix.toString(),
+      timestamp: dayjs().unix().toString(),
       nickname: nickname,
       bio: biography ? biography : '',
       avatar: userAvatarFile
