@@ -4,13 +4,12 @@ import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 import { web3 } from '@project-serum/anchor'
 import * as anchor from '@project-serum/anchor'
-import { UserNotFoundError } from '../../utils/errors'
 
 /**
  * @category User
  * @param publicKey - The public key of the user.
  */
-export default async function getUserByPublicKey(publicKey: web3.PublicKey): Promise<User> {
+export default async function getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null> {
   try {
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
@@ -44,8 +43,7 @@ export default async function getUserByPublicKey(publicKey: web3.PublicKey): Pro
       license: userProfileJson.license,
     } as User)
   } catch (error) {
-    if (error.message.includes('Account does not exist'))
-      return Promise.reject(new UserNotFoundError())
+    if (error.message.includes('Account does not exist')) return Promise.resolve(null)
     else return Promise.reject(error)
   }
 }
