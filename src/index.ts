@@ -12,6 +12,7 @@ import {
   deleteGroup,
   getPost,
   getGroup,
+  getGroupByPublicKey,
   getUser,
   getUserByPublicKey,
   deleteUser,
@@ -42,6 +43,7 @@ interface SplingProtocol {
   // GROUP METHODS
   createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
   getGroup(groupId: string): Promise<Group>
+  getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
   getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
   getAllGroups(): Promise<Group[]>
   joinGroup(groupId: string): Promise<void>
@@ -70,6 +72,7 @@ export class SocialProtocol implements SplingProtocol {
   // GROUP METHODS
   createGroup = createGroup
   getGroup = getGroup
+  getGroupByPublicKey = getGroupByPublicKey
   getUserGroup = getUserGroup
   getAllGroups = getAllGroups
   joinGroup = joinGroup

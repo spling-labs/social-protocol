@@ -24,28 +24,40 @@ export default async function deleteGroup(): Promise<void> {
 
     // Remove avatar file.
     if (groupFileData.avatar != null) {
-      await this.shadowDrive.deleteFile(
-        groupChain.shdw.toString(),
-        `${shadowDriveDomain}${groupChain.shdw.toString()}/${groupFileData.avatar.file}`,
-        'v2',
-      )
+      try {
+        await this.shadowDrive.deleteFile(
+          groupChain.shdw.toString(),
+          `${shadowDriveDomain}${groupChain.shdw.toString()}/${groupFileData.avatar.file}`,
+          'v2',
+        )
+      } catch (error) {
+        // Nothing to do here.
+      }
     }
 
     // Remove banner file.
     if (groupFileData.banner != null) {
-      await this.shadowDrive.deleteFile(
-        groupChain.shdw.toString(),
-        `${shadowDriveDomain}${groupChain.shdw.toString()}/${groupFileData.banner.file}`,
-        'v2',
-      )
+      try {
+        await this.shadowDrive.deleteFile(
+          groupChain.shdw.toString(),
+          `${shadowDriveDomain}${groupChain.shdw.toString()}/${groupFileData.banner.file}`,
+          'v2',
+        )
+      } catch (error) {
+        // Nothing to do here.
+      }
     }
 
     // Delete group json file from the shadow drive.
-    await this.shadowDrive.deleteFile(
-      groupChain.shdw.toString(),
-      `${shadowDriveDomain}${groupChain.shdw.toString()}/group.json`,
-      'v2',
-    )
+    try {
+      await this.shadowDrive.deleteFile(
+        groupChain.shdw.toString(),
+        `${shadowDriveDomain}${groupChain.shdw.toString()}/group.json`,
+        'v2',
+      )
+    } catch (error) {
+      // Nothing to do here.
+    }
 
     // Find spling pda.
     const [SplingPDA] = await web3.PublicKey.findProgramAddress(

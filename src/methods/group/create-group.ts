@@ -18,7 +18,10 @@ export default async function createGroup(
   try {
     // Generate avatar file to upload.
     const avatarUploadFile = avatar
-      ? new File([convertDataUriToBlob(avatar.base64)], `group.${avatar?.type.split('/')[1]}`)
+      ? new File(
+          [convertDataUriToBlob(avatar.base64)],
+          `group-avatar.${avatar?.type.split('/')[1]}`,
+        )
       : null
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the group.json.
@@ -88,7 +91,14 @@ export default async function createGroup(
       .rpc()
 
     // Fetch the group profile from the anchor program.
-    const groupProfile = await this.anchorProgram.account.groupProfile.fetch(GroupProfilePDA)
+    let groupProfile = null
+    while (groupProfile == null) {
+      try {
+        groupProfile = await this.anchorProgram.account.groupProfile.fetch(GroupProfilePDA)
+      } catch (error) {
+        // Nothing to do here.
+      }
+    }
     const groupChain = new GroupChain(groupProfile.publicKey, groupProfile)
 
     return Promise.resolve({
