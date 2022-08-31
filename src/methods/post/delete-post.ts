@@ -34,29 +34,41 @@ export default async function deletePost(publicKey: web3.PublicKey): Promise<voi
 
     // Remove text file.
     if (postFileData.text != null) {
-      await this.shadowDrive.deleteFile(
-        userChain.shdw.toString(),
-        `${shadowDriveDomain}${userChain.shdw.toString()}/${postFileData.text}`,
-        'v2',
-      )
+      try {
+        await this.shadowDrive.deleteFile(
+          userChain.shdw.toString(),
+          `${shadowDriveDomain}${userChain.shdw.toString()}/${postFileData.text}`,
+          'v2',
+        )
+      } catch (error) {
+        // Nothing to do here.
+      }
     }
 
     // Remove all media files from post from the shadow drive.
     for (const m in postFileData.media) {
-      const media = postFileData.media[m]
-      await this.shadowDrive.deleteFile(
-        userChain.shdw.toString(),
-        `${shadowDriveDomain}${userChain.shdw.toString()}/${media.file}`,
-        'v2',
-      )
+      try {
+        const media = postFileData.media[m]
+        await this.shadowDrive.deleteFile(
+          userChain.shdw.toString(),
+          `${shadowDriveDomain}${userChain.shdw.toString()}/${media.file}`,
+          'v2',
+        )
+      } catch (error) {
+        // Nothing to do here.
+      }
     }
 
     // Delete post json file from the shadow drive.
-    await this.shadowDrive.deleteFile(
-      userChain.shdw.toString(),
-      `${shadowDriveDomain}${userChain.shdw.toString()}/${publicKey.toString()}.json`,
-      'v2',
-    )
+    try {
+      await this.shadowDrive.deleteFile(
+        userChain.shdw.toString(),
+        `${shadowDriveDomain}${userChain.shdw.toString()}/${publicKey.toString()}.json`,
+        'v2',
+      )
+    } catch (error) {
+      // Nothing to do here.
+    }
 
     // Generate the post hash.
     const hash: web3.Keypair = getKeypairFromSeed(
