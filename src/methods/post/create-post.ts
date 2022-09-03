@@ -6,9 +6,10 @@ import {
 import { FileData, Post, PostFileData, MediaData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { programId } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { UserChain } from '../../models'
+import { getMediaDataWithUrl } from './helpers'
 
 /**
  * @category Post
@@ -17,7 +18,7 @@ import { UserChain } from '../../models'
  * @param image - The image of the post.
  */
 export default async function createPost(
-  groupId: string,
+  groupId: number,
   text: string | null,
   image: FileData | null,
 ): Promise<Post> {
@@ -43,7 +44,7 @@ export default async function createPost(
 
     // Generate the hash from the text.
     const hash: web3.Keypair = getKeypairFromSeed(
-      `${timestamp}${userChain.userId.toString()}${groupId}`,
+      `${timestamp}${userChain.userId.toString()}${groupId.toString()}`,
     )
 
     // Find post pda.
@@ -86,7 +87,7 @@ export default async function createPost(
       timestamp: timestamp,
       programId: programId.toString(),
       userId: userChain.userId.toString(),
-      groupId: groupId,
+      groupId: groupId.toString(),
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
@@ -106,7 +107,7 @@ export default async function createPost(
 
     // Submit the post to the anchor program.
     await this.anchorProgram.methods
-      .submitPost(Number(groupId), hash.publicKey)
+      .submitPost(groupId, hash.publicKey)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,
@@ -121,10 +122,10 @@ export default async function createPost(
       publicKey: PostPDA,
       status: 1,
       programId: postJson.programId,
-      userId: postJson.userId,
-      groupId: postJson.groupId,
+      userId: Number(postJson.userId),
+      groupId: Number(postJson.groupId),
       text: text ? text : null,
-      media: image ? [`${shadowDriveDomain}${account.publicKey}/${postJson.media[0].file}`] : [],
+      media: getMediaDataWithUrl(postJson.media, account.publicKey),
       license: postJson.license,
     } as Post)
   } catch (error) {

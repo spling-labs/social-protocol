@@ -1,6 +1,6 @@
 {
   "name": "@spling/social-protocol",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "The official spling social protocol. Create your own solona on-chain social media app with this protocol.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

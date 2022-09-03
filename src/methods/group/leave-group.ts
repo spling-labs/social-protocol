@@ -6,7 +6,7 @@ import { programId } from '../../utils/constants'
  * @category Group
  * @param groupId - the id of the group
  */
-export default async function leaveGroup(groupId: string): Promise<void> {
+export default async function leaveGroup(groupId: number): Promise<void> {
   try {
     // Find spling pda.
     const [SplingPDA] = await web3.PublicKey.findProgramAddress(
@@ -22,7 +22,7 @@ export default async function leaveGroup(groupId: string): Promise<void> {
 
     // Send user join group to the anchor program.
     await this.anchorProgram.methods
-      .leaveGroup(Number(groupId))
+      .leaveGroup(groupId)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,

@@ -34,26 +34,26 @@ import {
 interface SplingProtocol {
   // USER METHODS
   createUser(username: string, avatar: FileData, biography: string): Promise<User>
-  getUser(userId: string): Promise<User>
+  getUser(userId: number): Promise<User>
   getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null>
   deleteUser(): Promise<void>
-  followUser(userId: string): Promise<void>
-  unfollowUser(userId: string): Promise<void>
+  followUser(userId: number): Promise<void>
+  unfollowUser(userId: number): Promise<void>
 
   // GROUP METHODS
   createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
-  getGroup(groupId: string): Promise<Group>
+  getGroup(groupId: number): Promise<Group>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
   getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
   getAllGroups(): Promise<Group[]>
-  joinGroup(groupId: string): Promise<void>
-  leaveGroup(groupId: string): Promise<void>
+  joinGroup(groupId: number): Promise<void>
+  leaveGroup(groupId: number): Promise<void>
   deleteGroup(): Promise<void>
 
   // POST METHODS
-  createPost(groupId: string, text: string | null, image: FileData | null): Promise<Post>
+  createPost(groupId: number, text: string | null, image: FileData | null): Promise<Post>
   getPost(publicKey: web3.PublicKey): Promise<Post>
-  getAllPosts(groupId: string): Promise<Post[]>
+  getAllPosts(groupId: number): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
 }
 

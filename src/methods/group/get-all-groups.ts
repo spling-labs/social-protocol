@@ -22,7 +22,6 @@ export default async function getAllGroups(): Promise<Group[]> {
         groups.push({
           timestamp: groupChain.timestamp,
           publicKey: groupChain.publicKey,
-          group: groupChain.publicKey,
           groupId: groupChain.groupId,
           status: groupChain.status,
           shdw: groupChain.shdw,

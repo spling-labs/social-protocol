@@ -2,14 +2,14 @@ import { shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
-import { convertNumberToBase58 } from '../../utils/helpers'
 import { GroupNotFoundError } from '../../utils/errors'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 
 /**
  * @category Group
  * @param groupId - the id of the group
  */
-export default async function getGroup(groupId: string): Promise<Group> {
+export default async function getGroup(groupId: number): Promise<Group> {
   try {
     // Fetch the group by groupId.
     const onChainGroupProfiles = await this.anchorProgram.account.groupProfile.all([
@@ -19,7 +19,7 @@ export default async function getGroup(groupId: string): Promise<Group> {
             8 + // Discriminator
             8 + // Timestamp
             32, // group
-          bytes: convertNumberToBase58(Number(groupId)),
+          bytes: bs58.encode(Uint8Array.from([groupId])),
         },
       },
     ])
@@ -33,7 +33,6 @@ export default async function getGroup(groupId: string): Promise<Group> {
     return Promise.resolve({
       timestamp: groupChain.timestamp,
       publicKey: groupChain.publicKey,
-      group: groupChain.group,
       groupId: groupChain.groupId,
       status: groupChain.status,
       shdw: groupChain.shdw,

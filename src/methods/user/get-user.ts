@@ -3,13 +3,13 @@ import { User, UserFileData } from '../../types'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 import { UserNotFoundError } from '../../utils/errors'
-import { convertNumberToBase58 } from '../../utils/helpers'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 
 /**
  * @category User
  * @param userId - The id of the user.
  */
-export default async function getUser(userId: string): Promise<User> {
+export default async function getUser(userId: number): Promise<User> {
   try {
     // Fetch the user profile.
     const onChainProfiles = await this.anchorProgram.account.userProfile.all([
@@ -19,7 +19,7 @@ export default async function getUser(userId: string): Promise<User> {
             8 + // Discriminator
             8 + // Timestamp
             32, // user
-          bytes: convertNumberToBase58(Number(userId)),
+          bytes: bs58.encode(Uint8Array.from([userId])),
         },
       },
     ])
@@ -34,7 +34,7 @@ export default async function getUser(userId: string): Promise<User> {
     return Promise.resolve({
       timestamp: userChain.timestamp,
       publicKey: userChain.user,
-      userId: Number(userId),
+      userId: userId,
       status: userChain.status,
       shdw: userChain.shdw,
       following: userChain.following,

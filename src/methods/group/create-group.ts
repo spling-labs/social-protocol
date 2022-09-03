@@ -104,7 +104,6 @@ export default async function createGroup(
     return Promise.resolve({
       timestamp: groupChain.timestamp,
       publicKey: groupChain.publicKey,
-      group: groupChain.group,
       groupId: groupChain.groupId,
       status: groupChain.status,
       shdw: account.publicKey,
