@@ -19,7 +19,6 @@ export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Pr
     return Promise.resolve({
       timestamp: groupChain.timestamp,
       publicKey: publicKey,
-      group: groupChain.group,
       groupId: groupChain.groupId,
       status: groupChain.status,
       shdw: groupChain.shdw,

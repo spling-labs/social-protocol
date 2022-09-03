@@ -1,10 +1,12 @@
 import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
-import { Post, PostFileData } from '../../types'
-import { getPostFileData } from './helpers'
-import { convertNumberToBase58, getTextFromFile } from '../../utils/helpers'
+import { Post, PostFileData, UserFileData } from '../../types'
+import { getMediaDataWithUrl, getPostFileData } from './helpers'
+import { getTextFromFile } from '../../utils/helpers'
 import { UserNotFoundError } from '../../utils/errors'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { getUserFileData } from '../user/helpers'
 
 /**
  * @category Post
@@ -24,7 +26,7 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post> 
             8 + // Discriminator
             8 + // Timestamp
             32, // user
-          bytes: convertNumberToBase58(postChain.userId),
+          bytes: bs58.encode(Uint8Array.from([postChain.userId])),
         },
       },
     ])
@@ -41,19 +43,24 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post> 
       )
     }
 
+    // Get user profile json file from the shadow drive.
+    const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
+
     return Promise.resolve({
       timestamp: postChain.timestamp,
       publicKey: publicKey,
       status: postChain.status,
       programId: postFileData.programId,
-      userId: postFileData.userId,
-      groupId: postFileData.groupId,
+      userId: Number(postFileData.userId),
+      groupId: Number(postFileData.groupId),
       text: postFileData.text,
-      media:
-        postFileData.media.length > 0
-          ? [`${shadowDriveDomain}${userChain.shdw.toString()}/${postFileData.media[0].file}`]
-          : [],
+      media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
       license: postFileData.license,
+      userNickname: userProfileJson.nickname,
+      userAvatar:
+        userProfileJson.avatar != null
+          ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+          : null,
     } as Post)
   } catch (error) {
     return Promise.reject(error)
