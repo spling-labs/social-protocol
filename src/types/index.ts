@@ -48,7 +48,6 @@ export type GroupFileData = {
 export type Group = {
   timestamp: number
   publicKey: web3.PublicKey
-  group: web3.PublicKey
   groupId: number
   status: number
   shdw: web3.PublicKey
@@ -74,11 +73,13 @@ export type Post = {
   publicKey: web3.PublicKey
   status: number
   programId: string
-  userId: string
-  groupId: string
+  userId: number
+  groupId: number
   text: string
-  media: string[]
+  media: MediaData[]
   license: string | null
+  userNickname: string
+  userAvatar: string | null
 }
 
 export type Reply = {

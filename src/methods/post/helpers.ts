@@ -1,7 +1,7 @@
 import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostNotFoundError } from '../../utils/errors'
-import { PostFileData } from '../../types'
+import { MediaData, PostFileData } from '../../types'
 
 export async function getPostFileData(
   publicKey: web3.PublicKey,
@@ -21,4 +21,16 @@ export async function getPostFileData(
   } catch (error) {
     return Promise.reject(error)
   }
+}
+
+export function getMediaDataWithUrl(
+  mediaData: MediaData[],
+  shdwPublicKey: web3.PublicKey,
+): MediaData[] {
+  return mediaData.map((media) => {
+    return {
+      file: `${shadowDriveDomain}${shdwPublicKey.toString()}/${media.file}`,
+      type: media.type,
+    } as MediaData
+  })
 }

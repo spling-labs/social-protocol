@@ -1,15 +1,17 @@
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
-import { Post, PostFileData } from '../../types'
-import { getPostFileData } from './helpers'
-import { convertNumberToBase58, getTextFromFile } from '../../utils/helpers'
+import { Post, PostFileData, UserFileData } from '../../types'
+import { getMediaDataWithUrl, getPostFileData } from './helpers'
+import { getTextFromFile } from '../../utils/helpers'
 import { UserNotFoundError } from '../../utils/errors'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { getUserFileData } from '../user/helpers'
 
 /**
  * @category Post
  * @param groupId The group id where the post should be fetched.
  */
-export default async function getAllPosts(groupId: string): Promise<Post[]> {
+export default async function getAllPosts(groupId: number): Promise<Post[]> {
   try {
     const onChainPosts = await this.anchorProgram.account.post.all([
       {
@@ -18,7 +20,7 @@ export default async function getAllPosts(groupId: string): Promise<Post[]> {
             8 + // Discriminator
             8 + // Timestamp
             4, // userId
-          bytes: convertNumberToBase58(Number(groupId)),
+          bytes: bs58.encode(Uint8Array.from([groupId])),
         },
       },
     ])
@@ -35,7 +37,7 @@ export default async function getAllPosts(groupId: string): Promise<Post[]> {
                 8 + // Discriminator
                 8 + // Timestamp
                 32, // user
-              bytes: convertNumberToBase58(postChain.userId),
+              bytes: bs58.encode(Uint8Array.from([postChain.userId])),
             },
           },
         ])
@@ -55,20 +57,25 @@ export default async function getAllPosts(groupId: string): Promise<Post[]> {
           )
         }
 
+        // Get user profile json file from the shadow drive.
+        const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
+
         // Push post data to array.
         posts.push({
           timestamp: postChain.timestamp,
           publicKey: postChain.publicKey,
           status: postChain.status,
           programId: postFileData.programId,
-          userId: postFileData.userId,
-          groupId: postFileData.groupId,
+          userId: Number(postFileData.userId),
+          groupId: Number(postFileData.groupId),
           text: postFileData.text,
-          media:
-            postFileData.media.length > 0
-              ? [`${shadowDriveDomain}${userChain.shdw.toString()}/${postFileData.media[0].file}`]
-              : [],
+          media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
           license: postFileData.license,
+          userNickname: userProfileJson.nickname,
+          userAvatar:
+            userProfileJson.avatar != null
+              ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+              : null,
         } as Post)
       } catch (error) {
         // Nothing to do.

@@ -6,7 +6,7 @@ import { programId } from '../../utils/constants'
  * @category User
  * @param userId - the id of the user.
  */
-export default async function followUser(userId: string): Promise<void> {
+export default async function followUser(userId: number): Promise<void> {
   try {
     // Find spling pda.
     const [SplingPDA] = await web3.PublicKey.findProgramAddress(
@@ -22,7 +22,7 @@ export default async function followUser(userId: string): Promise<void> {
 
     // Send follow user to the anchor program.
     await this.anchorProgram.methods
-      .followUser(Number(userId))
+      .followUser(userId)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,

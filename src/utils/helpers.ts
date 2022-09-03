@@ -119,15 +119,3 @@ export async function getTextFromFile(url: string): Promise<string | null> {
     return Promise.resolve(null)
   }
 }
-
-const alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-const base = alphabet.length
-export function convertNumberToBase58(number: number): string {
-  let encoded = ''
-  while (number) {
-    const remainder = number % base
-    number = Math.floor(number / base)
-    encoded = alphabet[remainder].toString() + encoded
-  }
-  return encoded
-}

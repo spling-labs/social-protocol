@@ -26,7 +26,6 @@ export default async function getUserGroup(publicKey: web3.PublicKey): Promise<G
     return Promise.resolve({
       timestamp: groupChain.timestamp,
       publicKey: groupChain.publicKey,
-      group: groupChain.group,
       groupId: groupChain.groupId,
       status: groupChain.status,
       shdw: groupChain.shdw,
