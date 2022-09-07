@@ -68,6 +68,12 @@ export type PostFileData = {
   license: string | null
 }
 
+export type PostUser = {
+  publicKey: web3.PublicKey
+  nickname: string
+  avatar: string | null
+}
+
 export type Post = {
   timestamp: number
   publicKey: web3.PublicKey
@@ -78,8 +84,7 @@ export type Post = {
   text: string
   media: MediaData[]
   license: string | null
-  userNickname: string
-  userAvatar: string | null
+  user: PostUser
 }
 
 export type Reply = {
