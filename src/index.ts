@@ -20,7 +20,7 @@ import {
   unfollowUser,
   deletePost,
 } from './methods'
-import { FileData, Post, Reply, Group, User } from './types'
+import { FileData, Post, PostUser, Reply, Group, User } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import {
@@ -104,7 +104,7 @@ export class SocialProtocol implements SplingProtocol {
   }
 }
 
-export { User, Post, Group, Reply, FileData }
+export { User, Post, PostUser, Group, Reply, FileData }
 export {
   UserNotFoundError,
   GroupNotFoundError,
