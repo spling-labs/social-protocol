@@ -3,13 +3,14 @@ import {
   getKeypairFromSeed,
   getOrCreateShadowDriveAccount,
 } from '../../utils/helpers'
-import { FileData, Post, PostFileData, MediaData } from '../../types'
+import { FileData, Post, PostFileData, MediaData, PostUser, UserFileData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
-import { programId } from '../../utils/constants'
+import { programId, shadowDriveDomain } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
+import { getUserFileData } from '../user/helpers'
 
 /**
  * @category Post
@@ -117,6 +118,9 @@ export default async function createPost(
       })
       .rpc()
 
+    // Get user profile json file from the shadow drive.
+    const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
+
     return Promise.resolve({
       timestamp: Number(timestamp),
       publicKey: PostPDA,
@@ -127,6 +131,14 @@ export default async function createPost(
       text: text ? text : null,
       media: getMediaDataWithUrl(postJson.media, account.publicKey),
       license: postJson.license,
+      user: {
+        publicKey: userChain.user,
+        nickname: userProfileJson.nickname,
+        avatar:
+          userProfileJson.avatar != null
+            ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+            : null,
+      } as PostUser,
     } as Post)
   } catch (error) {
     return Promise.reject(error)

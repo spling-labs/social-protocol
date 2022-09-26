@@ -1,6 +1,6 @@
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
-import { Post, PostFileData, UserFileData } from '../../types'
+import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
 import { UserNotFoundError } from '../../utils/errors'
@@ -71,11 +71,14 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
           text: postFileData.text,
           media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
           license: postFileData.license,
-          userNickname: userProfileJson.nickname,
-          userAvatar:
-            userProfileJson.avatar != null
-              ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
-              : null,
+          user: {
+            publicKey: userChain.user,
+            nickname: userProfileJson.nickname,
+            avatar:
+              userProfileJson.avatar != null
+                ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+                : null,
+          } as PostUser,
         } as Post)
       } catch (error) {
         // Nothing to do.
