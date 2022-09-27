@@ -3,7 +3,7 @@
 
   <h1>Social Protocol</h1>
    <p>
-    <a href="https://spling-protocol.github.io/social/"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
+    <a href="https://spling-labs.github.io/social-protocol/"><img alt="Docs" src="https://img.shields.io/badge/docs-typedoc-blueviolet" /></a>
     <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Version" src="https://img.shields.io/npm/v/@spling/social-protocol"/></a>
     <a href="https://www.npmjs.com/package/@spling/social-protocol"><img alt="Downloads" src="https://img.shields.io/npm/dm/@spling/social-protocol" /></a>
     <img alt="License" src="https://img.shields.io/npm/l/@spling/social-protocol" />
@@ -69,16 +69,16 @@ const splingProtocol = await new SplingProtocol(connection, wallet).init();
 ### Examples
 
 | package                                                            | description                                               |
-| ------------------------------------------------------------------ | --------------------------------------------------------- |
-| [node](https://github.com/spling-protocol/tree/main/examples/node) | Using @spling/protocol in a nodejs environment components |
-| [react](https://github.com/spling-protocol/tree/main/examples/web) | Using @spling/protocol in a react/browser environment     |
+|--------------------------------------------------------------------| --------------------------------------------------------- |
+| [node](https://github.com/spling-labs/social-protocol/tree/main/examples/node)     | Using @spling/protocol in a nodejs environment components |
+| [react](https://github.com/spling-labs/social-protocol/tree/main/examples/web) | Using @spling/protocol in a react/browser environment     |
 
 ### Build From Source
 
 1. Clone the project:
 
 ```shell
-git clone https://github.com/spling-protocol/social.git
+git clone https://github.com/spling-labs/social-protocol.git
 ```
 
 2. Install dependencies:
