@@ -3,7 +3,7 @@ import { User, UserFileData } from '../../types'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 import { UserNotFoundError } from '../../utils/errors'
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 
 /**
  * @category User

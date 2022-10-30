@@ -22,6 +22,13 @@ import getPost from './post/get-post'
 import getAllPosts from './post/get-all-posts'
 import deletePost from './post/delete-post'
 
+// REPLY METHODS
+import createPostReply from './post/reply/create-post-reply'
+import getAllPostReplies from './post/reply/get-all-post-replies'
+
+// GENERAL METHODS
+// import setupSpling from './setup-spling'
+
 export {
   createUser,
   getUser,
@@ -41,4 +48,7 @@ export {
   getPost,
   getAllPosts,
   deletePost,
+  createPostReply,
+  getAllPostReplies,
+  // setupSpling,
 }

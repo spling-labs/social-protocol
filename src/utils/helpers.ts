@@ -1,11 +1,11 @@
-import * as anchor from '@project-serum/anchor'
-import { Program } from '@project-serum/anchor'
+import * as anchor from 'react-native-project-serum-anchor'
+import { Program } from 'react-native-project-serum-anchor'
 import {
   CreateStorageResponse,
   ShadowDriveResponse,
   ShdwDrive,
   StorageAccountResponse,
-} from '@shadow-drive/sdk'
+} from 'react-native-shadow-drive'
 import { programId } from './constants'
 import { StorageAccountNotFoundError } from './errors'
 import { IDL, SocialIDL } from './idl'

@@ -1,5 +1,5 @@
-import { Program, web3 } from '@project-serum/anchor'
-import { ShdwDrive } from '@shadow-drive/sdk'
+import { Program, web3 } from 'react-native-project-serum-anchor'
+import { ShdwDrive } from 'react-native-shadow-drive'
 import {
   createPost,
   createGroup,
@@ -19,8 +19,11 @@ import {
   followUser,
   unfollowUser,
   deletePost,
+  createPostReply,
+  getAllPostReplies,
+  // setupSpling,
 } from './methods'
-import { FileData, Post, PostUser, Reply, Group, User } from './types'
+import { FileData, Post, PostUser, Reply, Group, User, FileUriData } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import {
@@ -33,7 +36,11 @@ import {
 
 interface SplingProtocol {
   // USER METHODS
-  createUser(username: string, avatar: FileData, biography: string): Promise<User>
+  createUser(
+    username: string,
+    avatar: FileData | FileUriData | null,
+    biography: string,
+  ): Promise<User>
   getUser(userId: number): Promise<User>
   getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null>
   deleteUser(): Promise<void>
@@ -41,7 +48,11 @@ interface SplingProtocol {
   unfollowUser(userId: number): Promise<void>
 
   // GROUP METHODS
-  createGroup(name: string, bio: string | null, avatar: FileData | null): Promise<Group>
+  createGroup(
+    name: string,
+    bio: string | null,
+    avatar: FileData | FileUriData | null,
+  ): Promise<Group>
   getGroup(groupId: number): Promise<Group>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
   getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
@@ -51,10 +62,21 @@ interface SplingProtocol {
   deleteGroup(): Promise<void>
 
   // POST METHODS
-  createPost(groupId: number, text: string | null, image: FileData | null): Promise<Post>
+  createPost(
+    groupId: number,
+    text: string | null,
+    image: FileData | FileUriData | null,
+  ): Promise<Post>
   getPost(publicKey: web3.PublicKey): Promise<Post>
   getAllPosts(groupId: number): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
+
+  // REPLY METHODS
+  createPostReply(postId: number, text: string): Promise<Reply>
+  getAllPostReplies(postId: number): Promise<Reply[]>
+
+  // GENERAL METHODS
+  // setupSpling(): Promise<void>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -85,6 +107,13 @@ export class SocialProtocol implements SplingProtocol {
   getAllPosts = getAllPosts
   deletePost = deletePost
 
+  // REPLY METHODS
+  createPostReply = createPostReply
+  getAllPostReplies = getAllPostReplies
+
+  // GENERAL METHODS
+  // setupSpling = setupSpling
+
   /**
    *
    * @param connection The web3 connection object.
@@ -104,7 +133,7 @@ export class SocialProtocol implements SplingProtocol {
   }
 }
 
-export { User, Post, PostUser, Group, Reply, FileData }
+export { User, Post, PostUser, Group, Reply, FileData, FileUriData }
 export {
   UserNotFoundError,
   GroupNotFoundError,

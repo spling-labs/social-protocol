@@ -1,19 +1,19 @@
 import { web3 } from 'react-native-project-serum-anchor'
 
-export class GroupChain {
+export class ReplyChain {
   publicKey: web3.PublicKey
   timestamp: number
-  groupId: number
+  userId: number
+  postId: number
   status: number
-  shdw: web3.PublicKey
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   constructor(publicKey: web3.PublicKey, accountData: any) {
     this.publicKey = publicKey
     this.timestamp = accountData.ts
-    this.groupId = accountData.gid
+    this.userId = accountData.uid
+    this.postId = accountData.pid
     this.status = accountData.st
-    this.shdw = accountData.shdw
   }
 
   get key() {

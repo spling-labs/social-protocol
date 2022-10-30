@@ -1,11 +1,12 @@
 import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils/helpers'
-import { FileData, MediaData, User, UserFileData } from '../../types'
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
-import { StorageAccountResponse } from '@shadow-drive/sdk'
+import { FileData, FileUriData, MediaData, User, UserFileData } from '../../types'
+import * as anchor from 'react-native-project-serum-anchor'
+import { web3 } from 'react-native-project-serum-anchor'
+import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
+import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import dayjs from 'dayjs'
+import RNFS from 'react-native-fs'
 
 /**
  * @category User
@@ -15,23 +16,37 @@ import dayjs from 'dayjs'
  */
 export default async function createUser(
   nickname: string,
-  avatar: FileData | null,
+  avatar: FileData | FileUriData | null,
   biography: string | null,
 ): Promise<User> {
   try {
     // Generate avatar file to upload.
-    const userAvatarFile = avatar
-      ? new File(
-          [convertDataUriToBlob(avatar.base64)],
-          `profile-avatar.${avatar.type.split('/')[1]}`,
-        )
-      : null
+    let userAvatarFile = null
+
+    if (!isBrowser) {
+      userAvatarFile = avatar
+        ? ({
+            uri: (avatar as FileUriData).uri,
+            name: `profile-avatar.${avatar.type.split('/')[1]}`,
+            type: (avatar as FileUriData).type,
+            size: (avatar as FileUriData).size,
+            file: Buffer.from(''),
+          } as ShadowFile)
+        : null
+    } else {
+      userAvatarFile = avatar
+        ? new File(
+            [convertDataUriToBlob((avatar as FileData).base64)],
+            `profile-avatar.${avatar.type.split('/')[1]}`,
+          )
+        : null
+    }
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
 
     // Summarize size of files.
     if (userAvatarFile != null) {
-      fileSizeSummarized += userAvatarFile.size
+      fileSizeSummarized += avatar.size
     }
 
     // Find/Create shadow drive account.
@@ -40,11 +55,15 @@ export default async function createUser(
       fileSizeSummarized,
     )
 
-    const filesToUpload: File[] = []
+    // const filesToUpload: File[] = []
 
     // Upload image file to shadow drive.
     if (userAvatarFile != null) {
-      filesToUpload.push(userAvatarFile)
+      // filesToUpload.push(userAvatarFile)
+      await this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (userAvatarFile as ShadowFile) : (userAvatarFile as File),
+      )
     }
 
     // Generate the user profile json.
@@ -63,14 +82,37 @@ export default async function createUser(
       license: null,
     }
 
-    const fileToSave = new Blob([JSON.stringify(userProfileJson)], {
-      type: 'application/json',
-    })
+    if (!isBrowser) {
+      const profileJSONPath = `${RNFS.DownloadDirectoryPath}/profile.json`
+      await RNFS.writeFile(profileJSONPath, JSON.stringify(userProfileJson), 'utf8')
+      const statResult = await RNFS.stat(profileJSONPath)
+      const file = await RNFS.readFile(profileJSONPath, 'utf8')
+
+      const profileFile: ShadowFile = {
+        uri: `file://${profileJSONPath}`,
+        type: 'application/json',
+        file: Buffer.from(file, 'utf8'),
+        name: 'profile.json',
+        size: statResult.size,
+      }
+
+      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
+      await RNFS.unlink(profileJSONPath)
+    } else {
+      const fileToSave = new Blob([JSON.stringify(userProfileJson)], { type: 'application/json' })
+      const userProfileFile = new File([fileToSave], 'profile.json')
+      await this.shadowDrive.uploadFile(account.publicKey, userProfileFile)
+    }
+
+    /*
+    const fileToSave = new Blob([JSON.stringify(userProfileJson)], { type: 'application/json' })
     const userProfileFile = new File([fileToSave], 'profile.json')
     filesToUpload.push(userProfileFile)
 
     // Upload all files to shadow drive.
+    // TODO: Make the function react native ready to use it.
     await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
+    */
 
     // Find spling pda.
     const [SplingPDA] = await web3.PublicKey.findProgramAddress(

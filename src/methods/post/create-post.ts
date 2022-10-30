@@ -3,14 +3,24 @@ import {
   getKeypairFromSeed,
   getOrCreateShadowDriveAccount,
 } from '../../utils/helpers'
-import { FileData, Post, PostFileData, MediaData, PostUser, UserFileData } from '../../types'
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import {
+  FileData,
+  Post,
+  PostFileData,
+  MediaData,
+  PostUser,
+  UserFileData,
+  FileUriData,
+} from '../../types'
+import * as anchor from 'react-native-project-serum-anchor'
+import { web3 } from 'react-native-project-serum-anchor'
+import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
+import { ShadowFile } from 'react-native-shadow-drive'
+import RNFS from 'react-native-fs'
 
 /**
  * @category Post
@@ -21,7 +31,7 @@ import { getUserFileData } from '../user/helpers'
 export default async function createPost(
   groupId: number,
   text: string | null,
-  image: FileData | null,
+  image: FileData | FileUriData | null,
 ): Promise<Post> {
   try {
     // Find spling pda.
@@ -55,33 +65,84 @@ export default async function createPost(
     )
 
     // Create image file to upload.
-    const postImageFile = image
-      ? new File(
-          [convertDataUriToBlob(image.base64)],
-          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-        )
-      : null
+    let postImageFile = null
+
+    if (!isBrowser) {
+      postImageFile = image
+        ? ({
+            uri: (image as FileUriData).uri,
+            name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+            type: (image as FileUriData).type,
+            size: (image as FileUriData).size,
+            file: Buffer.from(''),
+          } as ShadowFile)
+        : null
+    } else {
+      postImageFile = image
+        ? new File(
+            [convertDataUriToBlob((image as FileData).base64)],
+            `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          )
+        : null
+    }
 
     // Create text tile to upload.
-    const postTextFile = text
-      ? new File([new Blob([text], { type: 'text/plain' })], `${PostPDA.toString()}.txt`)
-      : null
+    let postTextFile = null
+    if (text !== null) {
+      if (!isBrowser) {
+        const postTextPath = `${RNFS.DownloadDirectoryPath}/${PostPDA.toString()}.txt`
+        await RNFS.writeFile(postTextPath, text, 'utf8')
+        const statResult = await RNFS.stat(postTextPath)
+        const file = await RNFS.readFile(postTextPath, 'utf8')
+
+        postTextFile = {
+          uri: `file://${postTextPath}`,
+          type: 'text/plain',
+          file: Buffer.from(file, 'utf8'),
+          name: `${PostPDA.toString()}.txt`,
+          size: statResult.size,
+        } as ShadowFile
+
+        // await this.shadowDrive.uploadFile(account.publicKey, profileFile)
+        // await RNFS.unlink(postTextPath)
+      } else {
+        postTextFile = new File(
+          [new Blob([text], { type: 'text/plain' })],
+          `${PostPDA.toString()}.txt`,
+        )
+        // await this.shadowDrive.uploadFile(account.publicKey, userProfileFile)
+      }
+    }
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
-    const filesToUpload: File[] = []
+    // const filesToUpload: File[] = []
 
     if (postImageFile != null) {
       fileSizeSummarized += postImageFile.size
-      filesToUpload.push(postImageFile)
+      // filesToUpload.push(postImageFile)
     }
 
     if (postTextFile != null) {
       fileSizeSummarized += postTextFile.size
-      filesToUpload.push(postTextFile)
+      // filesToUpload.push(postTextFile)
     }
 
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
+
+    // Upload post text and post image files.
+    if (postImageFile != null) {
+      await this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (postImageFile as ShadowFile) : (postImageFile as File),
+      )
+    }
+    if (postTextFile != null) {
+      await this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
+      )
+    }
 
     // Generate the post json.
     const postJson: PostFileData = {
@@ -100,11 +161,32 @@ export default async function createPost(
         : [],
       license: null,
     }
-    const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
-    filesToUpload.push(new File([fileToSave], `${PostPDA.toString()}.json`))
+
+    if (!isBrowser) {
+      const postJSONPath = `${RNFS.DownloadDirectoryPath}/${PostPDA.toString()}.json`
+      await RNFS.writeFile(postJSONPath, JSON.stringify(postJson), 'utf8')
+      const statResult = await RNFS.stat(postJSONPath)
+      const file = await RNFS.readFile(postJSONPath, 'utf8')
+
+      const profileFile: ShadowFile = {
+        uri: `file://${postJSONPath}`,
+        type: 'application/json',
+        file: Buffer.from(file, 'utf8'),
+        name: `${PostPDA.toString()}.json`,
+        size: statResult.size,
+      }
+
+      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
+      await RNFS.unlink(postJSONPath)
+    } else {
+      const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
+      const postJSONFile = new File([fileToSave], `${PostPDA.toString()}.json`)
+      await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+    }
 
     // Upload all files to shadow drive.
-    await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
+    // TODO: Make the function react native ready to use it.
+    // await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
 
     // Submit the post to the anchor program.
     await this.anchorProgram.methods

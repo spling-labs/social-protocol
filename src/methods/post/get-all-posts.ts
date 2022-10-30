@@ -4,7 +4,7 @@ import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
 import { UserNotFoundError } from '../../utils/errors'
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
 
 /**

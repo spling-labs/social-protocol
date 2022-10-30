@@ -1,12 +1,11 @@
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { programId } from '../../utils/constants'
+import { programId } from '../utils/constants'
 
 /**
- * @category User
- * @param userId - the id of the user.
+ * @category General
  */
-export default async function unfollowUser(userId: number): Promise<void> {
+export default async function setupSpling(): Promise<void> {
   try {
     // Find spling pda.
     const [SplingPDA] = await web3.PublicKey.findProgramAddress(
@@ -14,21 +13,16 @@ export default async function unfollowUser(userId: number): Promise<void> {
       programId,
     )
 
-    // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
-      programId,
-    )
-
-    // Send follow user to the anchor program.
     await this.anchorProgram.methods
-      .unfollowUser(userId)
+      .setupSpling()
       .accounts({
         user: this.wallet.publicKey,
-        userProfile: UserProfilePDA,
         spling: SplingPDA,
       })
       .rpc()
+
+    const spling = await this.anchorProgram.account.spling.fetch(SplingPDA)
+    console.log(spling)
 
     return Promise.resolve()
   } catch (error) {

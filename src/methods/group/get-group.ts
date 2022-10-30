@@ -3,7 +3,7 @@ import { GroupChain } from '../../models'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
 import { GroupNotFoundError } from '../../utils/errors'
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 
 /**
  * @category Group

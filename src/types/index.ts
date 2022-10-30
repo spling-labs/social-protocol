@@ -1,4 +1,4 @@
-import { web3 } from '@project-serum/anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 
 export type MediaData = {
   file: string
@@ -75,8 +75,8 @@ export type PostUser = {
 }
 
 export type Post = {
-  timestamp: number
   publicKey: web3.PublicKey
+  timestamp: number
   status: number
   programId: string
   userId: number
@@ -87,13 +87,31 @@ export type Post = {
   user: PostUser
 }
 
-export type Reply = {
+export type ReplyFileData = {
+  timestamp: string
+  userId: string
+  postId: string
   text: string
 }
 
+export type Reply = {
+  publicKey: web3.PublicKey
+  timestamp: number
+  status: number
+  userId: number
+  postId: number
+  text: string
+  user: PostUser
+}
+
 export interface FileData {
-  name: string
   type: string
-  size: string
   base64: string
+  size: number
+}
+
+export interface FileUriData {
+  uri: string
+  type: string
+  size: number
 }

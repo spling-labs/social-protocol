@@ -2,7 +2,7 @@ import { shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
-import { web3 } from '@project-serum/anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 
 /**
  * @category Group

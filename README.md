@@ -10,7 +10,7 @@
 	</p>
 </div>
 
-Spling social protocol for building a solana on-chain social media platform.
+Spling Labs - Social Protocol for building a solana on-chain social media platform.
 
 ## Quick Setup
 
@@ -33,44 +33,37 @@ yarn add @spling/social-protocol
 ### Setup (React Example)
 
 ```tsx
-import React, { useEffect } from "react";
-import * as anchor from "@project-serum/anchor";
-import { SplingProtocol } from "@spling/social-protocol";
-import {
-  AnchorWallet,
-  useAnchorWallet,
-  useConnection,
-} from "@solana/wallet-adapter-react";
+import React, { useEffect } from 'react'
+import * as anchor from '@project-serum/anchor'
+import { SplingProtocol } from '@spling/social-protocol'
+import { AnchorWallet, useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 
 export default function SplingProtocol() {
-  const { connection } = useConnection();
-  const wallet = useAnchorWallet();
+  const { connection } = useConnection()
+  const wallet = useAnchorWallet()
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (wallet?.publicKey) {
-        const splingProtocol = await new SplingProtocol(
-          connection,
-          wallet
-        ).init();
+        const splingProtocol = await new SplingProtocol(connection, wallet).init()
       }
-    })();
-  }, [wallet?.publicKey]);
-  return <div></div>;
+    })()
+  }, [wallet?.publicKey])
+  return <div></div>
 }
 ```
 
 ### Setup (NodeJS Example)
 
 ```js
-import { SplingProtocol } from "@spling/social-protocol";
-const splingProtocol = await new SplingProtocol(connection, wallet).init();
+import { SplingProtocol } from '@spling/social-protocol'
+const splingProtocol = await new SplingProtocol(connection, wallet).init()
 ```
 
 ### Examples
 
-| package                                                            | description                                               |
-|--------------------------------------------------------------------| --------------------------------------------------------- |
-| [node](https://github.com/spling-labs/social-protocol/tree/main/examples/node)     | Using @spling/protocol in a nodejs environment components |
+| package                                                                        | description                                               |
+| ------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| [node](https://github.com/spling-labs/social-protocol/tree/main/examples/node) | Using @spling/protocol in a nodejs environment components |
 | [react](https://github.com/spling-labs/social-protocol/tree/main/examples/web) | Using @spling/protocol in a react/browser environment     |
 
 ### Build From Source
