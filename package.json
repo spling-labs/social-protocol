@@ -14,7 +14,7 @@
     "docs": "typedoc --excludePrivate --includeVersion --out ./docs src",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc" 
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc"
   },
   "repository": {
     "type": "git",
