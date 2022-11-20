@@ -21,9 +21,6 @@ export default async function setupSpling(): Promise<void> {
       })
       .rpc()
 
-    const spling = await this.anchorProgram.account.spling.fetch(SplingPDA)
-    console.log(spling)
-
     return Promise.resolve()
   } catch (error) {
     return Promise.reject(error)

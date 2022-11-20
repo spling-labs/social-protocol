@@ -1,11 +1,13 @@
-import { shadowDriveDomain } from '../../utils/constants'
-import { PostChain, UserChain } from '../../models'
+import { programId, shadowDriveDomain } from '../../utils/constants'
+import { LikesChain, PostChain, UserChain } from '../../models'
 import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
 import { UserNotFoundError } from '../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
+import * as anchor from 'react-native-project-serum-anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 
 /**
  * @category Post
@@ -19,7 +21,8 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
           offset:
             8 + // Discriminator
             8 + // Timestamp
-            4, // userId
+            4 + // userId
+            4, // postId
           bytes: bs58.encode(Uint8Array.from([groupId])),
         },
       },
@@ -60,12 +63,26 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
         // Get user profile json file from the shadow drive.
         const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 
+        // Find likes pda.
+        const [LikesPDA] = await web3.PublicKey.findProgramAddress(
+          [
+            anchor.utils.bytes.utf8.encode('likes'),
+            postChain.publicKey.toBuffer(),
+          ],
+          programId
+        )
+
+        // Get likes of the post.
+        const likes = await this.anchorProgram.account.likes.fetch(LikesPDA)
+        const likesChain = new LikesChain(LikesPDA, likes)
+
         // Push post data to array.
         posts.push({
           timestamp: postChain.timestamp,
           publicKey: postChain.publicKey,
           status: postChain.status,
           programId: postFileData.programId,
+          postId: postChain.postId,
           userId: Number(postFileData.userId),
           groupId: Number(postFileData.groupId),
           text: postFileData.text,
@@ -79,6 +96,7 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
                 ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
                 : null,
           } as PostUser,
+          likes: likesChain.users,
         } as Post)
       } catch (error) {
         // Nothing to do.

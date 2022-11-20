@@ -14,7 +14,7 @@ import { Reply } from 'index'
  */
 export default async function getAllPostReplies(postId: number): Promise<Reply[]> {
   try {
-    const onChainPostReplies = await this.anchorProgram.account.post.all([
+    const onChainPostReplies = await this.anchorProgram.account.reply.all([
       {
         memcmp: {
           offset:

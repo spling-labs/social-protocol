@@ -1,6 +1,7 @@
+import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { shadowDriveDomain } from '../../utils/constants'
-import { PostChain, UserChain } from '../../models'
+import { programId, shadowDriveDomain } from '../../utils/constants'
+import { LikesChain, PostChain, UserChain } from '../../models'
 import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
@@ -46,12 +47,26 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post> 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 
+    // Find likes pda.
+    const [LikesPDA] = await web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('likes'),
+        postChain.publicKey.toBuffer(),
+      ],
+      programId
+    )
+
+    // Get likes of the post.
+    const likes = await this.anchorProgram.account.likes.fetch(LikesPDA)
+    const likesChain = new LikesChain(LikesPDA, likes)
+
     return Promise.resolve({
       timestamp: postChain.timestamp,
       publicKey: publicKey,
       status: postChain.status,
       programId: postFileData.programId,
       userId: Number(postFileData.userId),
+      postId: postChain.postId,
       groupId: Number(postFileData.groupId),
       text: postFileData.text,
       media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
@@ -64,6 +79,7 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post> 
             ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
             : null,
       } as PostUser,
+      likes: likesChain.users
     } as Post)
   } catch (error) {
     return Promise.reject(error)

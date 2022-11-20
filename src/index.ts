@@ -19,9 +19,10 @@ import {
   followUser,
   unfollowUser,
   deletePost,
+  likePost,
   createPostReply,
   getAllPostReplies,
-  // setupSpling,
+  deletePostReply,
 } from './methods'
 import { FileData, Post, PostUser, Reply, Group, User, FileUriData } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
@@ -70,13 +71,12 @@ interface SplingProtocol {
   getPost(publicKey: web3.PublicKey): Promise<Post>
   getAllPosts(groupId: number): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
+  likePost(publicKey: web3.PublicKey): Promise<void>
 
   // REPLY METHODS
   createPostReply(postId: number, text: string): Promise<Reply>
   getAllPostReplies(postId: number): Promise<Reply[]>
-
-  // GENERAL METHODS
-  // setupSpling(): Promise<void>
+  deletePostReply(publicKey: web3.PublicKey): Promise<void>
 }
 
 export class SocialProtocol implements SplingProtocol {
@@ -106,13 +106,12 @@ export class SocialProtocol implements SplingProtocol {
   getPost = getPost
   getAllPosts = getAllPosts
   deletePost = deletePost
+  likePost = likePost
 
   // REPLY METHODS
   createPostReply = createPostReply
   getAllPostReplies = getAllPostReplies
-
-  // GENERAL METHODS
-  // setupSpling = setupSpling
+  deletePostReply = deletePostReply
 
   /**
    *

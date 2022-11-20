@@ -3,3 +3,7 @@ examples/
 dist
 .env
 .parcel-cache
+*.tgz
+src/methods/reset-bank.ts
+src/methods/setup-bank.ts
+src/methods/setup-spling.ts

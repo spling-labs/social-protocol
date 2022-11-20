@@ -80,11 +80,13 @@ export type Post = {
   status: number
   programId: string
   userId: number
+  postId: number
   groupId: number
   text: string
   media: MediaData[]
   license: string | null
   user: PostUser
+  likes: number[]
 }
 
 export type ReplyFileData = {

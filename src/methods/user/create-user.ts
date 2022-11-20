@@ -7,6 +7,7 @@ import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import dayjs from 'dayjs'
 import RNFS from 'react-native-fs'
+import { SocialIDL } from '../../utils/idl'
 
 /**
  * @category User
@@ -26,19 +27,19 @@ export default async function createUser(
     if (!isBrowser) {
       userAvatarFile = avatar
         ? ({
-            uri: (avatar as FileUriData).uri,
-            name: `profile-avatar.${avatar.type.split('/')[1]}`,
-            type: (avatar as FileUriData).type,
-            size: (avatar as FileUriData).size,
-            file: Buffer.from(''),
-          } as ShadowFile)
+          uri: (avatar as FileUriData).uri,
+          name: `profile-avatar.${avatar.type.split('/')[1]}`,
+          type: (avatar as FileUriData).type,
+          size: (avatar as FileUriData).size,
+          file: Buffer.from(''),
+        } as ShadowFile)
         : null
     } else {
       userAvatarFile = avatar
         ? new File(
-            [convertDataUriToBlob((avatar as FileData).base64)],
-            `profile-avatar.${avatar.type.split('/')[1]}`,
-          )
+          [convertDataUriToBlob((avatar as FileData).base64)],
+          `profile-avatar.${avatar.type.split('/')[1]}`,
+        )
         : null
     }
 
@@ -49,17 +50,38 @@ export default async function createUser(
       fileSizeSummarized += avatar.size
     }
 
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
+      programId,
+    )
+
+    // Find bank pda.
+    const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('bank'),
+      ],
+      programId
+    )
+
+    // Extract transaction costs from the bank.
+    await this.anchorProgram.methods
+      .extractBank()
+      .accounts({
+        user: this.wallet.publicKey,
+        bank: BankPDA,
+        spling: SplingPDA,
+      })
+      .rpc()
+
     // Find/Create shadow drive account.
     const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
       this.shadowDrive,
       fileSizeSummarized,
     )
 
-    // const filesToUpload: File[] = []
-
     // Upload image file to shadow drive.
     if (userAvatarFile != null) {
-      // filesToUpload.push(userAvatarFile)
       await this.shadowDrive.uploadFile(
         account.publicKey,
         !isBrowser ? (userAvatarFile as ShadowFile) : (userAvatarFile as File),
@@ -73,52 +95,33 @@ export default async function createUser(
       bio: biography ? biography : '',
       avatar: userAvatarFile
         ? ({
-            file: `profile-avatar.${avatar.type.split('/')[1]}`,
-            type: avatar.type.split('/')[1],
-          } as MediaData)
+          file: `profile-avatar.${avatar.type.split('/')[1]}`,
+          type: avatar.type.split('/')[1],
+        } as MediaData)
         : null,
       banner: null,
       socials: [],
       license: null,
     }
 
+    let profileFile
     if (!isBrowser) {
-      const profileJSONPath = `${RNFS.DownloadDirectoryPath}/profile.json`
+      const profileJSONPath = `${RNFS.ExternalDirectoryPath}/profile.json`
       await RNFS.writeFile(profileJSONPath, JSON.stringify(userProfileJson), 'utf8')
       const statResult = await RNFS.stat(profileJSONPath)
       const file = await RNFS.readFile(profileJSONPath, 'utf8')
 
-      const profileFile: ShadowFile = {
+      profileFile = {
         uri: `file://${profileJSONPath}`,
         type: 'application/json',
         file: Buffer.from(file, 'utf8'),
         name: 'profile.json',
         size: statResult.size,
-      }
-
-      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
-      await RNFS.unlink(profileJSONPath)
+      } as ShadowFile
     } else {
       const fileToSave = new Blob([JSON.stringify(userProfileJson)], { type: 'application/json' })
-      const userProfileFile = new File([fileToSave], 'profile.json')
-      await this.shadowDrive.uploadFile(account.publicKey, userProfileFile)
+      profileFile = new File([fileToSave], 'profile.json')
     }
-
-    /*
-    const fileToSave = new Blob([JSON.stringify(userProfileJson)], { type: 'application/json' })
-    const userProfileFile = new File([fileToSave], 'profile.json')
-    filesToUpload.push(userProfileFile)
-
-    // Upload all files to shadow drive.
-    // TODO: Make the function react native ready to use it.
-    await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
-    */
-
-    // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('spling')],
-      programId,
-    )
 
     // Find the user profile pda.
     const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
@@ -126,19 +129,17 @@ export default async function createUser(
       programId,
     )
 
-    // Submit the user profile to the anchor program.
-    await this.anchorProgram.methods
-      .createUserProfile(account.publicKey)
-      .accounts({
-        user: this.wallet.publicKey,
-        spling: SplingPDA,
-        userProfile: UserProfilePDA,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .rpc()
+    const [, ,] = await Promise.all([
+      this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? profileFile as ShadowFile : profileFile as File),
+      submitUserProfileToAnchorProgram(this.anchorProgram, this.wallet.publicKey, account.publicKey, SplingPDA, UserProfilePDA),
+    ]);
 
-    // Fetch the user profile from the anchor program.
-    const userProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+    if (profileFile !== null && !isBrowser) {
+      RNFS.unlink(`${RNFS.ExternalDirectoryPath}/profile.json`)
+    }
+
+    // Fetch created user profile.
+    const userProfile = this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
     const userChain = new UserChain(userProfile.publicKey, userProfile)
 
     return Promise.resolve({
@@ -161,4 +162,17 @@ export default async function createUser(
   } catch (error) {
     return Promise.reject(error)
   }
+}
+
+// Submit the user profile to the anchor program.
+async function submitUserProfileToAnchorProgram(anchorProgram: anchor.Program<SocialIDL>, walletPublicKey: web3.PublicKey, accountPublicKey: web3.PublicKey, SplingPDA: web3.PublicKey, UserProfilePDA: web3.PublicKey): Promise<any> {
+  return anchorProgram.methods
+    .createUserProfile(accountPublicKey)
+    .accounts({
+      user: walletPublicKey,
+      spling: SplingPDA,
+      userProfile: UserProfilePDA,
+      systemProgram: anchor.web3.SystemProgram.programId,
+    })
+    .rpc()
 }

@@ -16,7 +16,7 @@ import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
 import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
 import dayjs from 'dayjs'
-import { UserChain } from '../../models'
+import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
@@ -64,25 +64,34 @@ export default async function createPost(
       programId,
     )
 
+    // Find likes pda.
+    const [LikesPDA] = await web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('likes'),
+        PostPDA.toBuffer(),
+      ],
+      programId
+    )
+
     // Create image file to upload.
     let postImageFile = null
 
     if (!isBrowser) {
       postImageFile = image
         ? ({
-            uri: (image as FileUriData).uri,
-            name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-            type: (image as FileUriData).type,
-            size: (image as FileUriData).size,
-            file: Buffer.from(''),
-          } as ShadowFile)
+          uri: (image as FileUriData).uri,
+          name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          type: (image as FileUriData).type,
+          size: (image as FileUriData).size,
+          file: Buffer.from(''),
+        } as ShadowFile)
         : null
     } else {
       postImageFile = image
         ? new File(
-            [convertDataUriToBlob((image as FileData).base64)],
-            `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-          )
+          [convertDataUriToBlob((image as FileData).base64)],
+          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+        )
         : null
     }
 
@@ -90,7 +99,7 @@ export default async function createPost(
     let postTextFile = null
     if (text !== null) {
       if (!isBrowser) {
-        const postTextPath = `${RNFS.DownloadDirectoryPath}/${PostPDA.toString()}.txt`
+        const postTextPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`
         await RNFS.writeFile(postTextPath, text, 'utf8')
         const statResult = await RNFS.stat(postTextPath)
         const file = await RNFS.readFile(postTextPath, 'utf8')
@@ -102,30 +111,41 @@ export default async function createPost(
           name: `${PostPDA.toString()}.txt`,
           size: statResult.size,
         } as ShadowFile
-
-        // await this.shadowDrive.uploadFile(account.publicKey, profileFile)
-        // await RNFS.unlink(postTextPath)
       } else {
         postTextFile = new File(
           [new Blob([text], { type: 'text/plain' })],
           `${PostPDA.toString()}.txt`,
         )
-        // await this.shadowDrive.uploadFile(account.publicKey, userProfileFile)
       }
     }
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
-    // const filesToUpload: File[] = []
 
     if (postImageFile != null) {
       fileSizeSummarized += postImageFile.size
-      // filesToUpload.push(postImageFile)
     }
 
     if (postTextFile != null) {
       fileSizeSummarized += postTextFile.size
-      // filesToUpload.push(postTextFile)
     }
+
+    // Find bank pda.
+    const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('bank'),
+      ],
+      programId
+    )
+
+    // Extract transaction costs from the bank.
+    await this.anchorProgram.methods
+      .extractBank()
+      .accounts({
+        user: this.wallet.publicKey,
+        bank: BankPDA,
+        spling: SplingPDA,
+      })
+      .rpc()
 
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
@@ -142,6 +162,9 @@ export default async function createPost(
         account.publicKey,
         !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
       )
+      if (!isBrowser) {
+        RNFS.unlink(`${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`)
+      }
     }
 
     // Generate the post json.
@@ -153,17 +176,17 @@ export default async function createPost(
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
-            {
-              file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
-              type: image.type.split('/')[1],
-            } as MediaData,
-          ]
+          {
+            file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
+            type: image.type.split('/')[1],
+          } as MediaData,
+        ]
         : [],
       license: null,
     }
 
     if (!isBrowser) {
-      const postJSONPath = `${RNFS.DownloadDirectoryPath}/${PostPDA.toString()}.json`
+      const postJSONPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.json`
       await RNFS.writeFile(postJSONPath, JSON.stringify(postJson), 'utf8')
       const statResult = await RNFS.stat(postJSONPath)
       const file = await RNFS.readFile(postJSONPath, 'utf8')
@@ -184,21 +207,23 @@ export default async function createPost(
       await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
     }
 
-    // Upload all files to shadow drive.
-    // TODO: Make the function react native ready to use it.
-    // await this.shadowDrive.uploadMultipleFiles(account.publicKey, filesToUpload, 'v2')
-
     // Submit the post to the anchor program.
     await this.anchorProgram.methods
-      .submitPost(groupId, hash.publicKey)
+      .submitPostWithLikes(groupId, hash.publicKey)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,
         post: PostPDA,
+        likes: LikesPDA,
         spling: SplingPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
+
+    console.log(PostPDA);
+
+    const post = await this.anchorProgram.account.post.fetch(PostPDA)
+    const postChain = new PostChain(PostPDA, post)
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
@@ -209,6 +234,7 @@ export default async function createPost(
       status: 1,
       programId: postJson.programId,
       userId: Number(postJson.userId),
+      postId: postChain.postId,
       groupId: Number(postJson.groupId),
       text: text ? text : null,
       media: getMediaDataWithUrl(postJson.media, account.publicKey),
@@ -221,6 +247,7 @@ export default async function createPost(
             ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
             : null,
       } as PostUser,
+      likes: []
     } as Post)
   } catch (error) {
     return Promise.reject(error)

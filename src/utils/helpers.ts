@@ -1,5 +1,4 @@
 import * as anchor from 'react-native-project-serum-anchor'
-import { Program } from 'react-native-project-serum-anchor'
 import {
   CreateStorageResponse,
   ShadowDriveResponse,
@@ -17,7 +16,7 @@ import { IDL, SocialIDL } from './idl'
 export function createSocialProtocolProgram(
   connection: anchor.web3.Connection,
   wallet: anchor.Wallet,
-): Program<SocialIDL> {
+): anchor.Program<SocialIDL> {
   const anchorProvider = new anchor.AnchorProvider(connection, wallet, {})
   return new anchor.Program(IDL, programId, anchorProvider)
 }
@@ -56,6 +55,7 @@ export async function getOrCreateShadowDriveAccount(
     await createShadowDriveAccount(shadowDrive)
 
     account = await getShadowDriveAccount(shadowDrive)
+
     if (account != null) return Promise.resolve(account)
     else throw new StorageAccountNotFoundError()
   } catch (error) {
