@@ -25,6 +25,7 @@ import likePost from './post/like-post'
 
 // REPLY METHODS
 import createPostReply from './post/reply/create-post-reply'
+import getPostReply from './post/reply/get-post-reply'
 import getAllPostReplies from './post/reply/get-all-post-replies'
 import deletePostReply from './post/reply/delete-post-reply'
 
@@ -49,6 +50,7 @@ export {
   deletePost,
   likePost,
   createPostReply,
+  getPostReply,
   getAllPostReplies,
   deletePostReply,
 }

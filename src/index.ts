@@ -21,6 +21,7 @@ import {
   deletePost,
   likePost,
   createPostReply,
+  getPostReply,
   getAllPostReplies,
   deletePostReply,
 } from './methods'
@@ -76,6 +77,7 @@ interface SplingProtocol {
 
   // REPLY METHODS
   createPostReply(postId: number, text: string): Promise<Reply>
+  getPostReply(publicKey: web3.PublicKey): Promise<Reply | null>
   getAllPostReplies(postId: number): Promise<Reply[]>
   deletePostReply(publicKey: web3.PublicKey): Promise<void>
 }
@@ -113,6 +115,7 @@ export class SocialProtocol implements SplingProtocol {
 
   // REPLY METHODS
   createPostReply = createPostReply
+  getPostReply = getPostReply
   getAllPostReplies = getAllPostReplies
   deletePostReply = deletePostReply
 
@@ -122,7 +125,10 @@ export class SocialProtocol implements SplingProtocol {
    * @param wallet - The wallet of the current user.
    */
   constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair) {
-    this.connection = new web3.Connection(rpcUrl ? rpcUrl : 'https://solana-api.projectserum.com', 'confirmed')
+    this.connection = new web3.Connection(
+      rpcUrl ? rpcUrl : 'https://solana-api.projectserum.com',
+      'confirmed',
+    )
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
   }
