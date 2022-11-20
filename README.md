@@ -45,6 +45,9 @@ export default function SocialProtocol() {
     ;(async () => {
       if (wallet?.publicKey) {
         const socialProtocol = await new SocialProtocol(connection, wallet).init()
+
+        // You can call now functions like:
+        const user = await socialProtocol.getUser(42) 
       }
     })()
   }, [wallet?.publicKey])
@@ -57,38 +60,16 @@ export default function SocialProtocol() {
 ```tsx
 import React, { useEffect } from 'react'
 import { SocialProtocol } from '@spling/social-protocol'
-import { Wallet } from "react-native-project-serum-anchor";
-import { Keypair, Transaction, PublicKey } from "@solana/web3.js";
-
-type anchorWallet = typeof Wallet;
-
-export class AnchorWallet implements anchorWallet {
-  constructor(readonly payer: Keypair) {
-    this.payer = payer;
-  }
-
-  async signTransaction(tx: Transaction): Promise<Transaction> {
-    tx.partialSign(this.payer);
-    return tx;
-  }
-
-  async signAllTransactions(txs: Transaction[]): Promise<Transaction[]> {
-    return txs.map((t) => {
-      t.partialSign(this.payer);
-      return t;
-    });
-  }
-
-  get publicKey(): PublicKey {
-    return this.payer.publicKey;
-  }
-}
+import { Keypair } from "@solana/web3.js";
 
 export default function SocialProtocol() {
   useEffect(() => {
     ;(async () => {
       const wallet: Keypair = Keypair.generate()
-      const socialProtocol = await new SocialProtocol(connection, new AnchorWallet(wallet)).init()
+      const socialProtocol = await new SocialProtocol("https://solana-api.projectserum.com/", wallet).init()
+
+      // You can call now functions like:
+      const user = await socialProtocol.getUser(42) 
     })()
   }, [])
   

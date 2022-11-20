@@ -121,8 +121,8 @@ export class SocialProtocol implements SplingProtocol {
    * @param rpcUrl The solana rpc node url endpoint.
    * @param wallet - The wallet of the current user.
    */
-  constructor(rpcUrl: string, wallet: Wallet | web3.Keypair) {
-    this.connection = new web3.Connection(rpcUrl, 'confirmed')
+  constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair) {
+    this.connection = new web3.Connection(rpcUrl ? rpcUrl : "https://solana-api.projectserum.com", 'confirmed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
   }
