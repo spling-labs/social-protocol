@@ -11,6 +11,7 @@ import {
   leaveGroup,
   deleteGroup,
   getPost,
+  getPostByPublicKey,
   getGroup,
   getGroupByPublicKey,
   getUser,
@@ -70,7 +71,8 @@ interface SplingProtocol {
     text: string | null,
     image: FileData | FileUriData | null,
   ): Promise<Post>
-  getPost(publicKey: web3.PublicKey): Promise<Post | null>
+  getPost(postId: number): Promise<Post | null>
+  getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>
   getAllPosts(groupId: number): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
   likePost(publicKey: web3.PublicKey): Promise<void>
@@ -109,6 +111,7 @@ export class SocialProtocol implements SplingProtocol {
   // POST METHODS
   createPost = createPost
   getPost = getPost
+  getPostByPublicKey = getPostByPublicKey
   getAllPosts = getAllPosts
   deletePost = deletePost
   likePost = likePost

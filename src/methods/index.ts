@@ -19,6 +19,7 @@ import deleteGroup from './group/delete-group'
 // POST METHODS
 import createPost from './post/create-post'
 import getPost from './post/get-post'
+import getPostByPublicKey from './post/get-post-by-public-key'
 import getAllPosts from './post/get-all-posts'
 import deletePost from './post/delete-post'
 import likePost from './post/like-post'
@@ -46,6 +47,7 @@ export {
   deleteGroup,
   createPost,
   getPost,
+  getPostByPublicKey,
   getAllPosts,
   deletePost,
   likePost,
