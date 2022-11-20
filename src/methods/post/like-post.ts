@@ -47,11 +47,8 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
 
     // Find likes pda.
     const [LikesPDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('likes'),
-        PostPDA.toBuffer(),
-      ],
-      programId
+      [anchor.utils.bytes.utf8.encode('likes'), PostPDA.toBuffer()],
+      programId,
     )
 
     // Submit the post to the anchor program.

@@ -50,5 +50,5 @@ export {
   likePost,
   createPostReply,
   getAllPostReplies,
-  deletePostReply
+  deletePostReply,
 }

@@ -49,11 +49,8 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post |
 
     // Find likes pda.
     const [LikesPDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('likes'),
-        postChain.publicKey.toBuffer(),
-      ],
-      programId
+      [anchor.utils.bytes.utf8.encode('likes'), postChain.publicKey.toBuffer()],
+      programId,
     )
 
     // Get likes of the post.
@@ -79,10 +76,15 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post |
             ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
             : null,
       } as PostUser,
-      likes: likesChain.users
+      likes: likesChain.users,
     } as Post)
   } catch (error) {
-    if (error.message.includes('Account does not exist') || error instanceof UserNotFoundError || error instanceof PostNotFoundError) return Promise.resolve(null)
+    if (
+      error.message.includes('Account does not exist') ||
+      error instanceof UserNotFoundError ||
+      error instanceof PostNotFoundError
+    )
+      return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

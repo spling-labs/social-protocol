@@ -46,7 +46,8 @@ export default async function getGroup(groupId: number): Promise<Group | null> {
       license: groupFileData.license,
     } as Group)
   } catch (error) {
-    if (error.message.includes('Account does not exist') || error instanceof GroupNotFoundError) return Promise.resolve(null)
+    if (error.message.includes('Account does not exist') || error instanceof GroupNotFoundError)
+      return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

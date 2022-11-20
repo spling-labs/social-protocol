@@ -84,7 +84,7 @@ export default async function createGroup(
         uri: `file://${groupJSONPath}`,
         type: 'application/json',
         file: Buffer.from(file, 'utf8'),
-        name: `group.json`,
+        name: 'group.json',
         size: statResult.size,
       }
 

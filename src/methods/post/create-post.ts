@@ -66,11 +66,8 @@ export default async function createPost(
 
     // Find likes pda.
     const [LikesPDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('likes'),
-        PostPDA.toBuffer(),
-      ],
-      programId
+      [anchor.utils.bytes.utf8.encode('likes'), PostPDA.toBuffer()],
+      programId,
     )
 
     // Create image file to upload.
@@ -79,19 +76,19 @@ export default async function createPost(
     if (!isBrowser) {
       postImageFile = image
         ? ({
-          uri: (image as FileUriData).uri,
-          name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-          type: (image as FileUriData).type,
-          size: (image as FileUriData).size,
-          file: Buffer.from(''),
-        } as ShadowFile)
+            uri: (image as FileUriData).uri,
+            name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+            type: (image as FileUriData).type,
+            size: (image as FileUriData).size,
+            file: Buffer.from(''),
+          } as ShadowFile)
         : null
     } else {
       postImageFile = image
         ? new File(
-          [convertDataUriToBlob((image as FileData).base64)],
-          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-        )
+            [convertDataUriToBlob((image as FileData).base64)],
+            `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          )
         : null
     }
 
@@ -131,10 +128,8 @@ export default async function createPost(
 
     // Find bank pda.
     const [BankPDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('bank'),
-      ],
-      programId
+      [anchor.utils.bytes.utf8.encode('bank')],
+      programId,
     )
 
     // Extract transaction costs from the bank.
@@ -176,11 +171,11 @@ export default async function createPost(
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
-          {
-            file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
-            type: image.type.split('/')[1],
-          } as MediaData,
-        ]
+            {
+              file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
+              type: image.type.split('/')[1],
+            } as MediaData,
+          ]
         : [],
       license: null,
     }
@@ -220,7 +215,7 @@ export default async function createPost(
       })
       .rpc()
 
-    console.log(PostPDA);
+    console.log(PostPDA)
 
     const post = await this.anchorProgram.account.post.fetch(PostPDA)
     const postChain = new PostChain(PostPDA, post)
@@ -247,7 +242,7 @@ export default async function createPost(
             ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
             : null,
       } as PostUser,
-      likes: []
+      likes: [],
     } as Post)
   } catch (error) {
     return Promise.reject(error)

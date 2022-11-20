@@ -27,19 +27,19 @@ export default async function createUser(
     if (!isBrowser) {
       userAvatarFile = avatar
         ? ({
-          uri: (avatar as FileUriData).uri,
-          name: `profile-avatar.${avatar.type.split('/')[1]}`,
-          type: (avatar as FileUriData).type,
-          size: (avatar as FileUriData).size,
-          file: Buffer.from(''),
-        } as ShadowFile)
+            uri: (avatar as FileUriData).uri,
+            name: `profile-avatar.${avatar.type.split('/')[1]}`,
+            type: (avatar as FileUriData).type,
+            size: (avatar as FileUriData).size,
+            file: Buffer.from(''),
+          } as ShadowFile)
         : null
     } else {
       userAvatarFile = avatar
         ? new File(
-          [convertDataUriToBlob((avatar as FileData).base64)],
-          `profile-avatar.${avatar.type.split('/')[1]}`,
-        )
+            [convertDataUriToBlob((avatar as FileData).base64)],
+            `profile-avatar.${avatar.type.split('/')[1]}`,
+          )
         : null
     }
 
@@ -58,10 +58,8 @@ export default async function createUser(
 
     // Find bank pda.
     const [BankPDA] = await web3.PublicKey.findProgramAddress(
-      [
-        anchor.utils.bytes.utf8.encode('bank'),
-      ],
-      programId
+      [anchor.utils.bytes.utf8.encode('bank')],
+      programId,
     )
 
     // Extract transaction costs from the bank.
@@ -95,9 +93,9 @@ export default async function createUser(
       bio: biography ? biography : '',
       avatar: userAvatarFile
         ? ({
-          file: `profile-avatar.${avatar.type.split('/')[1]}`,
-          type: avatar.type.split('/')[1],
-        } as MediaData)
+            file: `profile-avatar.${avatar.type.split('/')[1]}`,
+            type: avatar.type.split('/')[1],
+          } as MediaData)
         : null,
       banner: null,
       socials: [],
@@ -130,9 +128,18 @@ export default async function createUser(
     )
 
     const [, ,] = await Promise.all([
-      this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? profileFile as ShadowFile : profileFile as File),
-      submitUserProfileToAnchorProgram(this.anchorProgram, this.wallet.publicKey, account.publicKey, SplingPDA, UserProfilePDA),
-    ]);
+      this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (profileFile as ShadowFile) : (profileFile as File),
+      ),
+      submitUserProfileToAnchorProgram(
+        this.anchorProgram,
+        this.wallet.publicKey,
+        account.publicKey,
+        SplingPDA,
+        UserProfilePDA,
+      ),
+    ])
 
     if (profileFile !== null && !isBrowser) {
       RNFS.unlink(`${RNFS.ExternalDirectoryPath}/profile.json`)
@@ -165,7 +172,13 @@ export default async function createUser(
 }
 
 // Submit the user profile to the anchor program.
-async function submitUserProfileToAnchorProgram(anchorProgram: anchor.Program<SocialIDL>, walletPublicKey: web3.PublicKey, accountPublicKey: web3.PublicKey, SplingPDA: web3.PublicKey, UserProfilePDA: web3.PublicKey): Promise<any> {
+async function submitUserProfileToAnchorProgram(
+  anchorProgram: anchor.Program<SocialIDL>,
+  walletPublicKey: web3.PublicKey,
+  accountPublicKey: web3.PublicKey,
+  SplingPDA: web3.PublicKey,
+  UserProfilePDA: web3.PublicKey,
+): Promise<string> {
   return anchorProgram.methods
     .createUserProfile(accountPublicKey)
     .accounts({

@@ -50,7 +50,8 @@ export default async function getUser(userId: number): Promise<User | null> {
       license: userProfileJson.license,
     } as User)
   } catch (error) {
-    if (error.message.includes('Account does not exist') || error instanceof UserNotFoundError) return Promise.resolve(null)
+    if (error.message.includes('Account does not exist') || error instanceof UserNotFoundError)
+      return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

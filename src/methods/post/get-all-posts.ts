@@ -65,11 +65,8 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
 
         // Find likes pda.
         const [LikesPDA] = await web3.PublicKey.findProgramAddress(
-          [
-            anchor.utils.bytes.utf8.encode('likes'),
-            postChain.publicKey.toBuffer(),
-          ],
-          programId
+          [anchor.utils.bytes.utf8.encode('likes'), postChain.publicKey.toBuffer()],
+          programId,
         )
 
         // Get likes of the post.

@@ -1,4 +1,4 @@
-import { Program, web3 } from 'react-native-project-serum-anchor'
+import { Program, Wallet, web3 } from 'react-native-project-serum-anchor'
 import { ShdwDrive } from 'react-native-shadow-drive'
 import {
   createPost,
@@ -34,6 +34,7 @@ import {
   InvalidHashError,
   StorageAccountNotFoundError,
 } from './utils/errors'
+import { AnchorWallet } from './utils/AnchorWallet'
 
 interface SplingProtocol {
   // USER METHODS
@@ -82,6 +83,8 @@ interface SplingProtocol {
 export class SocialProtocol implements SplingProtocol {
   private anchorProgram: Program<SocialIDL>
   private shadowDrive: ShdwDrive
+  private connection: web3.Connection
+  private wallet: Wallet
 
   // USER METHODS
   createUser = createUser
@@ -115,20 +118,23 @@ export class SocialProtocol implements SplingProtocol {
 
   /**
    *
-   * @param connection The web3 connection object.
+   * @param rpcUrl The solana rpc node url endpoint.
    * @param wallet - The wallet of the current user.
    */
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  constructor(private connection: web3.Connection, private wallet: any) {
-    this.connection = connection
-    this.wallet = wallet
-    this.anchorProgram = createSocialProtocolProgram(connection, wallet)
+  constructor(rpcUrl: string, wallet: Wallet | web3.Keypair) {
+    this.connection = new web3.Connection(rpcUrl, 'confirmed')
+    this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
+    this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
   }
 
   public async init(): Promise<SocialProtocol> {
     if (!this.wallet && !this.wallet.publicKey) return
     this.shadowDrive = await new ShdwDrive(this.connection, this.wallet).init()
     return this
+  }
+
+  public getConnection(): web3.Connection {
+    return this.connection
   }
 }
 
