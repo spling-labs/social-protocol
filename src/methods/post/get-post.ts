@@ -5,7 +5,7 @@ import { LikesChain, PostChain, UserChain } from '../../models'
 import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
-import { UserNotFoundError } from '../../utils/errors'
+import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
 
@@ -13,7 +13,7 @@ import { getUserFileData } from '../user/helpers'
  * @category Post
  * @param publicKey - the PublicKey of the post
  */
-export default async function getPost(publicKey: web3.PublicKey): Promise<Post> {
+export default async function getPost(publicKey: web3.PublicKey): Promise<Post | null> {
   try {
     // Fetch the post from the anchor program.
     const post = await this.anchorProgram.account.post.fetch(publicKey)
@@ -82,6 +82,7 @@ export default async function getPost(publicKey: web3.PublicKey): Promise<Post> 
       likes: likesChain.users
     } as Post)
   } catch (error) {
+    if (error.message.includes('Account does not exist') || error instanceof UserNotFoundError || error instanceof PostNotFoundError) return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

@@ -9,7 +9,7 @@ import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
  * @category Group
  * @param groupId - the id of the group
  */
-export default async function getGroup(groupId: number): Promise<Group> {
+export default async function getGroup(groupId: number): Promise<Group | null> {
   try {
     // Fetch the group by groupId.
     const onChainGroupProfiles = await this.anchorProgram.account.groupProfile.all([
@@ -46,6 +46,7 @@ export default async function getGroup(groupId: number): Promise<Group> {
       license: groupFileData.license,
     } as Group)
   } catch (error) {
+    if (error.message.includes('Account does not exist') || error instanceof GroupNotFoundError) return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

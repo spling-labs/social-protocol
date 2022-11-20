@@ -8,7 +8,7 @@ import { web3 } from 'react-native-project-serum-anchor'
  * @category Group
  * @param web3.PublicKey - the public key of the group
  */
-export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group> {
+export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null> {
   try {
     // Fetch the group by public key.
     const groupProfile = await this.anchorProgram.account.groupProfile.fetch(publicKey)
@@ -32,6 +32,7 @@ export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Pr
       license: groupFileData.license,
     } as Group)
   } catch (error) {
+    if (error.message.includes('Account does not exist')) return Promise.resolve(null)
     return Promise.reject(error)
   }
 }
