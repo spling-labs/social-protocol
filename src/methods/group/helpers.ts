@@ -1,4 +1,4 @@
-import { web3 } from '@project-serum/anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { GroupNotFoundError } from '../../utils/errors'
 import { GroupFileData } from '../../types'

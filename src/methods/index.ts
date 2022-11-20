@@ -19,8 +19,16 @@ import deleteGroup from './group/delete-group'
 // POST METHODS
 import createPost from './post/create-post'
 import getPost from './post/get-post'
+import getPostByPublicKey from './post/get-post-by-public-key'
 import getAllPosts from './post/get-all-posts'
 import deletePost from './post/delete-post'
+import likePost from './post/like-post'
+
+// REPLY METHODS
+import createPostReply from './post/reply/create-post-reply'
+import getPostReply from './post/reply/get-post-reply'
+import getAllPostReplies from './post/reply/get-all-post-replies'
+import deletePostReply from './post/reply/delete-post-reply'
 
 export {
   createUser,
@@ -39,6 +47,12 @@ export {
   deleteGroup,
   createPost,
   getPost,
+  getPostByPublicKey,
   getAllPosts,
   deletePost,
+  likePost,
+  createPostReply,
+  getPostReply,
+  getAllPostReplies,
+  deletePostReply,
 }

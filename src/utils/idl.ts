@@ -250,6 +250,127 @@ export type SocialIDL = {
       ]
     },
     {
+      name: 'submitPostWithLikes'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'post'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'likes'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'groupId'
+          type: 'u32'
+        },
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
+    {
+      name: 'likePost'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'post'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'likes'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: []
+    },
+    {
+      name: 'submitReply'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userProfile'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'reply'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'postId'
+          type: 'u32'
+        },
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
+    {
       name: 'deletePost'
       accounts: [
         {
@@ -290,7 +411,7 @@ export type SocialIDL = {
       ]
     },
     {
-      name: 'deleteGroupProfile'
+      name: 'deleteReply'
       accounts: [
         {
           name: 'user'
@@ -303,7 +424,12 @@ export type SocialIDL = {
           isSigner: false
         },
         {
-          name: 'groupProfile'
+          name: 'userProfile'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'reply'
           isMut: true
           isSigner: false
         },
@@ -314,6 +440,10 @@ export type SocialIDL = {
         },
       ]
       args: [
+        {
+          name: 'postId'
+          type: 'u32'
+        },
         {
           name: 'shdw'
           type: 'publicKey'
@@ -355,6 +485,115 @@ export type SocialIDL = {
         },
       ]
     },
+    {
+      name: 'deleteGroupProfile'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'groupProfile'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: [
+        {
+          name: 'shdw'
+          type: 'publicKey'
+        },
+      ]
+    },
+    {
+      name: 'createBank'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'bank'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: []
+    },
+    {
+      name: 'resetBank'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'bank'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: []
+    },
+    {
+      name: 'extractBank'
+      accounts: [
+        {
+          name: 'user'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'spling'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'bank'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+      ]
+      args: []
+    },
   ]
   accounts: [
     {
@@ -371,7 +610,77 @@ export type SocialIDL = {
             type: 'u32'
           },
           {
+            name: 'pid'
+            type: 'u32'
+          },
+          {
             name: 'gid'
+            type: 'u32'
+          },
+          {
+            name: 'st'
+            type: 'u8'
+          },
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+        ]
+      }
+    },
+    {
+      name: 'Tip'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'uid'
+            type: 'u32'
+          },
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+        ]
+      }
+    },
+    {
+      name: 'Likes'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'counter'
+            type: 'u16'
+          },
+          {
+            name: 'users'
+            type: {
+              vec: 'u32'
+            }
+          },
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+        ]
+      }
+    },
+    {
+      name: 'Reply'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'ts'
+            type: 'i64'
+          },
+          {
+            name: 'uid'
+            type: 'u32'
+          },
+          {
+            name: 'pid'
             type: 'u32'
           },
           {
@@ -399,6 +708,10 @@ export type SocialIDL = {
             type: 'u32'
           },
           {
+            name: 'posts'
+            type: 'u32'
+          },
+          {
             name: 'bump'
             type: 'u8'
           },
@@ -406,17 +719,13 @@ export type SocialIDL = {
       }
     },
     {
-      name: 'UserId'
+      name: 'Bank'
       type: {
         kind: 'struct'
         fields: [
           {
-            name: 'user'
-            type: 'publicKey'
-          },
-          {
-            name: 'uid'
-            type: 'u32'
+            name: 'size'
+            type: 'u16'
           },
           {
             name: 'bump'
@@ -470,26 +779,6 @@ export type SocialIDL = {
       }
     },
     {
-      name: 'GroupId'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'group'
-            type: 'publicKey'
-          },
-          {
-            name: 'gid'
-            type: 'u32'
-          },
-          {
-            name: 'bump'
-            type: 'u8'
-          },
-        ]
-      }
-    },
-    {
       name: 'GroupProfile'
       type: {
         kind: 'struct'
@@ -523,7 +812,7 @@ export type SocialIDL = {
     },
   ]
   metadata: {
-    address: '9XXBUPPp5gpsd8ii6NutuyPVQMGJhFSTqcnJawgQenpt'
+    address: '2CfHWikwHGSAb4mudPdnWEbf5CQwXbod1d9bN9pL34gs'
   }
 }
 
@@ -779,6 +1068,127 @@ export const IDL: SocialIDL = {
       ],
     },
     {
+      name: 'submitPostWithLikes',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'post',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'likes',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'groupId',
+          type: 'u32',
+        },
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
+    {
+      name: 'likePost',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'post',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'likes',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: 'submitReply',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userProfile',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'reply',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'postId',
+          type: 'u32',
+        },
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
+    {
       name: 'deletePost',
       accounts: [
         {
@@ -819,7 +1229,7 @@ export const IDL: SocialIDL = {
       ],
     },
     {
-      name: 'deleteGroupProfile',
+      name: 'deleteReply',
       accounts: [
         {
           name: 'user',
@@ -832,7 +1242,12 @@ export const IDL: SocialIDL = {
           isSigner: false,
         },
         {
-          name: 'groupProfile',
+          name: 'userProfile',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'reply',
           isMut: true,
           isSigner: false,
         },
@@ -843,6 +1258,10 @@ export const IDL: SocialIDL = {
         },
       ],
       args: [
+        {
+          name: 'postId',
+          type: 'u32',
+        },
         {
           name: 'shdw',
           type: 'publicKey',
@@ -884,6 +1303,115 @@ export const IDL: SocialIDL = {
         },
       ],
     },
+    {
+      name: 'deleteGroupProfile',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'groupProfile',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'shdw',
+          type: 'publicKey',
+        },
+      ],
+    },
+    {
+      name: 'createBank',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'bank',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: 'resetBank',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'bank',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: 'extractBank',
+      accounts: [
+        {
+          name: 'user',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'spling',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'bank',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
   ],
   accounts: [
     {
@@ -900,7 +1428,77 @@ export const IDL: SocialIDL = {
             type: 'u32',
           },
           {
+            name: 'pid',
+            type: 'u32',
+          },
+          {
             name: 'gid',
+            type: 'u32',
+          },
+          {
+            name: 'st',
+            type: 'u8',
+          },
+          {
+            name: 'bump',
+            type: 'u8',
+          },
+        ],
+      },
+    },
+    {
+      name: 'Tip',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'uid',
+            type: 'u32',
+          },
+          {
+            name: 'bump',
+            type: 'u8',
+          },
+        ],
+      },
+    },
+    {
+      name: 'Likes',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'counter',
+            type: 'u16',
+          },
+          {
+            name: 'users',
+            type: {
+              vec: 'u32',
+            },
+          },
+          {
+            name: 'bump',
+            type: 'u8',
+          },
+        ],
+      },
+    },
+    {
+      name: 'Reply',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'ts',
+            type: 'i64',
+          },
+          {
+            name: 'uid',
+            type: 'u32',
+          },
+          {
+            name: 'pid',
             type: 'u32',
           },
           {
@@ -928,6 +1526,10 @@ export const IDL: SocialIDL = {
             type: 'u32',
           },
           {
+            name: 'posts',
+            type: 'u32',
+          },
+          {
             name: 'bump',
             type: 'u8',
           },
@@ -935,17 +1537,13 @@ export const IDL: SocialIDL = {
       },
     },
     {
-      name: 'UserId',
+      name: 'Bank',
       type: {
         kind: 'struct',
         fields: [
           {
-            name: 'user',
-            type: 'publicKey',
-          },
-          {
-            name: 'uid',
-            type: 'u32',
+            name: 'size',
+            type: 'u16',
           },
           {
             name: 'bump',
@@ -999,26 +1597,6 @@ export const IDL: SocialIDL = {
       },
     },
     {
-      name: 'GroupId',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'group',
-            type: 'publicKey',
-          },
-          {
-            name: 'gid',
-            type: 'u32',
-          },
-          {
-            name: 'bump',
-            type: 'u8',
-          },
-        ],
-      },
-    },
-    {
       name: 'GroupProfile',
       type: {
         kind: 'struct',
@@ -1052,6 +1630,6 @@ export const IDL: SocialIDL = {
     },
   ],
   metadata: {
-    address: '9XXBUPPp5gpsd8ii6NutuyPVQMGJhFSTqcnJawgQenpt',
+    address: '2CfHWikwHGSAb4mudPdnWEbf5CQwXbod1d9bN9pL34gs',
   },
 }

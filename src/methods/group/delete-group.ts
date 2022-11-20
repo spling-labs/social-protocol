@@ -1,5 +1,5 @@
-import * as anchor from '@project-serum/anchor'
-import { web3 } from '@project-serum/anchor'
+import * as anchor from 'react-native-project-serum-anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models'
 import { GroupFileData } from '../../types'

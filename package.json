@@ -1,7 +1,7 @@
 {
   "name": "@spling/social-protocol",
-  "version": "1.2.1",
-  "description": "The official spling social protocol. Create your own solona on-chain social media app with this protocol.",
+  "version": "1.3.0",
+  "description": "The official Spling Labs social protocol. Create your own solona on-chain social media app with this protocol.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,9 +12,9 @@
     "prebuild": "yarn clean",
     "prepublishOnly": "yarn build",
     "docs": "typedoc --excludePrivate --includeVersion --out ./docs src",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
-    "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc"
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc"
   },
   "repository": {
     "type": "git",
@@ -35,12 +35,12 @@
     "protocol",
     "spling"
   ],
-  "author": "Spling",
+  "author": "Spling Labs",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/spling-labs/social-protocol/issues"
   },
-  "homepage": "https://spling.app/",
+  "homepage": "https://splinglabs.com/",
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
@@ -58,9 +58,10 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@project-serum/anchor": "^0.25.0",
-    "@shadow-drive/sdk": "^3.0.5",
     "bs58": "^5.0.0",
-    "dayjs": "^1.11.4"
+    "dayjs": "^1.11.4",
+    "react-native-fs": "^2.20.0",
+    "react-native-project-serum-anchor": "^0.25.0",
+    "react-native-shadow-drive": "^3.1.1"
   }
 }
