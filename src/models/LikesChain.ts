@@ -1,19 +1,15 @@
 import { web3 } from 'react-native-project-serum-anchor'
 
-export class GroupChain {
+export class LikesChain {
   publicKey: web3.PublicKey
-  timestamp: number
-  groupId: number
-  status: number
-  shdw: web3.PublicKey
+  counter: number
+  users: number[]
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   constructor(publicKey: web3.PublicKey, accountData: any) {
     this.publicKey = publicKey
-    this.timestamp = accountData.ts
-    this.groupId = accountData.gid
-    this.status = accountData.st
-    this.shdw = accountData.shdw
+    this.counter = accountData.counter
+    this.users = accountData.users
   }
 
   get key() {

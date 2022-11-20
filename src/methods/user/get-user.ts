@@ -3,13 +3,13 @@ import { User, UserFileData } from '../../types'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 import { UserNotFoundError } from '../../utils/errors'
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 
 /**
  * @category User
  * @param userId - The id of the user.
  */
-export default async function getUser(userId: number): Promise<User> {
+export default async function getUser(userId: number): Promise<User | null> {
   try {
     // Fetch the user profile.
     const onChainProfiles = await this.anchorProgram.account.userProfile.all([
@@ -50,6 +50,8 @@ export default async function getUser(userId: number): Promise<User> {
       license: userProfileJson.license,
     } as User)
   } catch (error) {
+    if (error.message.includes('Account does not exist') || error instanceof UserNotFoundError)
+      return Promise.resolve(null)
     return Promise.reject(error)
   }
 }

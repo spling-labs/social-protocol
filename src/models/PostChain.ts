@@ -1,9 +1,10 @@
-import { web3 } from '@project-serum/anchor'
+import { web3 } from 'react-native-project-serum-anchor'
 
 export class PostChain {
   publicKey: web3.PublicKey
   timestamp: number
   userId: number
+  postId: number
   groupId: number
   status: number
 
@@ -12,6 +13,7 @@ export class PostChain {
     this.publicKey = publicKey
     this.timestamp = accountData.ts
     this.userId = accountData.uid
+    this.postId = accountData.pid
     this.groupId = accountData.gid
     this.status = accountData.st
   }

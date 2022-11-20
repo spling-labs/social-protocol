@@ -11,26 +11,13 @@ import { getUserFileData } from '../user/helpers'
 
 /**
  * @category Post
- * @param postId - the id of the post
+ * @param publicKey - the PublicKey of the post
  */
-export default async function getPost(postId: number): Promise<Post | null> {
+export default async function getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null> {
   try {
-    // Fetch the post.
-    const onChainPosts = await this.anchorProgram.account.post.all([
-      {
-        memcmp: {
-          offset:
-            8 + // Discriminator
-            8 + // Timestamp
-            4, // userId
-          bytes: bs58.encode(Uint8Array.from([postId])),
-        },
-      },
-    ])
-    if (onChainPosts.length === 0) throw new PostNotFoundError()
-
-    const post = onChainPosts[0]
-    const postChain = new PostChain(post.publicKey, post)
+    // Fetch the post from the anchor program.
+    const post = await this.anchorProgram.account.post.fetch(publicKey)
+    const postChain = new PostChain(publicKey, post)
 
     // Fetch the user profile.
     const onChainProfiles = await this.anchorProgram.account.userProfile.all([
@@ -49,7 +36,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
     const profile = onChainProfiles[0]
     const userChain = new UserChain(profile.publicKey, profile.account)
 
-    const postFileData: PostFileData = await getPostFileData(postChain.publicKey, userChain.shdw)
+    const postFileData: PostFileData = await getPostFileData(publicKey, userChain.shdw)
 
     if (postFileData.text != null) {
       postFileData.text = await getTextFromFile(
@@ -72,7 +59,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
 
     return Promise.resolve({
       timestamp: postChain.timestamp,
-      publicKey: postChain.publicKey,
+      publicKey: publicKey,
       status: postChain.status,
       programId: postFileData.programId,
       userId: Number(postFileData.userId),
