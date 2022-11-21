@@ -129,7 +129,7 @@ export class SocialProtocol implements SplingProtocol {
    */
   constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair) {
     this.connection = new web3.Connection(
-      rpcUrl ? rpcUrl : 'https://solana-api.projectserum.com',
+      rpcUrl ? rpcUrl : 'https://api.mainnet-beta.solana.com/',
       'confirmed',
     )
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
