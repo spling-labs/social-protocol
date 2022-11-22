@@ -4,10 +4,12 @@ import { programId, shadowDriveDomain } from '../../utils/constants'
 import { LikesChain, PostChain, UserChain } from '../../models'
 import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
-import { getTextFromFile } from '../../utils/helpers'
+import { getKeypairFromSeed, getTextFromFile } from '../../utils/helpers'
 import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
+import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
+import { getAccessParams, getLitAuthenticationSignatureForUserWallet } from '../../utils/litProtocol'
 
 /**
  * @category Post
@@ -57,6 +59,30 @@ export default async function getPost(postId: number): Promise<Post | null> {
       )
     }
 
+    // Decrypt text from Post
+    // Retrieve stored encrypted values from Post
+    const encryptedString = postFileData.text;
+    const encryptedSymmetricKey = postFileData.encryptedSymmetricKey;
+    const solRpcConditions = postFileData.accessControlConditions;
+    
+    // Generate the hash from the text.
+    const hash: web3.Keypair = getKeypairFromSeed(
+      `${postFileData.timestamp}${userChain.userId.toString()}${postFileData.groupId.toString()}`,
+    )
+    
+    // Retrieve authsig of user
+    let authSig = getLitAuthenticationSignatureForUserWallet(profile.publicKey, hash.secretKey);
+    
+    // Revert string to Uint8Array so that we can work with it
+    let retrievedEncryptedSymmetricKey = new Uint8Array(LitJsSdk.uint8arrayFromString(encryptedSymmetricKey, 'base16'));
+
+    // Make connection with Lit Node for obtaining symmetricKey
+    const getAccess = getAccessParams(solRpcConditions, retrievedEncryptedSymmetricKey, authSig);
+    const symmetricKey = await this.litNodeClient.getEncryptionKey(getAccess);
+
+    const decryptedPostText = await LitJsSdk.decryptString(encryptedString, symmetricKey);
+    
+
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 
@@ -78,7 +104,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
       userId: Number(postFileData.userId),
       postId: postChain.postId,
       groupId: Number(postFileData.groupId),
-      text: postFileData.text,
+      text: decryptedPostText,
       media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
       license: postFileData.license,
       user: {

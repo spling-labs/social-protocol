@@ -66,7 +66,7 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
-  encryptedSymetricKey: string
+  encryptedSymmetricKey: string
   accessControlConditions: [LitSolRpcCondition]
 }
 
@@ -152,4 +152,18 @@ export interface LitSolRpcConditionReturnValueTest {
   key: string
   comparator: string
   value: string
+}
+
+export interface LitNodeSaveEncryptionParams {
+  accessControlConditions: [LitSolRpcCondition]
+  symmetricKey: Uint8Array
+  authSig: LitAuthSig
+  chain: string
+}
+
+export interface LitNodeDecryptionParams {
+  accessControlConditions: [LitSolRpcCondition]
+  toDecrypt: Uint8Array
+  chain: string
+  authSig: LitAuthSig
 }

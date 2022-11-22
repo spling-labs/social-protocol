@@ -21,7 +21,7 @@ import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import RNFS from 'react-native-fs'
-import { getLitAuthenticationSignatureForUserWallet, getSolRpcCondition } from '../../utils/litProtocol'
+import { createEncyptionsParams, getLitAuthenticationSignatureForUserWallet, getSolRpcCondition } from '../../utils/litProtocol'
 import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
 
 /**
@@ -100,13 +100,8 @@ export default async function createPost(
     const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text);
 
     let solRpcConditions = getSolRpcCondition(UserProfilePDA);
-    const saveEncryptionParams = {
-      solRpcConditions: solRpcConditions,
-      chain: 'solana',
-      authSig: JSON.parse(JSON.stringify(authSig)),
-      symmetricKey: symmetricKey
-    };
-
+    const saveEncryptionParams = createEncyptionsParams(solRpcConditions, symmetricKey, authSig);
+    
     const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey(
         saveEncryptionParams
     );
@@ -199,7 +194,7 @@ export default async function createPost(
         : [],
       license: null,
        // TODO We gonna need the accessControlConditions, encryptedSymmetricKey & encryptedString to decrypt the message
-      encryptedSymetricKey: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, 'base16'),
+      encryptedSymmetricKey: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, 'base16'),
       accessControlConditions: solRpcConditions
     }
 

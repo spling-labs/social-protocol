@@ -1,7 +1,10 @@
 import { toString as uint8arrayToString } from 'uint8arrays';
 import { PublicKey } from '@solana/web3.js';
 import { sign } from 'tweetnacl';
-import { LitAuthSig, LitClientConfiguration, LitSolRpcCondition } from "index";
+import { LitAuthSig, LitClientConfiguration, LitNodeDecryptionParams, LitNodeSaveEncryptionParams, LitSolRpcCondition } from "index";
+
+const CHAIN = 'solana';
+
 
 export function getLitClientConfiguration(): LitClientConfiguration {
     const configLitClient: LitClientConfiguration = {
@@ -60,4 +63,26 @@ export function getSolRpcCondition(publicKey: PublicKey): [LitSolRpcCondition] {
         }
 
     return [solRpcCondition];
+}
+
+export function createEncyptionsParams(solRpcConditions: [LitSolRpcCondition], symmetricKey: Uint8Array, authSig: LitAuthSig): LitNodeSaveEncryptionParams {
+        
+    const params: LitNodeSaveEncryptionParams = {
+        accessControlConditions: solRpcConditions,
+        symmetricKey: symmetricKey,
+        authSig: authSig,
+        chain: CHAIN
+    }
+    return params;
+}
+
+export function getAccessParams(solRpcConditions: [LitSolRpcCondition], symmetricKey: Uint8Array, authSig: LitAuthSig): LitNodeDecryptionParams  {
+    
+    const params: LitNodeDecryptionParams = {
+        accessControlConditions: solRpcConditions,
+        toDecrypt: symmetricKey,
+        chain: CHAIN,
+        authSig: authSig
+    }
+    return params;
 }
