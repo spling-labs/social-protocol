@@ -21,6 +21,8 @@ import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import RNFS from 'react-native-fs'
+import { getLitAuthenticationSignatureForUserWallet, getSolRpcCondition } from '../../utils/litProtocol'
+import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
 
 /**
  * @category Post
@@ -92,12 +94,30 @@ export default async function createPost(
         : null
     }
 
+
+    // Encrypt text
+    let authSig = getLitAuthenticationSignatureForUserWallet(UserProfilePDA, hash.secretKey);
+    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text);
+
+    let solRpcConditions = getSolRpcCondition(UserProfilePDA);
+    const saveEncryptionParams = {
+      solRpcConditions: solRpcConditions,
+      chain: 'solana',
+      authSig: JSON.parse(JSON.stringify(authSig)),
+      symmetricKey: symmetricKey
+    };
+
+    const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey(
+        saveEncryptionParams
+    );
+
+
     // Create text tile to upload.
     let postTextFile = null
     if (text !== null) {
       if (!isBrowser) {
         const postTextPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`
-        await RNFS.writeFile(postTextPath, text, 'utf8')
+        await RNFS.writeFile(postTextPath, encryptedString, 'utf8')
         const statResult = await RNFS.stat(postTextPath)
         const file = await RNFS.readFile(postTextPath, 'utf8')
 
@@ -110,7 +130,7 @@ export default async function createPost(
         } as ShadowFile
       } else {
         postTextFile = new File(
-          [new Blob([text], { type: 'text/plain' })],
+          [new Blob([encryptedString], { type: 'text/plain' })],
           `${PostPDA.toString()}.txt`,
         )
       }
@@ -168,7 +188,7 @@ export default async function createPost(
       programId: programId.toString(),
       userId: userChain.userId.toString(),
       groupId: groupId.toString(),
-      text: text ? `${PostPDA.toString()}.txt` : null,
+      text: encryptedString ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
             {
@@ -178,6 +198,9 @@ export default async function createPost(
           ]
         : [],
       license: null,
+       // TODO We gonna need the accessControlConditions, encryptedSymmetricKey & encryptedString to decrypt the message
+      encryptedSymetricKey: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, 'base16'),
+      accessControlConditions: solRpcConditions
     }
 
     if (!isBrowser) {

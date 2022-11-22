@@ -66,6 +66,8 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
+  encryptedSymetricKey: string
+  accessControlConditions: [LitSolRpcCondition]
 }
 
 export type PostUser = {
@@ -116,4 +118,38 @@ export interface FileUriData {
   uri: string
   type: string
   size: number
+}
+
+export interface LitClientConfiguration {
+  alertWhenUnauthorized: false
+  minNodeCount: number
+  debug: boolean
+}
+
+export interface LitAuthSig {
+  sig: string
+  derivedVia: string
+  signedMessage: string
+  address: string
+}
+
+export interface LitSolRpcCondition {
+  method: string,
+  params: [string]
+  pdaParams: []
+  pdaInterface: LitSolRpcConditionPdaInterface
+  pdaKey: string
+  chain: string
+  returnValueTest: LitSolRpcConditionReturnValueTest
+}
+
+export interface LitSolRpcConditionPdaInterface {
+  offset: number
+  fields: {}
+}
+
+export interface LitSolRpcConditionReturnValueTest {
+  key: string
+  comparator: string
+  value: string
 }
