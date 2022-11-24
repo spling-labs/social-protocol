@@ -40,6 +40,7 @@ export type GroupFileData = {
   timestamp: string
   name: string
   bio: string
+  isPrivate: boolean
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
@@ -49,6 +50,7 @@ export type Group = {
   timestamp: number
   publicKey: web3.PublicKey
   groupId: number
+  isPrivate: boolean
   status: number
   shdw: web3.PublicKey
   name: string

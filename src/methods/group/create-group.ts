@@ -15,6 +15,7 @@ export default async function createGroup(
   name: string,
   bio: string | null,
   avatar: FileData | FileUriData | null,
+  isPrivate: boolean
 ): Promise<Group> {
   try {
     // Generate avatar file to upload.
@@ -64,6 +65,7 @@ export default async function createGroup(
       timestamp: dayjs().unix().toString(),
       name: name,
       bio: bio ? bio : '',
+      isPrivate: isPrivate,
       avatar: avatarUploadFile
         ? ({
             file: `group-avatar.${avatar.type.split('/')[1]}`,
