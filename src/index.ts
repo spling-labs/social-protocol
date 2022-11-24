@@ -37,6 +37,8 @@ import {
   StorageAccountNotFoundError,
 } from './utils/errors'
 import { AnchorWallet } from './utils/AnchorWallet'
+import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
+import { getLitClientConfiguration } from './utils/litProtocol'
 
 interface SplingProtocol {
   // USER METHODS
@@ -89,6 +91,7 @@ export class SocialProtocol implements SplingProtocol {
   private shadowDrive: ShdwDrive
   private connection: web3.Connection
   private wallet: Wallet
+  private litNodeClient: LitJsSdk
 
   // USER METHODS
   createUser = createUser
@@ -139,6 +142,8 @@ export class SocialProtocol implements SplingProtocol {
   public async init(): Promise<SocialProtocol> {
     if (!this.wallet && !this.wallet.publicKey) return
     this.shadowDrive = await new ShdwDrive(this.connection, this.wallet).init()
+    this.litNodeClient = new LitJsSdk.LitNodeClient(getLitClientConfiguration());
+    await this.litNodeClient.connect();
     return this
   }
 

@@ -2,12 +2,15 @@ import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import { LikesChain, PostChain, UserChain } from '../../models'
-import { Post, PostFileData, PostUser, UserFileData } from '../../types'
+import { Group, Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
-import { getTextFromFile } from '../../utils/helpers'
+import { getKeypairFromSeed, getTextFromFile } from '../../utils/helpers'
 import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
+import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
+import { getAccessParams, getLitAuthenticationSignatureForUserWallet } from '../../utils/litProtocol'
+import getGroupByPublicKey from '../group/get-group-by-public-key'
 
 /**
  * @category Post
@@ -57,6 +60,42 @@ export default async function getPost(postId: number): Promise<Post | null> {
       )
     }
 
+    // Check if post of Group is private
+    let group: Group = await getGroupByPublicKey(profile.publicKey);
+    if (group.isPrivate) {
+
+      // Retrieve stored encrypted values from Post
+      const encryptedString = postFileData.text;
+      const encryptedSymmetricKey = postFileData.encryptedSymmetricKey;
+      const solRpcConditions = postFileData.accessControlConditions;
+
+      // Retrieve hash for User
+      const hash: web3.Keypair = getKeypairFromSeed(
+        `${postFileData.timestamp}${userChain.userId.toString()}${postFileData.groupId.toString()}`,
+      )
+
+      // Decrypt text from Post
+      // Check and sign cryptographic authentication.
+      // This is to prove ownership of a given wallet address to Lit nodes
+      // Generate the hash from the text.
+      
+      // Retrieve authsig of user
+      let authSig = getLitAuthenticationSignatureForUserWallet(profile.publicKey, hash.secretKey);
+      
+      // Revert string to Uint8Array so that we can work with it
+      let retrievedEncryptedSymmetricKey = new Uint8Array(LitJsSdk.uint8arrayFromString(encryptedSymmetricKey, 'base16'));
+      
+      // Make connection with Lit Node for obtaining decrypted symmetricKey
+      const getAccess = getAccessParams(solRpcConditions, retrievedEncryptedSymmetricKey, authSig);
+
+      const symmetricKey = await this.litNodeClient.getEncryptionKey(getAccess);
+
+      const decryptedPostText = await LitJsSdk.decryptString(encryptedString, symmetricKey);
+      
+      postFileData.text = decryptedPostText;
+    }
+
+    
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 

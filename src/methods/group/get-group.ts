@@ -38,6 +38,7 @@ export default async function getGroup(groupId: number): Promise<Group | null> {
       shdw: groupChain.shdw,
       name: groupFileData.name,
       bio: groupFileData.bio,
+      isPrivate: groupFileData.isPrivate,
       avatar:
         groupFileData.avatar != null
           ? `${shadowDriveDomain}${groupChain.shdw.toString()}/${groupFileData.avatar.file}`

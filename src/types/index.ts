@@ -40,6 +40,7 @@ export type GroupFileData = {
   timestamp: string
   name: string
   bio: string
+  isPrivate: boolean
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
@@ -49,6 +50,7 @@ export type Group = {
   timestamp: number
   publicKey: web3.PublicKey
   groupId: number
+  isPrivate: boolean
   status: number
   shdw: web3.PublicKey
   name: string
@@ -66,6 +68,8 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
+  encryptedSymmetricKey: string
+  accessControlConditions: [LitSolRpcCondition]
 }
 
 export type PostUser = {
@@ -116,4 +120,52 @@ export interface FileUriData {
   uri: string
   type: string
   size: number
+}
+
+export interface LitClientConfiguration {
+  alertWhenUnauthorized: false
+  minNodeCount: number
+  debug: boolean
+}
+
+export interface LitAuthSig {
+  sig: string
+  derivedVia: string
+  signedMessage: string
+  address: string
+}
+
+export interface LitSolRpcCondition {
+  method: string,
+  params: [string]
+  pdaParams: []
+  pdaInterface: LitSolRpcConditionPdaInterface
+  pdaKey: string
+  chain: string
+  returnValueTest: LitSolRpcConditionReturnValueTest
+}
+
+export interface LitSolRpcConditionPdaInterface {
+  offset: number
+  fields: {}
+}
+
+export interface LitSolRpcConditionReturnValueTest {
+  key: string
+  comparator: string
+  value: string
+}
+
+export interface LitNodeSaveEncryptionParams {
+  accessControlConditions: [LitSolRpcCondition]
+  symmetricKey: Uint8Array
+  authSig: LitAuthSig
+  chain: string
+}
+
+export interface LitNodeDecryptionParams {
+  accessControlConditions: [LitSolRpcCondition]
+  toDecrypt: Uint8Array
+  chain: string
+  authSig: LitAuthSig
 }

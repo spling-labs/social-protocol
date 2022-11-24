@@ -11,6 +11,8 @@ import {
   PostUser,
   UserFileData,
   FileUriData,
+  Group,
+  LitSolRpcCondition,
 } from '../../types'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
@@ -21,6 +23,9 @@ import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import RNFS from 'react-native-fs'
+import { createEncyptionsParams, getLitAuthenticationSignatureForUserWallet, getSolRpcCondition } from '../../utils/litProtocol'
+import * as LitJsSdk from 'lit-js-sdk/build/index.node.js'
+import getGroupByPublicKey from '../group/get-group-by-public-key'
 
 /**
  * @category Post
@@ -91,6 +96,38 @@ export default async function createPost(
           )
         : null
     }
+
+
+    // Check if Post for Group is private
+    let group: Group = await getGroupByPublicKey(hash.publicKey);
+    let stringAsEncryptedSymmetricKey: string = "";
+    let solRpcConditions: [LitSolRpcCondition];
+    if (group.isPrivate) {
+      
+      // Encrypt text
+      // Check and sign cryptographic authentication.
+      // This is to prove ownership of a given wallet address to Lit nodes
+      let authSig = getLitAuthenticationSignatureForUserWallet(UserProfilePDA, hash.secretKey);
+
+      // Run encryption over text
+      const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text);
+
+      // Securely saves the association between access control conditions and the content we want to decrypt. 
+      // This is saved on Lit nodes.
+      let solRpcConditions = getSolRpcCondition(UserProfilePDA);
+      const saveEncryptionParams = createEncyptionsParams(solRpcConditions, symmetricKey, authSig);
+
+      const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey(
+          saveEncryptionParams
+      );
+
+      stringAsEncryptedSymmetricKey = LitJsSdk.uint8arrayToString(encryptedSymmetricKey, 'base16');
+
+      // replace text with encrypted version w.r.t wallet signature
+      text = encryptedString;
+    }
+    
+
 
     // Create text tile to upload.
     let postTextFile = null
@@ -178,6 +215,9 @@ export default async function createPost(
           ]
         : [],
       license: null,
+       // TODO We gonna need the accessControlConditions, encryptedSymmetricKey & encryptedString to decrypt the message
+      encryptedSymmetricKey: stringAsEncryptedSymmetricKey,
+      accessControlConditions: solRpcConditions
     }
 
     if (!isBrowser) {

@@ -60,8 +60,11 @@
   "dependencies": {
     "bs58": "^5.0.0",
     "dayjs": "^1.11.4",
+    "lit-js-sdk": "^1.1.234",
     "react-native-fs": "^2.20.0",
     "react-native-project-serum-anchor": "^0.25.0",
-    "react-native-shadow-drive": "^3.1.1"
+    "react-native-shadow-drive": "^3.1.1",
+    "tweetnacl": "^1.0.3",
+    "uint8arrays": "^4.0.2"
   }
 }
