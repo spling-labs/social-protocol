@@ -1,10 +1,11 @@
 import { getKeypairFromSeed } from '../../utils/helpers'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { programId } from '../../utils/constants'
+import { programId, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
 import { PostFileData } from 'index'
 import { getPostFileData } from './helpers'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * @category Post
@@ -29,7 +30,7 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
 
     // Fetch the user id.
     const fetchedUserProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(UserProfilePDA, fetchedUserProfile)
+    const userChain = new UserChain(fetchedUserProfile)
 
     // Get the post file data.
     const postFileData: PostFileData = await getPostFileData(publicKey, userChain.shdw)
@@ -50,6 +51,29 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
       [anchor.utils.bytes.utf8.encode('likes'), PostPDA.toBuffer()],
       programId,
     )
+
+    if (this.tokenAccount !== null) {
+      // Find bank pda.
+      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode('b')],
+        programId,
+      )
+
+      // Extract transaction costs from the bank.
+      await this.anchorProgram.methods
+        .extractBank(new anchor.BN(10000))
+        .accounts({
+          user: this.wallet.publicKey,
+          spling: SplingPDA,
+          b: BankPDA,
+          receiver: this.wallet.publicKey,
+          senderTokenAccount: this.tokenAccount,
+          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+          mint: SPLING_TOKEN_ADDRESS,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc()
+    }
 
     // Submit the post to the anchor program.
     await this.anchorProgram.methods

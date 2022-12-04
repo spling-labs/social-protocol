@@ -24,7 +24,7 @@ export default async function deletePostReply(publicKey: web3.PublicKey): Promis
 
     // Fetch the user profile.
     const profile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(profile.publicKey, profile)
+    const userChain = new UserChain(profile)
 
     // Check if the user owns the post.
     if (replyChain.userId !== userChain.userId)

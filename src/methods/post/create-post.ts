@@ -14,24 +14,27 @@ import {
 } from '../../types'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
+import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import RNFS from 'react-native-fs'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * @category Post
  * @param groupId - The id of the group.
  * @param text - The text of the post.
  * @param image - The image of the post.
+ * @param tag - The tag of the post.
  */
 export default async function createPost(
   groupId: number,
   text: string | null,
   image: FileData | FileUriData | null,
+  tag: string | null = null
 ): Promise<Post> {
   try {
     // Find spling pda.
@@ -48,7 +51,7 @@ export default async function createPost(
 
     // Fetch the user id.
     const fetchedUserProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(UserProfilePDA, fetchedUserProfile)
+    const userChain = new UserChain(fetchedUserProfile)
 
     // Get current timestamp.
     const timestamp: string = dayjs().unix().toString()
@@ -76,19 +79,19 @@ export default async function createPost(
     if (!isBrowser) {
       postImageFile = image
         ? ({
-            uri: (image as FileUriData).uri,
-            name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-            type: (image as FileUriData).type,
-            size: (image as FileUriData).size,
-            file: Buffer.from(''),
-          } as ShadowFile)
+          uri: (image as FileUriData).uri,
+          name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          type: (image as FileUriData).type,
+          size: (image as FileUriData).size,
+          file: Buffer.from(''),
+        } as ShadowFile)
         : null
     } else {
       postImageFile = image
         ? new File(
-            [convertDataUriToBlob((image as FileData).base64)],
-            `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-          )
+          [convertDataUriToBlob((image as FileData).base64)],
+          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+        )
         : null
     }
 
@@ -126,21 +129,28 @@ export default async function createPost(
       fileSizeSummarized += postTextFile.size
     }
 
-    // Find bank pda.
-    const [BankPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('bank')],
-      programId,
-    )
+    if (this.tokenAccount !== null) {
+      // Find bank pda.
+      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode('b')],
+        programId,
+      )
 
-    // Extract transaction costs from the bank.
-    await this.anchorProgram.methods
-      .extractBank()
-      .accounts({
-        user: this.wallet.publicKey,
-        bank: BankPDA,
-        spling: SplingPDA,
-      })
-      .rpc()
+      // Extract transaction costs from the bank.
+      await this.anchorProgram.methods
+        .extractBank(new anchor.BN(2292880))
+        .accounts({
+          user: this.wallet.publicKey,
+          spling: SplingPDA,
+          b: BankPDA,
+          receiver: this.wallet.publicKey,
+          senderTokenAccount: this.tokenAccount,
+          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+          mint: SPLING_TOKEN_ADDRESS,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc()
+    }
 
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
@@ -171,11 +181,11 @@ export default async function createPost(
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: image
         ? [
-            {
-              file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
-              type: image.type.split('/')[1],
-            } as MediaData,
-          ]
+          {
+            file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
+            type: image.type.split('/')[1],
+          } as MediaData,
+        ]
         : [],
       license: null,
     }
@@ -202,13 +212,20 @@ export default async function createPost(
       await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
     }
 
+    // Find tags pda.
+    const [TagsPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('tags')],
+      programId,
+    )
+
     // Submit the post to the anchor program.
     await this.anchorProgram.methods
-      .submitPostWithLikes(groupId, hash.publicKey)
+      .submitPost(groupId, hash.publicKey, tag ? tag : "")
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,
         post: PostPDA,
+        tags: TagsPDA,
         likes: LikesPDA,
         spling: SplingPDA,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -243,6 +260,7 @@ export default async function createPost(
             : null,
       } as PostUser,
       likes: [],
+      tags: tag ? [tag] : []
     } as Post)
   } catch (error) {
     return Promise.reject(error)

@@ -45,7 +45,7 @@ export default async function getAllPostReplies(postId: number): Promise<Reply[]
         if (onChainProfiles.length === 0) throw new UserNotFoundError()
 
         const profile = onChainProfiles[0]
-        const userChain = new UserChain(profile.publicKey, profile.account)
+        const userChain = new UserChain(profile.account)
 
         const replyFileData: ReplyFileData = await getReplyFileData(
           replyChain.publicKey,
@@ -68,7 +68,7 @@ export default async function getAllPostReplies(postId: number): Promise<Reply[]
           postId: postId,
           text: replyFileData.text,
           user: {
-            publicKey: userChain.user,
+            publicKey: userChain.publicKey,
             nickname: userProfileJson.nickname,
             avatar:
               userProfileJson.avatar != null

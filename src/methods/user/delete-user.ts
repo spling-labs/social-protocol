@@ -18,7 +18,7 @@ export default async function deleteUser(): Promise<void> {
 
     // Fetch the user profile.
     const profile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(profile.publicKey, profile)
+    const userChain = new UserChain(profile)
 
     const userFileData: UserFileData = await getUserFileData(userChain.shdw)
 

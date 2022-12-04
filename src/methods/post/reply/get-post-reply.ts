@@ -33,7 +33,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
     if (onChainProfiles.length === 0) throw new UserNotFoundError()
 
     const profile = onChainProfiles[0]
-    const userChain = new UserChain(profile.publicKey, profile.account)
+    const userChain = new UserChain(profile.account)
 
     const replyFileData: ReplyFileData = await getReplyFileData(publicKey, userChain.shdw)
 
@@ -52,7 +52,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
       postId: replyChain.postId,
       text: replyFileData.text,
       user: {
-        publicKey: userChain.user,
+        publicKey: userChain.publicKey,
         nickname: userProfileJson.nickname,
         avatar:
           userProfileJson.avatar != null
