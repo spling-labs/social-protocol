@@ -2,12 +2,13 @@ import { getKeypairFromSeed, getOrCreateShadowDriveAccount } from '../../../util
 import { PostUser, UserFileData, Reply, ReplyFileData } from '../../../types'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { isBrowser, programId, shadowDriveDomain } from '../../../utils/constants'
+import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import { UserChain } from '../../../models'
 import { getUserFileData } from '../../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import RNFS from 'react-native-fs'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * @category Post
@@ -30,7 +31,7 @@ export default async function createPostReply(postId: number, text: string): Pro
 
     // Fetch the user id.
     const fetchedUserProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(UserProfilePDA, fetchedUserProfile)
+    const userChain = new UserChain(fetchedUserProfile)
 
     // Get current timestamp.
     const timestamp: string = dayjs().unix().toString()
@@ -98,6 +99,29 @@ export default async function createPostReply(postId: number, text: string): Pro
     // 1024 bytes will be reserved for the reply.json.
     const fileSizeSummarized = 1024 + replyTextFile.size
 
+    if (this.tokenAccount !== null) {
+      // Find bank pda.
+      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode('b')],
+        programId,
+      )
+
+      // Extract transaction costs from the bank.
+      await this.anchorProgram.methods
+        .extractBank(new anchor.BN(1123600))
+        .accounts({
+          user: this.wallet.publicKey,
+          spling: SplingPDA,
+          b: BankPDA,
+          receiver: this.wallet.publicKey,
+          senderTokenAccount: this.tokenAccount,
+          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+          mint: SPLING_TOKEN_ADDRESS,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc()
+    }
+
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
@@ -141,7 +165,7 @@ export default async function createPostReply(postId: number, text: string): Pro
       postId: postId,
       text: text,
       user: {
-        publicKey: userChain.user,
+        publicKey: userChain.publicKey,
         nickname: userProfileJson.nickname,
         avatar:
           userProfileJson.avatar != null

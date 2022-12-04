@@ -6,6 +6,7 @@ export class PostChain {
   userId: number
   postId: number
   groupId: number
+  tagIndex: number | null
   status: number
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -15,6 +16,7 @@ export class PostChain {
     this.userId = accountData.uid
     this.postId = accountData.pid
     this.groupId = accountData.gid
+    this.tagIndex = accountData.tid ? accountData.tid : null
     this.status = accountData.st
   }
 

@@ -2,11 +2,12 @@ import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils
 import { FileData, FileUriData, Group, GroupFileData, MediaData } from '../../types'
 import { web3 } from 'react-native-project-serum-anchor'
 import * as anchor from 'react-native-project-serum-anchor'
-import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
+import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { GroupChain } from '../../models'
 import dayjs from 'dayjs'
 import RNFS from 'react-native-fs'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * @category Group
@@ -22,19 +23,19 @@ export default async function createGroup(
     if (!isBrowser) {
       avatarUploadFile = avatar
         ? ({
-            uri: (avatar as FileUriData).uri,
-            name: `group-avatar.${avatar?.type.split('/')[1]}`,
-            type: (avatar as FileUriData).type,
-            size: (avatar as FileUriData).size,
-            file: Buffer.from(''),
-          } as ShadowFile)
+          uri: (avatar as FileUriData).uri,
+          name: `group-avatar.${avatar?.type.split('/')[1]}`,
+          type: (avatar as FileUriData).type,
+          size: (avatar as FileUriData).size,
+          file: Buffer.from(''),
+        } as ShadowFile)
         : null
     } else {
       avatarUploadFile = avatar
         ? new File(
-            [convertDataUriToBlob((avatar as FileData).base64)],
-            `group-avatar.${avatar?.type.split('/')[1]}`,
-          )
+          [convertDataUriToBlob((avatar as FileData).base64)],
+          `group-avatar.${avatar?.type.split('/')[1]}`,
+        )
         : null
     }
 
@@ -43,6 +44,35 @@ export default async function createGroup(
     // Summarize size of files.
     if (avatarUploadFile != null) {
       fileSizeSummarized += avatarUploadFile.size
+    }
+
+    // Find spling pda.
+    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('spling')],
+      programId,
+    )
+
+    if (this.tokenAccount !== null) {
+      // Find bank pda.
+      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode('b')],
+        programId,
+      )
+
+      // Extract transaction costs from the bank.
+      await this.anchorProgram.methods
+        .extractBank(new anchor.BN(1513360))
+        .accounts({
+          user: this.wallet.publicKey,
+          spling: SplingPDA,
+          b: BankPDA,
+          receiver: this.wallet.publicKey,
+          senderTokenAccount: this.tokenAccount,
+          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+          mint: SPLING_TOKEN_ADDRESS,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc()
     }
 
     // Find/Create shadow drive account.
@@ -66,9 +96,9 @@ export default async function createGroup(
       bio: bio ? bio : '',
       avatar: avatarUploadFile
         ? ({
-            file: `group-avatar.${avatar.type.split('/')[1]}`,
-            type: avatar.type.split('/')[1],
-          } as MediaData)
+          file: `group-avatar.${avatar.type.split('/')[1]}`,
+          type: avatar.type.split('/')[1],
+        } as MediaData)
         : null,
       banner: null,
       license: null,
@@ -96,12 +126,6 @@ export default async function createGroup(
       await this.shadowDrive.uploadFile(account.publicKey, groupJSONFile)
     }
 
-    // Find the spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('spling')],
-      programId,
-    )
-
     // Find the group profile pda.
     const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode('group_profile'), this.wallet.publicKey.toBuffer()],
@@ -128,7 +152,7 @@ export default async function createGroup(
         // Nothing to do here.
       }
     }
-    const groupChain = new GroupChain(groupProfile.publicKey, groupProfile)
+    const groupChain = new GroupChain(GroupProfilePDA, groupProfile)
 
     return Promise.resolve({
       timestamp: groupChain.timestamp,

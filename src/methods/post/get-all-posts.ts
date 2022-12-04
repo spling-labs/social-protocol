@@ -1,5 +1,5 @@
 import { programId, shadowDriveDomain } from '../../utils/constants'
-import { LikesChain, PostChain, UserChain } from '../../models'
+import { LikesChain, PostChain, TagsChain, UserChain } from '../../models'
 import { Post, PostFileData, PostUser, UserFileData } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
@@ -27,6 +27,17 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
         },
       },
     ])
+
+    // Find tags pda.
+    const [TagsPDA] = await web3.PublicKey.findProgramAddress(
+      [anchor.utils.bytes.utf8.encode('tags')],
+      programId,
+    )
+
+    // Fetch tag.
+    const tags = await this.anchorProgram.account.tags.fetch(TagsPDA)
+    const tagsChain = new TagsChain(TagsPDA, tags)
+
     const posts: Post[] = []
     for (const post of onChainPosts) {
       try {
@@ -47,7 +58,7 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
         if (onChainProfiles.length === 0) throw new UserNotFoundError()
 
         const profile = onChainProfiles[0]
-        const userChain = new UserChain(profile.publicKey, profile.account)
+        const userChain = new UserChain(profile.account)
 
         const postFileData: PostFileData = await getPostFileData(
           postChain.publicKey,
@@ -94,6 +105,7 @@ export default async function getAllPosts(groupId: number): Promise<Post[]> {
                 : null,
           } as PostUser,
           likes: likesChain.users,
+          tags: postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : []
         } as Post)
       } catch (error) {
         // Nothing to do.

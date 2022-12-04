@@ -19,14 +19,14 @@ export default async function getUserByPublicKey(publicKey: web3.PublicKey): Pro
 
     // Fetch the user profile from the anchor program.
     const onChainProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(publicKey, onChainProfile)
+    const userChain = new UserChain(onChainProfile)
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
 
     return Promise.resolve({
       timestamp: userChain.timestamp,
-      publicKey: userChain.user,
+      publicKey: userChain.publicKey,
       userId: userChain.userId,
       status: userChain.status,
       shdw: userChain.shdw,

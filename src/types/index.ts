@@ -87,6 +87,7 @@ export type Post = {
   license: string | null
   user: PostUser
   likes: number[]
+  tags: string[]
 }
 
 export type ReplyFileData = {

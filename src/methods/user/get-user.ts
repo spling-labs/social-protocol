@@ -26,7 +26,7 @@ export default async function getUser(userId: number): Promise<User | null> {
     if (onChainProfiles.length === 0) throw new UserNotFoundError()
 
     const profile = onChainProfiles[0]
-    const userChain = new UserChain(profile.publicKey, profile.account)
+    const userChain = new UserChain(profile.account)
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)

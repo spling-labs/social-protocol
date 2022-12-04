@@ -11,8 +11,8 @@ export class UserChain {
   groups: number[]
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  constructor(publicKey: web3.PublicKey, accountData: any) {
-    this.publicKey = publicKey
+  constructor(accountData: any) {
+    this.publicKey = accountData.publicKey
     this.timestamp = accountData.ts
     this.user = accountData.user
     this.userId = accountData.uid
