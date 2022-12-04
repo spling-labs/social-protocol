@@ -2,12 +2,13 @@ import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils
 import { FileData, FileUriData, MediaData, User, UserFileData } from '../../types'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
+import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import dayjs from 'dayjs'
 import RNFS from 'react-native-fs'
 import { SocialIDL } from '../../utils/idl'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * @category User
@@ -27,19 +28,19 @@ export default async function createUser(
     if (!isBrowser) {
       userAvatarFile = avatar
         ? ({
-            uri: (avatar as FileUriData).uri,
-            name: `profile-avatar.${avatar.type.split('/')[1]}`,
-            type: (avatar as FileUriData).type,
-            size: (avatar as FileUriData).size,
-            file: Buffer.from(''),
-          } as ShadowFile)
+          uri: (avatar as FileUriData).uri,
+          name: `profile-avatar.${avatar.type.split('/')[1]}`,
+          type: (avatar as FileUriData).type,
+          size: (avatar as FileUriData).size,
+          file: Buffer.from(''),
+        } as ShadowFile)
         : null
     } else {
       userAvatarFile = avatar
         ? new File(
-            [convertDataUriToBlob((avatar as FileData).base64)],
-            `profile-avatar.${avatar.type.split('/')[1]}`,
-          )
+          [convertDataUriToBlob((avatar as FileData).base64)],
+          `profile-avatar.${avatar.type.split('/')[1]}`,
+        )
         : null
     }
 
@@ -56,21 +57,28 @@ export default async function createUser(
       programId,
     )
 
-    // Find bank pda.
-    const [BankPDA] = await web3.PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode('bank')],
-      programId,
-    )
+    if (this.tokenAccount !== null) {
+      // Find bank pda.
+      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode('b')],
+        programId,
+      )
 
-    // Extract transaction costs from the bank.
-    await this.anchorProgram.methods
-      .extractBank()
-      .accounts({
-        user: this.wallet.publicKey,
-        bank: BankPDA,
-        spling: SplingPDA,
-      })
-      .rpc()
+      // Extract transaction costs from the bank.
+      await this.anchorProgram.methods
+        .extractBank(new anchor.BN(6458000))
+        .accounts({
+          user: this.wallet.publicKey,
+          spling: SplingPDA,
+          b: BankPDA,
+          receiver: this.wallet.publicKey,
+          senderTokenAccount: this.tokenAccount,
+          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+          mint: SPLING_TOKEN_ADDRESS,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc()
+    }
 
     // Find/Create shadow drive account.
     const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
@@ -93,9 +101,9 @@ export default async function createUser(
       bio: biography ? biography : '',
       avatar: userAvatarFile
         ? ({
-            file: `profile-avatar.${avatar.type.split('/')[1]}`,
-            type: avatar.type.split('/')[1],
-          } as MediaData)
+          file: `profile-avatar.${avatar.type.split('/')[1]}`,
+          type: avatar.type.split('/')[1],
+        } as MediaData)
         : null,
       banner: null,
       socials: [],
@@ -147,11 +155,11 @@ export default async function createUser(
 
     // Fetch created user profile.
     const userProfile = this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(userProfile.publicKey, userProfile)
+    const userChain = new UserChain(userProfile)
 
     return Promise.resolve({
       timestamp: userChain.timestamp,
-      publicKey: this.wallet.publicKey,
+      publicKey: userChain.publicKey,
       userId: userChain.userId,
       status: userChain.status,
       shdw: account.publicKey,

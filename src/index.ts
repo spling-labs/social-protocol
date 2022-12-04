@@ -37,6 +37,11 @@ import {
   StorageAccountNotFoundError,
 } from './utils/errors'
 import { AnchorWallet } from './utils/AnchorWallet'
+import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
+import PayerNotFoundError from './utils/errors/PayerNotFoundError'
+import { SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
+import { TOKEN_PROGRAM_ID } from 'react-native-project-serum-anchor/dist/cjs/utils/token'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 interface SplingProtocol {
   // USER METHODS
@@ -70,6 +75,7 @@ interface SplingProtocol {
     groupId: number,
     text: string | null,
     image: FileData | FileUriData | null,
+    tag: string | null
   ): Promise<Post>
   getPost(postId: number): Promise<Post | null>
   getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>
@@ -89,6 +95,8 @@ export class SocialProtocol implements SplingProtocol {
   private shadowDrive: ShdwDrive
   private connection: web3.Connection
   private wallet: Wallet
+  private payer: Wallet | null = null
+  private tokenAccount: web3.PublicKey | null = null
 
   // USER METHODS
   createUser = createUser
@@ -127,12 +135,13 @@ export class SocialProtocol implements SplingProtocol {
    * @param rpcUrl The solana rpc node url endpoint.
    * @param wallet - The wallet of the current user.
    */
-  constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair) {
+  constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null) {
     this.connection = new web3.Connection(
       rpcUrl ? rpcUrl : 'https://api.mainnet-beta.solana.com/',
       'confirmed',
     )
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
+    this.payer = payer instanceof web3.Keypair ? new AnchorWallet(payer) : payer
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
   }
 
@@ -140,6 +149,66 @@ export class SocialProtocol implements SplingProtocol {
     if (!this.wallet && !this.wallet.publicKey) return
     this.shadowDrive = await new ShdwDrive(this.connection, this.wallet).init()
     return this
+  }
+
+  public async prepareWallet(): Promise<void> {
+    if (this.payer === null) return Promise.reject(new PayerNotFoundError())
+
+    // Get token accounts.
+    const [shdwTokenAccount, splingTokenAccount] = await Promise.all([
+      getOrCreateAssociatedTokenAccount(this.connection, this.payer.payer, SHDW_TOKEN_ADDRESS, this.wallet.publicKey),
+      getOrCreateAssociatedTokenAccount(this.connection, this.payer.payer, SPLING_TOKEN_ADDRESS, this.wallet.publicKey)
+    ]);
+
+    // Set spling token account address.
+    this.tokenAccount = splingTokenAccount.address
+
+    // Get token balances.
+    const [solBalance, shdwBalance, splingBalance] = await Promise.all([
+      this.connection.getBalance(this.wallet.publicKey),
+      this.connection.getTokenAccountBalance(shdwTokenAccount.address),
+      this.connection.getTokenAccountBalance(splingTokenAccount.address)
+    ]);
+
+    if (solBalance >= 500000 && shdwBalance.value.uiAmount !== null && shdwBalance.value.uiAmount >= 0.01 && splingBalance.value.uiAmount! >= 1) return Promise.resolve();
+
+    const [payerShdwPublicKey, payerSplingPublicKey] = await Promise.all([
+      getAssociatedTokenAddress(SHDW_TOKEN_ADDRESS, this.payer.publicKey),
+      getAssociatedTokenAddress(SPLING_TOKEN_ADDRESS, this.payer.publicKey)
+    ]);
+
+    const recentBlockhash = await this.connection.getLatestBlockhash();
+
+    // Make transaction ready for sending the balances
+    const transaction = new web3.Transaction({
+      feePayer: this.payer.publicKey,
+      blockhash: recentBlockhash.blockhash,
+      lastValidBlockHeight: recentBlockhash.lastValidBlockHeight
+    }).add(
+      web3.SystemProgram.transfer({
+        fromPubkey: this.payer.publicKey,
+        toPubkey: this.wallet.publicKey,
+        lamports: 7500000
+      })
+    ).add(createTransferInstruction(
+      payerShdwPublicKey,
+      shdwTokenAccount.address,
+      this.payer.publicKey,
+      0.10 * LAMPORTS_PER_SOL,
+      [],
+      TOKEN_PROGRAM_ID)
+    ).add(createTransferInstruction(
+      payerSplingPublicKey,
+      splingTokenAccount.address,
+      this.payer.publicKey,
+      10 * LAMPORTS_PER_SOL,
+      [],
+      TOKEN_PROGRAM_ID)
+    );
+
+    await this.connection.sendTransaction(transaction, [this.payer.payer], { skipPreflight: true, preflightCommitment: 'finalized' })
+
+    return Promise.resolve()
   }
 
   public getConnection(): web3.Connection {
