@@ -220,7 +220,7 @@ export default async function createPost(
 
     // Submit the post to the anchor program.
     await this.anchorProgram.methods
-      .submitPost(groupId, hash.publicKey, tag ? tag : "")
+      .submitPost(groupId, hash.publicKey, tag ? tag : '')
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,

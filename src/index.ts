@@ -37,11 +37,11 @@ import {
   StorageAccountNotFoundError,
 } from './utils/errors'
 import { AnchorWallet } from './utils/AnchorWallet'
-import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from "@solana/spl-token";
+import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
 import PayerNotFoundError from './utils/errors/PayerNotFoundError'
 import { SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
 import { TOKEN_PROGRAM_ID } from 'react-native-project-serum-anchor/dist/cjs/utils/token'
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 interface SplingProtocol {
   // USER METHODS
@@ -206,7 +206,7 @@ export class SocialProtocol implements SplingProtocol {
       TOKEN_PROGRAM_ID)
     );
 
-    await this.connection.sendTransaction(transaction, [this.payer.payer], { skipPreflight: true, preflightCommitment: "finalized" })
+    await this.connection.sendTransaction(transaction, [this.payer.payer], { skipPreflight: true, preflightCommitment: 'finalized' })
 
     return Promise.resolve()
   }
