@@ -6,7 +6,6 @@ import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER,
 import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import dayjs from 'dayjs'
-import RNFS from 'react-native-fs'
 import { SocialIDL } from '../../utils/idl'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
@@ -112,6 +111,7 @@ export default async function createUser(
 
     let profileFile
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       const profileJSONPath = `${RNFS.ExternalDirectoryPath}/profile.json`
       await RNFS.writeFile(profileJSONPath, JSON.stringify(userProfileJson), 'utf8')
       const statResult = await RNFS.stat(profileJSONPath)
@@ -150,6 +150,7 @@ export default async function createUser(
     ])
 
     if (profileFile !== null && !isBrowser) {
+      const RNFS = require('react-native-fs')
       RNFS.unlink(`${RNFS.ExternalDirectoryPath}/profile.json`)
     }
 

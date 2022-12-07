@@ -20,7 +20,6 @@ import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
-import RNFS from 'react-native-fs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
@@ -99,6 +98,7 @@ export default async function createPost(
     let postTextFile = null
     if (text !== null) {
       if (!isBrowser) {
+        const RNFS = require('react-native-fs')
         const postTextPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`
         await RNFS.writeFile(postTextPath, text, 'utf8')
         const statResult = await RNFS.stat(postTextPath)
@@ -168,6 +168,7 @@ export default async function createPost(
         !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
       )
       if (!isBrowser) {
+        const RNFS = require('react-native-fs')
         RNFS.unlink(`${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`)
       }
     }
@@ -191,6 +192,7 @@ export default async function createPost(
     }
 
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       const postJSONPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.json`
       await RNFS.writeFile(postJSONPath, JSON.stringify(postJson), 'utf8')
       const statResult = await RNFS.stat(postJSONPath)
