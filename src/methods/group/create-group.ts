@@ -6,7 +6,6 @@ import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER,
 import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { GroupChain } from '../../models'
 import dayjs from 'dayjs'
-import RNFS from 'react-native-fs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
@@ -105,6 +104,7 @@ export default async function createGroup(
     }
 
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       const groupJSONPath = `${RNFS.DownloadDirectoryPath}/group.json`
       await RNFS.writeFile(groupJSONPath, JSON.stringify(groupJson), 'utf8')
       const statResult = await RNFS.stat(groupJSONPath)

@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 import { UserChain } from '../../../models'
 import { getUserFileData } from '../../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
-import RNFS from 'react-native-fs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
@@ -50,6 +49,7 @@ export default async function createPostReply(postId: number, text: string): Pro
     // Create text tile to upload.
     let replyTextFile
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       const replyTextPath = `${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.txt`
       await RNFS.writeFile(replyTextPath, text, 'utf8')
       const statResult = await RNFS.stat(replyTextPath)
@@ -79,6 +79,7 @@ export default async function createPostReply(postId: number, text: string): Pro
 
     let replyJSONFile
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       const replyJSONPath = `${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`
       await RNFS.writeFile(replyJSONPath, JSON.stringify(replyJson), 'utf8')
       const statResult = await RNFS.stat(replyJSONPath)
@@ -138,6 +139,7 @@ export default async function createPostReply(postId: number, text: string): Pro
 
     // Remove created device files if necessary.
     if (!isBrowser) {
+      const RNFS = require('react-native-fs')
       await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.txt`)
       await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`)
     }

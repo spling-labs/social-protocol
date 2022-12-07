@@ -2,6 +2,7 @@ import { web3 } from 'react-native-project-serum-anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostNotFoundError } from '../../utils/errors'
 import { MediaData, PostFileData } from '../../types'
+import axios from 'axios';
 
 export async function getPostFileData(
   publicKey: web3.PublicKey,
@@ -9,15 +10,10 @@ export async function getPostFileData(
 ): Promise<PostFileData> {
   try {
     // Get post json file from the shadow drive.
-    const splingJsonResponse: Response = await fetch(
-      `${shadowDriveDomain}${shdw.toString()}/${publicKey}.json`,
-    )
-    if (!splingJsonResponse.ok) throw new PostNotFoundError()
+    const response = await axios.get(`${shadowDriveDomain}${shdw.toString()}/${publicKey}.json`);
+    if (response.status !== 200) throw new PostNotFoundError()
 
-    // Check if json is valid.
-    const postJson: PostFileData = await splingJsonResponse.json()
-
-    return Promise.resolve(postJson)
+    return Promise.resolve(response.data as PostFileData)
   } catch (error) {
     return Promise.reject(error)
   }

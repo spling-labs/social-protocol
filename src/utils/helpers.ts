@@ -8,6 +8,7 @@ import {
 import { programId } from './constants'
 import { StorageAccountNotFoundError } from './errors'
 import { IDL, SocialIDL } from './idl'
+import axios from 'axios';
 
 /**
  * @param wallet The wallet used to pay for and sign all transactions.
@@ -109,12 +110,10 @@ export function getKeypairFromSeed(seed: string): anchor.web3.Keypair {
 
 export async function getTextFromFile(url: string): Promise<string | null> {
   try {
-    const splingJsonResponse: Response = await fetch(url)
-    if (!splingJsonResponse.ok) return Promise.resolve(null)
+    const response = await axios.get(url);
+    if (response.status !== 200) return Promise.resolve(null)
 
-    const text: string = await splingJsonResponse.text()
-
-    return Promise.resolve(text)
+    return Promise.resolve(response.data)
   } catch (error) {
     return Promise.resolve(null)
   }
