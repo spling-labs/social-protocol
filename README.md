@@ -36,15 +36,17 @@ yarn add @spling/social-protocol
 import React, { useEffect } from 'react'
 import * as anchor from '@project-serum/anchor'
 import { SocialProtocol } from '@spling/social-protocol'
-import { AnchorWallet, useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
+import { AnchorWallet, useAnchorWallet, Keypair } from '@solana/wallet-adapter-react'
 
 export default function SocialProtocol() {
-  const { connection } = useConnection()
   const wallet = useAnchorWallet()
+  const payerWallet: Keypair = Keypair.generate()
+
   useEffect(() => {
     ;(async () => {
       if (wallet?.publicKey) {
-        const socialProtocol = await new SocialProtocol(connection, wallet).init()
+        // Initialize the social protocol
+        const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
 
         // You can call now functions like:
         const user = await socialProtocol.getUser(42) 
@@ -66,7 +68,10 @@ export default function SocialProtocol() {
   useEffect(() => {
     ;(async () => {
       const wallet: Keypair = Keypair.generate()
-      const socialProtocol = await new SocialProtocol("https://solana-api.projectserum.com/", wallet).init()
+      const payerWallet: Keypair = Keypair.generate()
+
+      // Initialize the social protocol
+      const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
 
       // You can call now functions like:
       const user = await socialProtocol.getUser(42) 
@@ -81,7 +86,14 @@ export default function SocialProtocol() {
 
 ```js
 import { SocialProtocol } from '@spling/social-protocol'
-const socialProtocol = await new SocialProtocol(connection, wallet).init()
+const wallet: Keypair = Keypair.generate()
+const payerWallet: Keypair = Keypair.generate()
+
+// Initialize the social protocol
+const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
+
+// You can call now functions like:
+const user = await socialProtocol.getUser(42) 
 ```
 
 ### Examples
