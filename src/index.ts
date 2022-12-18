@@ -67,7 +67,7 @@ interface SplingProtocol {
   getGroup(groupId: number): Promise<Group | null>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
   getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
-  getAllGroups(): Promise<Group[]>
+  getAllGroups(limit: number | null, offset: number | null, orderBy: Order_By | null): Promise<Group[]>
   joinGroup(groupId: number): Promise<void>
   leaveGroup(groupId: number): Promise<void>
   deleteGroup(): Promise<void>
