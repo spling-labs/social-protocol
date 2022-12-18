@@ -26,7 +26,7 @@ import {
   getAllPostReplies,
   deletePostReply,
 } from './methods'
-import { FileData, Post, PostUser, Reply, Group, User, FileUriData } from './types'
+import { FileData, Post, PostUser, Reply, Group, User, FileUriData, ProtocolOptions } from './types'
 import { createSocialProtocolProgram } from './utils/helpers'
 import { SocialIDL } from './utils/idl'
 import {
@@ -39,9 +39,11 @@ import {
 import { AnchorWallet } from './utils/AnchorWallet'
 import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
 import PayerNotFoundError from './utils/errors/PayerNotFoundError'
-import { SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
+import { INDEXER_GRAPH_QP_ENDPOINT, SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
 import { TOKEN_PROGRAM_ID } from 'react-native-project-serum-anchor/dist/cjs/utils/token'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { GraphQLClient } from 'graphql-request'
+import { Order_By } from './gql/graphql'
 
 interface SplingProtocol {
   // USER METHODS
@@ -79,7 +81,7 @@ interface SplingProtocol {
   ): Promise<Post>
   getPost(postId: number): Promise<Post | null>
   getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>
-  getAllPosts(groupId: number): Promise<Post[]>
+  getAllPosts(groupId: number, limit: number | null, offset: number | null, orderBy: Order_By | null): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
   likePost(publicKey: web3.PublicKey): Promise<void>
 
@@ -97,6 +99,7 @@ export class SocialProtocol implements SplingProtocol {
   private wallet: Wallet
   private payer: Wallet | null = null
   private tokenAccount: web3.PublicKey | null = null
+  private graphQLClient: GraphQLClient | null = null
 
   // USER METHODS
   createUser = createUser
@@ -133,13 +136,14 @@ export class SocialProtocol implements SplingProtocol {
   /**
    *
    * @param rpcUrl The solana rpc node url endpoint.
-   * @param wallet - The wallet of the current user.
+   * @param wallet The wallet of the current user.
+   * @param options The options of the protocol. 
    */
-  constructor(rpcUrl: string | null = null, wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null) {
-    this.connection = new web3.Connection(
-      rpcUrl ? rpcUrl : 'https://api.mainnet-beta.solana.com/',
-      'confirmed',
-    )
+  constructor(wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null, options: ProtocolOptions | null) {
+    if (options.useIndexer === true) {
+      this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QP_ENDPOINT)
+    }
+    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'confirmed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
     this.payer = payer instanceof web3.Keypair ? new AnchorWallet(payer) : payer
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
@@ -216,7 +220,7 @@ export class SocialProtocol implements SplingProtocol {
   }
 }
 
-export { User, Post, PostUser, Group, Reply, FileData, FileUriData }
+export { User, Post, PostUser, Group, Reply, FileData, FileUriData, ProtocolOptions, Order_By }
 export {
   UserNotFoundError,
   GroupNotFoundError,

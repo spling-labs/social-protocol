@@ -118,3 +118,8 @@ export interface FileUriData {
   type: string
   size: number
 }
+
+export interface ProtocolOptions {
+  rpcUrl: string | null
+  useIndexer: boolean
+}
