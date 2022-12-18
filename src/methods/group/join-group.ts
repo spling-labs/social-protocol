@@ -4,8 +4,13 @@ import { programId, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Join group with the given group id.
+ * 
  * @category Group
- * @param groupId - the id of the group
+ * 
+ * @param {number} groupId - the id of the group.
+ * 
+ * @returns A promise that resolves when the user has joined the group.
  */
 export default async function joinGroup(groupId: number): Promise<void> {
   try {

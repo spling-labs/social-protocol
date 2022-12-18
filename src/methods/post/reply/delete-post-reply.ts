@@ -7,8 +7,13 @@ import { getReplyFileData } from './helpers'
 import { getKeypairFromSeed } from '../../../utils/helpers'
 
 /**
+ * Deletes a post reply associated with the given public key.
+ * 
  * @category Post
- * @param publicKey - the PublicKey of the reply
+ * 
+ * @param {web3.PublicKey} publicKey - The public key of the post reply to be deleted.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the post reply was deleted.
  */
 export default async function deletePostReply(publicKey: web3.PublicKey): Promise<void> {
   try {

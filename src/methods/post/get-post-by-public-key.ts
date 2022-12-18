@@ -15,8 +15,13 @@ import { GetUserByUserIdQueryDocument } from '../../utils/gql/user'
 import { GetAllLikesByPublicKeyQueryDocument } from '../../utils/gql/like'
 
 /**
+ * Retrieves a post by its public key.
+ * 
  * @category Post
- * @param publicKey - the PublicKey of the post
+ * 
+ * @param {web3.PublicKey} publicKey - The public key of the post.
+ * 
+ * @returns {Promise<Post | null>} - Returns a Promise that resolves with the post associated with the public key, or null if no post was found.
  */
 export default async function getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null> {
   try {

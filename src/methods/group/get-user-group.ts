@@ -9,8 +9,13 @@ import { GetGroupByPublicKeyQuery, Splinglabs_0_1_0_Decoded_Groupprofile } from 
 import { GroupNotFoundError } from '../../utils/errors'
 
 /**
+ * Retrieves the group associated with a given user public key.
+ * 
  * @category Group
- * @param publicKey - the public key of the user.
+ * 
+ * @param {web3.PublicKey} publicKey - The public key of the user to retrieve the group for.
+ * 
+ * @returns {Promise<Group | null>} - A promise that resolves to the group, or null if no group was found.
  */
 export default async function getUserGroup(publicKey: web3.PublicKey): Promise<Group | null> {
   try {

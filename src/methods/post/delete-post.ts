@@ -7,8 +7,13 @@ import { getPostFileData } from './helpers'
 import { getKeypairFromSeed } from '../../utils/helpers'
 
 /**
+ * Delete a post by the given public key.
+ * 
  * @category Post
- * @param publicKey - the PublicKey of the post
+ * 
+ * @param publicKey - The public key of the post to be deleted.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the post has been deleted.
  */
 export default async function deletePost(publicKey: web3.PublicKey): Promise<void> {
   try {

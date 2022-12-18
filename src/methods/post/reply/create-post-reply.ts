@@ -10,9 +10,14 @@ import { ShadowFile } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a reply to the given post.
+ * 
  * @category Post
- * @param postId - The id of the post.
- * @param text - The text of the reply.
+ * 
+ * @param {number} postId The id of the post to reply to.
+ * @param {string} text The content of the reply.
+ * 
+ * @returns {Promise<Reply>} - A promise that resolves with the new created reply.
  */
 export default async function createPostReply(postId: number, text: string): Promise<Reply> {
   try {

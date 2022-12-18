@@ -4,8 +4,13 @@ import { programId, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Unfollows the user specified by the given user id.
+ * 
  * @category User
- * @param userId - the id of the user.
+ * 
+ * @param {number} userId - The id of the user to unfollow.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the user has been unfollowed.
  */
 export default async function unfollowUser(userId: number): Promise<void> {
   try {

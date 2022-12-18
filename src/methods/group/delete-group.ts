@@ -6,7 +6,11 @@ import { GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
 
 /**
+ * Deletes own user group.
+ * 
  * @category Group
+ * 
+ * @returns {Promise<void>} A promise that resolves when the group has been successfully deleted.
  */
 export default async function deleteGroup(): Promise<void> {
   try {

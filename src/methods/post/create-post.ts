@@ -23,11 +23,16 @@ import { ShadowFile } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a new post in the specific group with the given parameters.
+ * 
  * @category Post
- * @param groupId - The id of the group.
- * @param text - The text of the post.
- * @param image - The image of the post.
- * @param tag - The tag of the post.
+ * 
+ * @param {number} groupId - The id of the group to post to.
+ * @param {string | null} text - The text (content) of the post
+ * @param {FileData | FileUriData | null} image - The image to be posted.
+ * @param {string | null} tag - The tag to be associated with the post.
+ * 
+ * @returns {Promise<Post>} - A promise that resolves to the newly created post.
  */
 export default async function createPost(
   groupId: number,

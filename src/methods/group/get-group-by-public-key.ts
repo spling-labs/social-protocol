@@ -8,8 +8,13 @@ import { GetGroupByPublicKeyQueryDocument } from '../../utils/gql/group'
 import { GroupNotFoundError } from '../../utils/errors'
 
 /**
+ * Retrieves a group associated with the specified public key.
+ * 
  * @category Group
- * @param web3.PublicKey - the public key of the group
+ * 
+ * @param {web3.PublicKey} publicKey The public key of the group to be retrieved.
+ * 
+ * @returns {Promise<Group | null>} A Promise that resolves to the group associated with the specified public key, or null if no group was found. 
  */
 export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null> {
   try {

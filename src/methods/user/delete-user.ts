@@ -6,7 +6,11 @@ import { UserFileData } from '../../types'
 import { getUserFileData } from './helpers'
 
 /**
+ * Deletes a user.
+ * 
  * @category User
+ * 
+ * @returns {Promise<void>} A promise that resolves when the user was successfully deleted.
  */
 export default async function deleteUser(): Promise<void> {
   try {

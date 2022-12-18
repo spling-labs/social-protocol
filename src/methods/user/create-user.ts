@@ -10,10 +10,15 @@ import { SocialIDL } from '../../utils/idl'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a user with the given parameters.
+ * 
  * @category User
- * @param nickname - The nickname of the user.
- * @param avatar - The image FileData of the user avatar.
- * @param biography - The biography of the user.
+ * 
+ * @param {string} nickname - The nickname of the user to be created.
+ * @param {FileData | FileUriData | null} avatar - An avatar for the new user. Can be a FileData object, a FileUriData object, or null.
+ * @param {string | null} biography - A biography for the new user. Can be a string or null.
+ * 
+ * @returns {Promise<User>} A promise that resolves to the newly created user.
  */
 export default async function createUser(
   nickname: string,

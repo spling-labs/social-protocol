@@ -9,7 +9,15 @@ import dayjs from 'dayjs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a new group.
+ * 
  * @category Group
+ * 
+ * @param {string} name The name of the group.
+ * @param {string | null} bio An optional description of the group.
+ * @param {FileData | FileUriData | null} avatar An optional avatar for the group. Can be a FileData, FileUriData, or null.
+ * 
+ * @returns A Promise that resolves with the newly created group.
  */
 export default async function createGroup(
   name: string,

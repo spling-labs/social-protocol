@@ -15,8 +15,13 @@ import { GetAllTagsByPublicKeyQueryDocument } from '../../utils/gql/tag'
 import { GetPostByIdQueryDocument } from '../../utils/gql/post'
 
 /**
+ * Retrieve a post by id.
+ * 
  * @category Post
- * @param postId - the id of the post
+ * 
+ * @param {number} postId - The id of the post to be retrieved.
+ * 
+ * @returns {Promise<Post | null>} - Returns a Promise that resolves with the post associated with the post id, or null if no post was found.
  */
 export default async function getPost(postId: number): Promise<Post | null> {
   try {

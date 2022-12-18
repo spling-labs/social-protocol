@@ -24,7 +24,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="tsd-signature-type">SplingProtocol</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L95">src/index.ts:95</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L95">src/index.ts:95</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -95,7 +95,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="SocialProtocol.html" class="tsd-signature-type" data-tsd-kind="Class">SocialProtocol</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L142">src/index.ts:142</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L142">src/index.ts:142</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Group Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="createGroup" class="tsd-anchor"></a>
@@ -108,19 +108,29 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type.__type-1"><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, bio<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, avatar<span class="tsd-signature-symbol">: </span><a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a new group.</p>
+
+<h3>Returns</h3><p>A Promise that resolves with the newly created group.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the group.</p>
+</div></li>
 <li>
-<h5>bio: <span class="tsd-signature-type">string</span></h5></li>
+<h5>bio: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>An optional description of the group.</p>
+</div></li>
 <li>
-<h5>avatar: <a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a></h5></li></ul></div>
+<h5>avatar: <a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a></h5>
+<div class="tsd-comment tsd-typography"><p>An optional avatar for the group. Can be a FileData, FileUriData, or null.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.createGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L113">src/index.ts:113</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L113">src/index.ts:113</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="deleteGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Group</span><a href="#deleteGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">delete<wbr/>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = deleteGroup</span></div>
@@ -131,10 +141,14 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-8.__type-9"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Deletes own user group.</p>
+
+<h3>Returns</h3><p>A promise that resolves when the group has been successfully deleted.</p>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.deleteGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L120">src/index.ts:120</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L120">src/index.ts:120</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getAllGroups" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>All<wbr/>Groups</span><a href="#getAllGroups" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>All<wbr/>Groups<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, orderBy<span class="tsd-signature-symbol">?: </span><a href="../enums/Order_By.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Order_By</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getAllGroups</span></div>
@@ -169,7 +183,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getAllGroups</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L117">src/index.ts:117</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L117">src/index.ts:117</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Group</span><a href="#getGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getGroup</span></div>
@@ -180,17 +194,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-24.__type-25"><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Retrieves a group associated with the id.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves to the group, or null if no group was found.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the group</p>
+<div class="tsd-comment tsd-typography"><p>The id of the group to retrieve.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L114">src/index.ts:114</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L114">src/index.ts:114</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getGroupByPublicKey" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Group<wbr/>By<wbr/>Public<wbr/>Key</span><a href="#getGroupByPublicKey" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>Group<wbr/>By<wbr/>Public<wbr/>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getGroupByPublicKey</span></div>
@@ -201,15 +221,21 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-26.__type-27"><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Retrieves a group associated with the specified public key.</p>
+
+<h3>Returns</h3><p>A Promise that resolves to the group associated with the specified public key, or null if no group was found.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5></li></ul></div>
+<h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5>
+<div class="tsd-comment tsd-typography"><p>The public key of the group to be retrieved.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getGroupByPublicKey</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L115">src/index.ts:115</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L115">src/index.ts:115</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getUserGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>User<wbr/>Group</span><a href="#getUserGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>User<wbr/>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getUserGroup</span></div>
@@ -220,17 +246,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-38.__type-39"><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Retrieves the group associated with a given user public key.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves to the group, or null if no group was found.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5>
-<div class="tsd-comment tsd-typography"><p>the public key of the user.</p>
+<div class="tsd-comment tsd-typography"><p>The public key of the user to retrieve the group for.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Group.html" class="tsd-signature-type" data-tsd-kind="Type alias">Group</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getUserGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L116">src/index.ts:116</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L116">src/index.ts:116</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="joinGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>join<wbr/>Group</span><a href="#joinGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">join<wbr/>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = joinGroup</span></div>
@@ -241,17 +273,21 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-40.__type-41"><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Join group with the given group id.</p>
+
+<h3>Returns</h3><p>A promise that resolves when the user has joined the group.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the group</p>
+<div class="tsd-comment tsd-typography"><p>the id of the group.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.joinGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L118">src/index.ts:118</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L118">src/index.ts:118</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="leaveGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>leave<wbr/>Group</span><a href="#leaveGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">leave<wbr/>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = leaveGroup</span></div>
@@ -262,17 +298,21 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-42.__type-43"><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Leave group with the given group id.</p>
+
+<h3>Returns</h3><p>A promise that resolves when the user has left the group.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the group</p>
+<div class="tsd-comment tsd-typography"><p>the id of the group.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.leaveGroup</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L119">src/index.ts:119</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L119">src/index.ts:119</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Post Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="createPost" class="tsd-anchor"></a>
@@ -285,29 +325,35 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-2.__type-3"><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, image<span class="tsd-signature-symbol">: </span><a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a>, tag<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a new post in the specific group with the given parameters.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves to the newly created post.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the group.</p>
+<div class="tsd-comment tsd-typography"><p>The id of the group to post to.</p>
 </div></li>
 <li>
 <h5>text: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The text of the post.</p>
+<div class="tsd-comment tsd-typography"><p>The text (content) of the post</p>
 </div></li>
 <li>
 <h5>image: <a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a></h5>
-<div class="tsd-comment tsd-typography"><p>The image of the post.</p>
+<div class="tsd-comment tsd-typography"><p>The image to be posted.</p>
 </div></li>
 <li>
 <h5>tag: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = null</span></h5>
-<div class="tsd-comment tsd-typography"><p>The tag of the post.</p>
+<div class="tsd-comment tsd-typography"><p>The tag to be associated with the post.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.createPost</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L123">src/index.ts:123</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L123">src/index.ts:123</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="createPostReply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Post<wbr/>Reply</span><a href="#createPostReply" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">create<wbr/>Post<wbr/>Reply<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>postId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = createPostReply</span></div>
@@ -318,21 +364,27 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-4.__type-5"><span class="tsd-signature-symbol">(</span>postId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a reply to the given post.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves with the new created reply.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>postId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the post.</p>
+<div class="tsd-comment tsd-typography"><p>The id of the post to reply to.</p>
 </div></li>
 <li>
 <h5>text: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The text of the reply.</p>
+<div class="tsd-comment tsd-typography"><p>The content of the reply.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.createPostReply</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L131">src/index.ts:131</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L131">src/index.ts:131</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="deletePost" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Post</span><a href="#deletePost" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">delete<wbr/>Post<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = deletePost</span></div>
@@ -343,17 +395,21 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-10.__type-11"><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Delete a post by the given public key.</p>
+
+<h3>Returns</h3><p>A promise that resolves when the post has been deleted.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5>
-<div class="tsd-comment tsd-typography"><p>the PublicKey of the post</p>
+<div class="tsd-comment tsd-typography"><p>The public key of the post to be deleted.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.deletePost</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L127">src/index.ts:127</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L127">src/index.ts:127</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="deletePostReply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Post<wbr/>Reply</span><a href="#deletePostReply" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">delete<wbr/>Post<wbr/>Reply<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = deletePostReply</span></div>
@@ -364,17 +420,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-12.__type-13"><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Deletes a post reply associated with the given public key.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves when the post reply was deleted.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5>
-<div class="tsd-comment tsd-typography"><p>the PublicKey of the reply</p>
+<div class="tsd-comment tsd-typography"><p>The public key of the post reply to be deleted.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.deletePostReply</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L134">src/index.ts:134</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L134">src/index.ts:134</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getAllPostReplies" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>All<wbr/>Post<wbr/>Replies</span><a href="#getAllPostReplies" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>All<wbr/>Post<wbr/>Replies<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>postId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, orderBy<span class="tsd-signature-symbol">?: </span><a href="../enums/Order_By.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Order_By</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getAllPostReplies</span></div>
@@ -412,7 +474,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getAllPostReplies</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L133">src/index.ts:133</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L133">src/index.ts:133</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getAllPosts" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>All<wbr/>Posts</span><a href="#getAllPosts" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>All<wbr/>Posts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>groupId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, orderBy<span class="tsd-signature-symbol">?: </span><a href="../enums/Order_By.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Order_By</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getAllPosts</span></div>
@@ -451,7 +513,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getAllPosts</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L126">src/index.ts:126</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L126">src/index.ts:126</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getPost" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Post</span><a href="#getPost" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>Post<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>postId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getPost</span></div>
@@ -462,17 +524,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-28.__type-29"><span class="tsd-signature-symbol">(</span>postId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Retrieve a post by id.</p>
+
+<h3>Returns</h3><ul>
+<li>Returns a Promise that resolves with the post associated with the post id, or null if no post was found.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>postId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the post</p>
+<div class="tsd-comment tsd-typography"><p>The id of the post to be retrieved.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getPost</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L124">src/index.ts:124</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L124">src/index.ts:124</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getPostByPublicKey" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Post<wbr/>By<wbr/>Public<wbr/>Key</span><a href="#getPostByPublicKey" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>Post<wbr/>By<wbr/>Public<wbr/>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getPostByPublicKey</span></div>
@@ -483,17 +551,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-30.__type-31"><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Retrieves a post by its public key.</p>
+
+<h3>Returns</h3><ul>
+<li>Returns a Promise that resolves with the post associated with the public key, or null if no post was found.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>publicKey: <span class="tsd-signature-type">PublicKey</span></h5>
-<div class="tsd-comment tsd-typography"><p>the PublicKey of the post</p>
+<div class="tsd-comment tsd-typography"><p>The public key of the post.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Post.html" class="tsd-signature-type" data-tsd-kind="Type alias">Post</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getPostByPublicKey</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L125">src/index.ts:125</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L125">src/index.ts:125</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getPostReply" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Post<wbr/>Reply</span><a href="#getPostReply" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>Post<wbr/>Reply<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getPostReply</span></div>
@@ -520,7 +594,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Reply.html" class="tsd-signature-type" data-tsd-kind="Type alias">Reply</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getPostReply</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L132">src/index.ts:132</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L132">src/index.ts:132</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="likePost" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>like<wbr/>Post</span><a href="#likePost" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">like<wbr/>Post<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = likePost</span></div>
@@ -541,7 +615,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.likePost</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L128">src/index.ts:128</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L128">src/index.ts:128</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>User Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="createUser" class="tsd-anchor"></a>
@@ -554,25 +628,29 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-6.__type-7"><span class="tsd-signature-symbol">(</span>nickname<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, avatar<span class="tsd-signature-symbol">: </span><a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a>, biography<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Creates a user with the given parameters.</p>
+
+<h3>Returns</h3><p>A promise that resolves to the newly created user.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>nickname: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The nickname of the user.</p>
+<div class="tsd-comment tsd-typography"><p>The nickname of the user to be created.</p>
 </div></li>
 <li>
 <h5>avatar: <a href="../interfaces/FileData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileData</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/FileUriData.html" class="tsd-signature-type" data-tsd-kind="Interface">FileUriData</a></h5>
-<div class="tsd-comment tsd-typography"><p>The image FileData of the user avatar.</p>
+<div class="tsd-comment tsd-typography"><p>An avatar for the new user. Can be a FileData object, a FileUriData object, or null.</p>
 </div></li>
 <li>
 <h5>biography: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The biography of the user.</p>
+<div class="tsd-comment tsd-typography"><p>A biography for the new user. Can be a string or null.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.createUser</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L105">src/index.ts:105</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L105">src/index.ts:105</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="deleteUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>User</span><a href="#deleteUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">delete<wbr/>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = deleteUser</span></div>
@@ -583,10 +661,14 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-14.__type-15"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Deletes a user.</p>
+
+<h3>Returns</h3><p>A promise that resolves when the user was successfully deleted.</p>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.deleteUser</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L108">src/index.ts:108</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L108">src/index.ts:108</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="followUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>follow<wbr/>User</span><a href="#followUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">follow<wbr/>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = followUser</span></div>
@@ -597,17 +679,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-16.__type-17"><span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Follows a user with the given user id.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves when the user has been followed.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>userId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the user.</p>
+<div class="tsd-comment tsd-typography"><p>The id of the user to follow.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.followUser</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L109">src/index.ts:109</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L109">src/index.ts:109</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>User</span><a href="#getUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getUser</span></div>
@@ -632,7 +720,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getUser</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L106">src/index.ts:106</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L106">src/index.ts:106</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="getUserByPublicKey" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>User<wbr/>By<wbr/>Public<wbr/>Key</span><a href="#getUserByPublicKey" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">get<wbr/>User<wbr/>By<wbr/>Public<wbr/>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = getUserByPublicKey</span></div>
@@ -657,7 +745,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/User.html" class="tsd-signature-type" data-tsd-kind="Type alias">User</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.getUserByPublicKey</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L107">src/index.ts:107</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L107">src/index.ts:107</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="unfollowUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>unfollow<wbr/>User</span><a href="#unfollowUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">unfollow<wbr/>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = unfollowUser</span></div>
@@ -668,17 +756,23 @@
 <ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
 <li class="tsd-signature" id="__type-46.__type-47"><span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Unfollows the user specified by the given user id.</p>
+
+<h3>Returns</h3><ul>
+<li>A promise that resolves when the user has been unfollowed.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>userId: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the user.</p>
+<div class="tsd-comment tsd-typography"><p>The id of the user to unfollow.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Implementation of SplingProtocol.unfollowUser</p>
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L110">src/index.ts:110</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L110">src/index.ts:110</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getConnection" class="tsd-anchor"></a>
@@ -688,7 +782,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Connection</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L218">src/index.ts:218</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L218">src/index.ts:218</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="init" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>init</span><a href="#init" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -696,7 +790,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="SocialProtocol.html" class="tsd-signature-type" data-tsd-kind="Class">SocialProtocol</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L152">src/index.ts:152</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L152">src/index.ts:152</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="prepareWallet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepare<wbr/>Wallet</span><a href="#prepareWallet" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -704,7 +798,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/44265c9/src/index.ts#L158">src/index.ts:158</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/spling-labs/social-protocol/blob/51e7308/src/index.ts#L158">src/index.ts:158</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">

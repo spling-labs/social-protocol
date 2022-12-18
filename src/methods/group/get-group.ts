@@ -9,8 +9,13 @@ import { GetGroupByIdQueryDocument } from '../../utils/gql/group'
 import { web3 } from 'react-native-project-serum-anchor'
 
 /**
+ * Retrieves a group associated with the id.
+ * 
  * @category Group
- * @param groupId - the id of the group
+ *
+ * @param {number} groupId - The id of the group to retrieve.
+ * 
+ * @returns {Promise<Group | null>} - A promise that resolves to the group, or null if no group was found.
  */
 export default async function getGroup(groupId: number): Promise<Group | null> {
   try {
