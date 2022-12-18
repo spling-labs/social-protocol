@@ -22,6 +22,7 @@ const documents = {
     "\n    query GetPostById($postId: bigint!) {\n        splinglabs_0_1_0_decoded_post(where: {pid: {_eq: $postId}}) {\n            cl_pubkey    \n            gid\n            pid\n            st\n            tid\n            ts\n            uid\n        }\n    }\n": types.GetPostByIdDocument,
     "\n    query GetAllTagsByPublicKey($publicKey: String!) {\n        splinglabs_0_1_0_decoded_tags_by_pk(cl_pubkey: $publicKey) {\n            taglist\n        }\n    }      \n": types.GetAllTagsByPublicKeyDocument,
     "\n    query GetUserByUserId($userId: bigint!) {\n        splinglabs_0_1_0_decoded_userprofile(where: {uid: {_eq: $userId}}) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }      \n": types.GetUserByUserIdDocument,
+    "\n    query GetUserByPublicKey($publicKey: String!) {\n        splinglabs_0_1_0_decoded_userprofile_by_pk(cl_pubkey: $publicKey) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }\n": types.GetUserByPublicKeyDocument,
 };
 
 /**
@@ -60,6 +61,10 @@ export function graphql(source: "\n    query GetAllTagsByPublicKey($publicKey: S
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query GetUserByUserId($userId: bigint!) {\n        splinglabs_0_1_0_decoded_userprofile(where: {uid: {_eq: $userId}}) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }      \n"): (typeof documents)["\n    query GetUserByUserId($userId: bigint!) {\n        splinglabs_0_1_0_decoded_userprofile(where: {uid: {_eq: $userId}}) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }      \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetUserByPublicKey($publicKey: String!) {\n        splinglabs_0_1_0_decoded_userprofile_by_pk(cl_pubkey: $publicKey) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }\n"): (typeof documents)["\n    query GetUserByPublicKey($publicKey: String!) {\n        splinglabs_0_1_0_decoded_userprofile_by_pk(cl_pubkey: $publicKey) {\n            cl_pubkey    \n            following\n            groups\n            shdw\n            st\n            ts\n            uid\n            username\n        }\n    }\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
