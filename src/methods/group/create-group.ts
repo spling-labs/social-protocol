@@ -46,14 +46,14 @@ export default async function createGroup(
     }
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -127,7 +127,7 @@ export default async function createGroup(
     }
 
     // Find the group profile pda.
-    const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [GroupProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('group_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )

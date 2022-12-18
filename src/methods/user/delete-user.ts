@@ -11,7 +11,7 @@ import { getUserFileData } from './helpers'
 export default async function deleteUser(): Promise<void> {
   try {
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -48,7 +48,7 @@ export default async function deleteUser(): Promise<void> {
     )
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )

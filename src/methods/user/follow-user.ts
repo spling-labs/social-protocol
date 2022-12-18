@@ -10,20 +10,20 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 export default async function followUser(userId: number): Promise<void> {
   try {
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )

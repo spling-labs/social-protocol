@@ -37,13 +37,13 @@ export default async function createPost(
 ): Promise<Post> {
   try {
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -61,13 +61,13 @@ export default async function createPost(
     )
 
     // Find post pda.
-    const [PostPDA] = await web3.PublicKey.findProgramAddress(
+    const [PostPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('post'), hash.publicKey.toBuffer()],
       programId,
     )
 
     // Find likes pda.
-    const [LikesPDA] = await web3.PublicKey.findProgramAddress(
+    const [LikesPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('likes'), PostPDA.toBuffer()],
       programId,
     )
@@ -131,7 +131,7 @@ export default async function createPost(
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -215,7 +215,7 @@ export default async function createPost(
     }
 
     // Find tags pda.
-    const [TagsPDA] = await web3.PublicKey.findProgramAddress(
+    const [TagsPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('tags')],
       programId,
     )

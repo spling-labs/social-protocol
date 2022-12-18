@@ -17,7 +17,7 @@ export default async function deletePostReply(publicKey: web3.PublicKey): Promis
     const replyChain = new ReplyChain(publicKey, reply)
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -62,13 +62,13 @@ export default async function deletePostReply(publicKey: web3.PublicKey): Promis
     )
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find reply pda.
-    const [ReplyPDA] = await web3.PublicKey.findProgramAddress(
+    const [ReplyPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('reply'), hash.publicKey.toBuffer()],
       programId,
     )

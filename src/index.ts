@@ -143,7 +143,7 @@ export class SocialProtocol implements SplingProtocol {
     if (options.useIndexer === true) {
       this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QP_ENDPOINT)
     }
-    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'confirmed')
+    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'processed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
     this.payer = payer instanceof web3.Keypair ? new AnchorWallet(payer) : payer
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
