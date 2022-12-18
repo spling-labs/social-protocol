@@ -15,8 +15,16 @@ import { GetUserByUserIdQueryDocument } from '../../utils/gql/user'
 import { GetAllLikesByPublicKeyQueryDocument } from '../../utils/gql/like'
 
 /**
+ *  Get all posts for a group.
+ * 
  * @category Post
- * @param groupId The group id where the post should be fetched.
+ * 
+ * @param {number} groupId The group id where the posts should be fetched.
+ * @param {number|null} limit Maximum number of posts to return. (optional, requires useIndexer option to be enabled)
+ * @param {number|null} offset Offset to start returning posts from. (optional, requires useIndexer option to be enabled)
+ * @param {Order_By|null} orderBy The order to return posts by timestamp. (optional, requires useIndexer option to be enabled)
+ * 
+ * @return {Promise<Post[]>} - Promise resolving to an array of posts.
  */
 export default async function getAllPosts(groupId: number, limit: number | null = null, offset: number | null = null, orderBy: Order_By | null = null): Promise<Post[]> {
   try {

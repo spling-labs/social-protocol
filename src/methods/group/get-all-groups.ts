@@ -7,7 +7,15 @@ import { GetAllGroupsQuery, Order_By, Splinglabs_0_1_0_Decoded_Groupprofile } fr
 import { web3 } from 'react-native-project-serum-anchor'
 
 /**
+ *  Get all groups.
+ * 
  * @category Group
+ * 
+ * @param {number|null} limit Maximum number of groups to return. (optional, requires useIndexer option to be enabled)
+ * @param {number|null} offset Offset to start returning groups from. (optional, requires useIndexer option to be enabled)
+ * @param {Order_By|null} orderBy The order to return groups by timestamp. (optional, requires useIndexer option to be enabled)
+ * 
+ * @return {Promise<Group[]>} - Promise resolving to an array of groups.
  */
 export default async function getAllGroups(limit: number | null = null, offset: number | null = null, orderBy: Order_By | null = null): Promise<Group[]> {
   try {
