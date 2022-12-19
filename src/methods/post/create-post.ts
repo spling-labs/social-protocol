@@ -29,7 +29,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
  * 
  * @param {number} groupId - The id of the group to post to.
  * @param {string | null} text - The text (content) of the post
- * @param {FileData | FileUriData | null} image - The image to be posted.
+ * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
  * 
  * @returns {Promise<Post>} - A promise that resolves to the newly created post.
@@ -37,7 +37,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 export default async function createPost(
   groupId: number,
   text: string | null,
-  image: FileData | FileUriData | null,
+  file: FileData | FileUriData | null,
   tag: string | null = null
 ): Promise<Post> {
   try {
@@ -77,24 +77,24 @@ export default async function createPost(
       programId,
     )
 
-    // Create image file to upload.
-    let postImageFile = null
+    // Create file to upload.
+    let postFile = null
 
     if (!isBrowser) {
-      postImageFile = image
+      postFile = file
         ? ({
-          uri: (image as FileUriData).uri,
-          name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-          type: (image as FileUriData).type,
-          size: (image as FileUriData).size,
+          uri: (file as FileUriData).uri,
+          name: `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
+          type: (file as FileUriData).type,
+          size: (file as FileUriData).size,
           file: Buffer.from(''),
         } as ShadowFile)
         : null
     } else {
-      postImageFile = image
+      postFile = file
         ? new File(
-          [convertDataUriToBlob((image as FileData).base64)],
-          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          [convertDataUriToBlob((file as FileData).base64)],
+          `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
         )
         : null
     }
@@ -126,8 +126,8 @@ export default async function createPost(
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
 
-    if (postImageFile != null) {
-      fileSizeSummarized += postImageFile.size
+    if (postFile != null) {
+      fileSizeSummarized += postFile.size
     }
 
     if (postTextFile != null) {
@@ -160,11 +160,11 @@ export default async function createPost(
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
-    // Upload post text and post image files.
-    if (postImageFile != null) {
+    // Upload post text and post file.
+    if (postFile != null) {
       await this.shadowDrive.uploadFile(
         account.publicKey,
-        !isBrowser ? (postImageFile as ShadowFile) : (postImageFile as File),
+        !isBrowser ? (postFile as ShadowFile) : (postFile as File),
       )
     }
     if (postTextFile != null) {
@@ -185,11 +185,11 @@ export default async function createPost(
       userId: userChain.userId.toString(),
       groupId: groupId.toString(),
       text: text ? `${PostPDA.toString()}.txt` : null,
-      media: image
+      media: file
         ? [
           {
-            file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
-            type: image.type.split('/')[1],
+            file: `${PostPDA.toString()}.${file.type.split('/')[1]}`,
+            type: file.type.split('/')[1],
           } as MediaData,
         ]
         : [],
