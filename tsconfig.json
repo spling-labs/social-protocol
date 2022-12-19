@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es2020",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "./src",

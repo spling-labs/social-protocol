@@ -4,26 +4,31 @@ import { programId, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Unfollows the user specified by the given user id.
+ * 
  * @category User
- * @param userId - the id of the user.
+ * 
+ * @param {number} userId - The id of the user to unfollow.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the user has been unfollowed.
  */
 export default async function unfollowUser(userId: number): Promise<void> {
   try {
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )

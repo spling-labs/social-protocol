@@ -6,12 +6,16 @@ import { UserFileData } from '../../types'
 import { getUserFileData } from './helpers'
 
 /**
+ * Deletes a user.
+ * 
  * @category User
+ * 
+ * @returns {Promise<void>} A promise that resolves when the user was successfully deleted.
  */
 export default async function deleteUser(): Promise<void> {
   try {
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -48,7 +52,7 @@ export default async function deleteUser(): Promise<void> {
     )
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
