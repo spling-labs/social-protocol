@@ -28,6 +28,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
  * @category Post
  * 
  * @param {number} groupId - The id of the group to post to.
+ * @param {string | null} title - The title of the post
  * @param {string | null} text - The text (content) of the post
  * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
@@ -36,6 +37,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
  */
 export default async function createPost(
   groupId: number,
+  title: string | null,
   text: string | null,
   file: FileData | FileUriData | null,
   tag: string | null = null
@@ -184,6 +186,7 @@ export default async function createPost(
       programId: programId.toString(),
       userId: userChain.userId.toString(),
       groupId: groupId.toString(),
+      title: title,
       text: text ? `${PostPDA.toString()}.txt` : null,
       media: file
         ? [
@@ -255,6 +258,7 @@ export default async function createPost(
       userId: Number(postJson.userId),
       postId: postChain.postId,
       groupId: Number(postJson.groupId),
+      title: title ? title : null,
       text: text ? text : null,
       media: getMediaDataWithUrl(postJson.media, account.publicKey),
       license: postJson.license,

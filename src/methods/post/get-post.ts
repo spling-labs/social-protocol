@@ -78,6 +78,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
         postId: onChainPost.pid,
         userId: Number(postFileData.userId),
         groupId: Number(postFileData.groupId),
+        title: postFileData.title,
         text: postFileData.text,
         media: getMediaDataWithUrl(postFileData.media, userShdwPublicKey),
         license: postFileData.license,

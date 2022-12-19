@@ -75,6 +75,7 @@ interface SplingProtocol {
   // POST METHODS
   createPost(
     groupId: number,
+    title: string | null,
     text: string | null,
     image: FileData | FileUriData | null,
     tag: string | null

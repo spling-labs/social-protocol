@@ -63,6 +63,7 @@ export type PostFileData = {
   programId: string
   userId: string
   groupId: string
+  title: string | null
   text: string | null
   media: MediaData[]
   license: string | null
@@ -82,6 +83,7 @@ export type Post = {
   userId: number
   postId: number
   groupId: number
+  title: string | null
   text: string
   media: MediaData[]
   license: string | null
