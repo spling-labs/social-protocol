@@ -56,6 +56,16 @@ export type GroupFileData = {
   license: string | null
 }
 
+export type GroupFileDataV2 = {
+  groupId: number
+  timestamp: string
+  name: string
+  bio: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  license: string | null
+}
+
 export type Group = {
   timestamp: number
   publicKey: web3.PublicKey

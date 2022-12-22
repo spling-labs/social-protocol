@@ -20,9 +20,9 @@ export async function getUserFileDataV2(userId: number, shdw: web3.PublicKey): P
   try {
     // Get spling json file from the shadow drive.
     const response = await axios.get(`${shadowDriveDomain}${shdw.toString()}/profile.json`);
-    if (response.status !== 200) throw new UserNotFoundError()
+    if (response.status !== 200) return Promise.resolve(null)
     
-    // Add missing key
+    // Add missing key.
     response.data.userId = userId
 
     return Promise.resolve(response.data as UserFileDataV2)

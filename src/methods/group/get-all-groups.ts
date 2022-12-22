@@ -1,10 +1,11 @@
 import { shadowDriveDomain } from '../../utils/constants'
 import { GroupChain } from '../../models/GroupChain'
-import { Group, GroupFileData } from '../../types'
-import { getGroupFileData } from './helpers'
+import { Group, GroupFileData, GroupFileDataV2 } from '../../types'
+import { getGroupFileData, getGroupFileDataV2 } from './helpers'
 import { GetAllGroupsQueryDocument } from '../../utils/gql/group'
 import { GetAllGroupsQuery, Order_By, Splinglabs_0_1_0_Decoded_Groupprofile } from '../../gql/graphql'
 import { web3 } from 'react-native-project-serum-anchor'
+import { GroupNotFoundError } from '../../utils/errors'
 
 /**
  *  Get all groups.
@@ -25,12 +26,17 @@ export default async function getAllGroups(limit: number | null = null, offset: 
       const groupQuery: GetAllGroupsQuery = await this.graphQLClient.request(GetAllGroupsQueryDocument, { limit: limit, offset: offset, orderBy: orderBy })
       const onChainGroups: Splinglabs_0_1_0_Decoded_Groupprofile[] = groupQuery.splinglabs_0_1_0_decoded_groupprofile
 
+      // Read all group files from shadow drives.
+      let groupFiles: GroupFileDataV2[] = await Promise.all(onChainGroups.map(group => getGroupFileDataV2(group.gid, group.shdw)))
+      groupFiles = groupFiles.filter(value => value !== null)
+
       for (const g in onChainGroups) {
         try {
           const onChainGroup: Splinglabs_0_1_0_Decoded_Groupprofile = onChainGroups[g]
           const groupPublicKey: web3.PublicKey = new web3.PublicKey(onChainGroup.cl_pubkey)
           const groupShdwPublicKey: web3.PublicKey = new web3.PublicKey(onChainGroup.shdw)
-          const groupFileData: GroupFileData = await getGroupFileData(groupShdwPublicKey)
+          const groupFileData: GroupFileDataV2 | undefined = groupFiles.find(groupFile => groupFile.groupId == onChainGroup.gid)
+          if (groupFileData == undefined) throw new GroupNotFoundError()
 
           // Push group data to array.
           groups.push({

@@ -27,9 +27,9 @@ export async function getPostFileDataV2(
   try {
     // Get post json file from the shadow drive.
     const response = await axios.get(`${shadowDriveDomain}${shdw.toString()}/${publicKey}.json`);
-    if (response.status !== 200) throw new PostNotFoundError()
+    if (response.status !== 200) return Promise.resolve(null)
 
-    // Add missing key
+    // Add missing key.
     response.data.postId = postId
 
     return Promise.resolve(response.data as PostFileDataV2)
