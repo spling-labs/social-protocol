@@ -8,3 +8,13 @@ export const GetAllLikesByPublicKeyQueryDocument = graphql(`
         }
     }      
 `);
+
+export const GetAllLikesByPublicKeysQueryDocument = graphql(`
+    query GetAllLikesByPublicKeys($publicKeys: [String!]!) {
+        splinglabs_0_1_0_decoded_likes(where: {cl_pubkey: {_in: $publicKeys}}) {
+            cl_pubkey
+            counter
+            users
+        }
+    }
+`);

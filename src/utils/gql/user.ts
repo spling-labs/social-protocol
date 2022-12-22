@@ -29,3 +29,18 @@ export const GetUserByPublicKeyQueryDocument = graphql(`
         }
     }
 `);
+
+export const GetAllUserByUserIdQueryDocument = graphql(`
+    query GetAllUserByUserId($userIds: [bigint!]!) {
+        splinglabs_0_1_0_decoded_userprofile(where: {uid: {_in: $userIds}}) {
+            cl_pubkey
+            following
+            groups
+            shdw
+            st
+            ts
+            uid
+            username
+        }
+    }
+`);

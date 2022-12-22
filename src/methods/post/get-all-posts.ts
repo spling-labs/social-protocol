@@ -1,18 +1,18 @@
 import { programId, shadowDriveDomain } from '../../utils/constants'
 import { LikesChain, PostChain, TagsChain, UserChain } from '../../models'
-import { Post, PostUser } from '../../types'
-import { getMediaDataWithUrl, getPostFileData } from './helpers'
+import { Post, PostFileDataV2, PostTextFileData, PostUser, UserFileDataV2 } from '../../types'
+import { getMediaDataWithUrl, getPostFileData, getPostFileDataV2, getPostTextFromFile } from './helpers'
 import { getTextFromFile } from '../../utils/helpers'
-import { UserNotFoundError } from '../../utils/errors'
+import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
-import { getUserFileData } from '../user/helpers'
+import { getUserFileData, getUserFileDataV2 } from '../user/helpers'
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { GetAllLikesByPublicKeyQuery, GetUserByUserIdQuery, Order_By, Splinglabs_0_1_0_Decoded_Post } from '../../gql/graphql'
+import { GetAllLikesByPublicKeysQuery, GetAllUserByUserIdQuery, Order_By, Splinglabs_0_1_0_Decoded_Likes, Splinglabs_0_1_0_Decoded_Post, Splinglabs_0_1_0_Decoded_Userprofile } from '../../gql/graphql'
 import { GetAllPostByGroupIdQueryDocument } from '../../utils/gql/post'
 import { GetAllTagsByPublicKeyQueryDocument } from '../../utils/gql/tag'
-import { GetUserByUserIdQueryDocument } from '../../utils/gql/user'
-import { GetAllLikesByPublicKeyQueryDocument } from '../../utils/gql/like'
+import { GetAllUserByUserIdQueryDocument } from '../../utils/gql/user'
+import { GetAllLikesByPublicKeysQueryDocument } from '../../utils/gql/like'
 
 /**
  *  Get all posts for a group.
@@ -45,25 +45,62 @@ export default async function getAllPosts(groupId: number, limit: number | null 
       const tagList: string[] = tagsAndPosts[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist ? tagsAndPosts[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist : []
       const onChainPosts: Splinglabs_0_1_0_Decoded_Post[] = tagsAndPosts[1].data.splinglabs_0_1_0_decoded_post
 
+      // Get all users from posts.
+      const onChainUsers: GetAllUserByUserIdQuery = await this.graphQLClient.request(GetAllUserByUserIdQueryDocument, { userIds: [...new Set(onChainPosts.map(post => post.uid))] })
+      const users: Splinglabs_0_1_0_Decoded_Userprofile[] = onChainUsers.splinglabs_0_1_0_decoded_userprofile
+
+      // Get all post and user profile json file from the shadow drives.
+      const postsContentPromises: Promise<PostFileDataV2>[] = onChainPosts.map(post => {
+        const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == post.uid)
+        return getPostFileDataV2(post.pid, new web3.PublicKey(post.cl_pubkey), new web3.PublicKey(userChain.shdw))
+      })
+      const usersContentPromises: Promise<UserFileDataV2>[] = users.filter((v, i, a) => a.findIndex(v2 => (v2.uid === v.uid)) === i).map(user => getUserFileDataV2(user.uid, new web3.PublicKey(user.shdw)))
+
+      // Read all post and user files from shadow drives.
+      const [postsContent, usersContent] = await Promise.all([
+        Promise.all(postsContentPromises),
+        Promise.all(usersContentPromises)
+      ]);
+
+      // Read all post text files from shadow drives.
+      const postsText: PostTextFileData[] = await Promise.all(postsContent.filter(value => value !== null).map(postContent => {
+          if (postContent.text !== null) {
+            const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(postContent.userId))
+            return getPostTextFromFile(postContent.postId, `${shadowDriveDomain}${userChain.shdw}/${postContent.text}`)
+          }
+          return null
+      }))
+
+      // Get all likes from posts.
+      const onChainLikes: GetAllLikesByPublicKeysQuery = await this.graphQLClient.request(GetAllLikesByPublicKeysQueryDocument, {
+        publicKeys: onChainPosts.map(post => {
+          // Find likes pda.
+          const [LikesPDA] = web3.PublicKey.findProgramAddressSync(
+            [anchor.utils.bytes.utf8.encode('likes'), new web3.PublicKey(post.cl_pubkey).toBuffer()],
+            programId,
+          )
+          return LikesPDA.toString()
+        })
+      })
+      const postLikes: Splinglabs_0_1_0_Decoded_Likes[] = onChainLikes.splinglabs_0_1_0_decoded_likes
+
       for (const post of onChainPosts) {
         try {
-          const user: GetUserByUserIdQuery = await this.graphQLClient.request(GetUserByUserIdQueryDocument, { userId: post.uid })
-          if (user.splinglabs_0_1_0_decoded_userprofile.length <= 0) throw new UserNotFoundError()
+          const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == post.uid)
+          if (userChain == undefined) throw new UserNotFoundError()
 
-          const userChain = user.splinglabs_0_1_0_decoded_userprofile[0]
           const userShdwPublicKey: web3.PublicKey = new web3.PublicKey(userChain.shdw)
           const postPublicKey: web3.PublicKey = new web3.PublicKey(post.cl_pubkey)
 
-          // Get post and user profile json file from the shadow drive.
-          const [postFileData, userProfileJson] = await Promise.all([
-            getPostFileData(postPublicKey, userShdwPublicKey),
-            getUserFileData(userShdwPublicKey)
-          ]);
+          const postFileData: PostFileDataV2 | undefined = postsContent.find(postFile => postFile.postId == post.pid)
+          if (postFileData == undefined) throw new PostNotFoundError()
 
-          if (postFileData.text != null) {
-            postFileData.text = await getTextFromFile(
-              `${shadowDriveDomain}${userChain.shdw}/${postFileData.text}`,
-            )
+          const userFileData: UserFileDataV2 | undefined = usersContent.find(userFile => userFile.userId == Number(postFileData.userId))
+          if (userFileData == undefined) throw new UserNotFoundError()
+
+          const postTextFile: PostTextFileData | undefined = postsText.find(postText => postText.postId == post.pid)
+          if (postTextFile !== undefined) {
+            postFileData.text = postTextFile.text
           }
 
           // Find likes pda.
@@ -72,8 +109,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
             programId,
           )
 
-          const likes: GetAllLikesByPublicKeyQuery = await this.graphQLClient.request(GetAllLikesByPublicKeyQueryDocument, { publicKey: LikesPDA.toString() })
-          const likesChain = likes.splinglabs_0_1_0_decoded_likes_by_pk
+          const likesChain: Splinglabs_0_1_0_Decoded_Likes = postLikes.find(likes => likes.cl_pubkey === LikesPDA.toString())
 
           // Push post data to array.
           posts.push({
@@ -90,10 +126,10 @@ export default async function getAllPosts(groupId: number, limit: number | null 
             license: postFileData.license,
             user: {
               publicKey: new web3.PublicKey(userChain.username),
-              nickname: userProfileJson.nickname,
+              nickname: userFileData.nickname,
               avatar:
-                userProfileJson.avatar != null
-                  ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
+                userFileData.avatar != null
+                  ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userFileData.avatar.file}`
                   : null,
             } as PostUser,
             likes: likesChain.users,

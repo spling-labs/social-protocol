@@ -20,6 +20,17 @@ export type UserFileData = {
   license: string | null
 }
 
+export type UserFileDataV2 = {
+  userId: number
+  timestamp: string
+  nickname: string
+  bio: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  socials: SocialData[]
+  license: string | null
+}
+
 export type User = {
   timestamp: number
   publicKey: web3.PublicKey
@@ -67,6 +78,23 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
+}
+
+export type PostFileDataV2 = {
+  postId: number
+  timestamp: string
+  programId: string
+  userId: string
+  groupId: string
+  title: string | null
+  text: string | null
+  media: MediaData[]
+  license: string | null
+}
+
+export type PostTextFileData = {
+  postId: number
+  text: string | null
 }
 
 export type PostUser = {
