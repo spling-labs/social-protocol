@@ -1,16 +1,16 @@
 import { shadowDriveDomain } from '../../../utils/constants'
 import { ReplyChain, UserChain } from '../../../models'
-import { PostUser } from '../../../types'
-import { getReplyFileData } from './helpers'
+import { PostUser, ReplyFileDataV2, ReplyTextFileData, UserFileDataV2 } from '../../../types'
+import { getReplyFileData, getReplyFileDataV2, getReplyTextFromFile } from './helpers'
 import { getTextFromFile } from '../../../utils/helpers'
-import { UserNotFoundError } from '../../../utils/errors'
+import { ReplyNotFoundError, UserNotFoundError } from '../../../utils/errors'
 import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
-import { getUserFileData } from '../../user/helpers'
+import { getUserFileData, getUserFileDataV2 } from '../../user/helpers'
 import { Reply } from 'index'
 import { web3 } from 'react-native-project-serum-anchor'
-import { GetAllRepliesByPostIdQuery, GetUserByUserIdQuery, Order_By, Splinglabs_0_1_0_Decoded_Reply } from '../../../gql/graphql'
+import { GetAllRepliesByPostIdQuery, GetAllUserByUserIdQuery, Order_By, Splinglabs_0_1_0_Decoded_Reply, Splinglabs_0_1_0_Decoded_Userprofile } from '../../../gql/graphql'
 import { GetAllRepliesByPostIdQueryDocument } from '../../../utils/gql/reply'
-import { GetUserByUserIdQueryDocument } from '../../../utils/gql/user'
+import { GetAllUserByUserIdQueryDocument } from '../../../utils/gql/user'
 
 /**
  * @category Post
@@ -30,24 +30,49 @@ export default async function getAllPostReplies(postId: number, limit: number | 
       const replyQuery: GetAllRepliesByPostIdQuery = await this.graphQLClient.request(GetAllRepliesByPostIdQueryDocument, { postId: postId, limit: limit, offset: offset, orderBy: orderBy })
       const onChainReplies: Splinglabs_0_1_0_Decoded_Reply[] = replyQuery.splinglabs_0_1_0_decoded_reply
 
+      // Get all users from replies.
+      const onChainUsers: GetAllUserByUserIdQuery = await this.graphQLClient.request(GetAllUserByUserIdQueryDocument, { userIds: [...new Set(onChainReplies.map(reply => reply.uid))] })
+      const users: Splinglabs_0_1_0_Decoded_Userprofile[] = onChainUsers.splinglabs_0_1_0_decoded_userprofile
+
+      // Get all post and user profile json file from the shadow drives.
+      const repliesContentPromises: Promise<ReplyFileDataV2>[] = onChainReplies.map(post => {
+        const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == post.uid)
+        return getReplyFileDataV2(post.cl_pubkey, userChain.shdw)
+      })
+      const usersContentPromises: Promise<UserFileDataV2>[] = users.filter((v, i, a) => a.findIndex(v2 => (v2.uid === v.uid)) === i).map(user => getUserFileDataV2(user.uid, new web3.PublicKey(user.shdw)))
+
+      // Read all reply and user files from shadow drives.
+      const [repliesContent, usersContent] = await Promise.all([
+        Promise.all(repliesContentPromises),
+        Promise.all(usersContentPromises)
+      ]);
+
+      // Read all reply text files from shadow drives.
+      const repliesText: ReplyTextFileData[] = await Promise.all(repliesContent.filter(value => value !== null).map(replyContent => {
+        if (replyContent.text !== null) {
+          const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(replyContent.userId))
+          return getReplyTextFromFile(replyContent.publicKey, `${shadowDriveDomain}${userChain.shdw.toString()}/${replyContent.text}`)
+        }
+        return null
+      }))
+
       for (const onChainReply of onChainReplies) {
         try {
-          const user: GetUserByUserIdQuery = await this.graphQLClient.request(GetUserByUserIdQueryDocument, { userId: onChainReply.uid })
-          if (user.splinglabs_0_1_0_decoded_userprofile.length <= 0) throw new UserNotFoundError()
+          const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == onChainReply.uid)
+          if (userChain == undefined) throw new UserNotFoundError()
 
-          const userChain = user.splinglabs_0_1_0_decoded_userprofile[0]
-          const userShdwPublicKey: web3.PublicKey = new web3.PublicKey(userChain.shdw)
           const replyPublicKey: web3.PublicKey = new web3.PublicKey(onChainReply.cl_pubkey)
 
-          // Get reply and user profile json file from the shadow drive.
-          const [replyFileData, userProfileJson] = await Promise.all([
-            getReplyFileData(replyPublicKey, userShdwPublicKey),
-            getUserFileData(userShdwPublicKey)
-          ]);
+          const replyFileData: ReplyFileDataV2 | undefined = repliesContent.find(replyFile => replyFile.publicKey == onChainReply.cl_pubkey)
+          if (replyFileData == undefined) throw new ReplyNotFoundError()
 
-          replyFileData.text = await getTextFromFile(
-            `${shadowDriveDomain}${userChain.shdw.toString()}/${replyFileData.text}`,
-          )
+          const userFileData: UserFileDataV2 | undefined = usersContent.find(userFile => userFile.userId == Number(replyFileData.userId))
+          if (userFileData == undefined) throw new UserNotFoundError()
+
+          const postTextFile: ReplyTextFileData | undefined = repliesText.find(replyText => replyText.publicKey == onChainReply.cl_pubkey)
+          if (postTextFile !== undefined) {
+            replyFileData.text = postTextFile.text
+          }
 
           // Push reply data to array.
           replies.push({
@@ -59,10 +84,10 @@ export default async function getAllPostReplies(postId: number, limit: number | 
             text: replyFileData.text,
             user: {
               publicKey: new web3.PublicKey(userChain.username),
-              nickname: userProfileJson.nickname,
+              nickname: userFileData.nickname,
               avatar:
-                userProfileJson.avatar != null
-                  ? `${shadowDriveDomain}${userChain.shdw}/${userProfileJson.avatar.file}`
+                userFileData.avatar != null
+                  ? `${shadowDriveDomain}${userChain.shdw}/${userFileData.avatar.file}`
                   : null,
             } as PostUser,
           } as Reply)

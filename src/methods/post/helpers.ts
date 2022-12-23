@@ -44,7 +44,7 @@ export async function getPostTextFromFile(postId: number, url: string): Promise<
     if (response.status !== 200) return Promise.resolve(null)
 
     return Promise.resolve({ postId: postId, text: response.data } as PostTextFileData)
-  } catch (error) {
+  } catch {
     return Promise.resolve(null)
   }
 }

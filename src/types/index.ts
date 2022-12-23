@@ -137,6 +137,19 @@ export type ReplyFileData = {
   text: string
 }
 
+export type ReplyFileDataV2 = {
+  publicKey: string
+  timestamp: string
+  userId: string
+  postId: string
+  text: string
+}
+
+export type ReplyTextFileData = {
+  publicKey: string
+  text: string | null
+}
+
 export type Reply = {
   publicKey: web3.PublicKey
   timestamp: number
