@@ -45,8 +45,13 @@ export default function SocialProtocol() {
   useEffect(() => {
     ;(async () => {
       if (wallet?.publicKey) {
+        const options = { 
+          rpcUrl: "https://api.mainnet-beta.solana.com/", 
+          useIndexer: true
+        } as ProtocolOptions
+
         // Initialize the social protocol
-        const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
+        const socialProtocol = await new SocialProtocol(wallet, payerWallet, options).init()
 
         // You can call now functions like:
         const user = await socialProtocol.getUser(42) 
@@ -69,9 +74,13 @@ export default function SocialProtocol() {
     ;(async () => {
       const wallet: Keypair = Keypair.generate()
       const payerWallet: Keypair = Keypair.generate()
+      const options = { 
+        rpcUrl: "https://api.mainnet-beta.solana.com/", 
+        useIndexer: true
+      } as ProtocolOptions
 
       // Initialize the social protocol
-      const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
+      const socialProtocol = await new SocialProtocol(wallet, payerWallet, options).init()
 
       // You can call now functions like:
       const user = await socialProtocol.getUser(42) 
@@ -88,9 +97,13 @@ export default function SocialProtocol() {
 import { SocialProtocol } from '@spling/social-protocol'
 const wallet: Keypair = Keypair.generate()
 const payerWallet: Keypair = Keypair.generate()
+const options = { 
+  rpcUrl: "https://api.mainnet-beta.solana.com/", 
+  useIndexer: true
+} as ProtocolOptions
 
 // Initialize the social protocol
-const socialProtocol = await new SocialProtocol("https://api.mainnet-beta.solana.com/", wallet, payerWallet).init()
+const socialProtocol = await new SocialProtocol(wallet, payerWallet, options).init()
 
 // You can call now functions like:
 const user = await socialProtocol.getUser(42) 
