@@ -19,31 +19,38 @@ import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
-import { ShadowFile } from 'react-native-shadow-drive'
+import { ShadowFile, ShadowUploadResponse } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a new post in the specific group with the given parameters.
+ * 
  * @category Post
- * @param groupId - The id of the group.
- * @param text - The text of the post.
- * @param image - The image of the post.
- * @param tag - The tag of the post.
+ * 
+ * @param {number} groupId - The id of the group to post to.
+ * @param {string | null} title - The title of the post
+ * @param {string | null} text - The text (content) of the post
+ * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
+ * @param {string | null} tag - The tag to be associated with the post.
+ * 
+ * @returns {Promise<Post>} - A promise that resolves to the newly created post.
  */
 export default async function createPost(
   groupId: number,
+  title: string | null,
   text: string | null,
-  image: FileData | FileUriData | null,
+  file: FileData | FileUriData | null,
   tag: string | null = null
 ): Promise<Post> {
   try {
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -61,35 +68,35 @@ export default async function createPost(
     )
 
     // Find post pda.
-    const [PostPDA] = await web3.PublicKey.findProgramAddress(
+    const [PostPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('post'), hash.publicKey.toBuffer()],
       programId,
     )
 
     // Find likes pda.
-    const [LikesPDA] = await web3.PublicKey.findProgramAddress(
+    const [LikesPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('likes'), PostPDA.toBuffer()],
       programId,
     )
 
-    // Create image file to upload.
-    let postImageFile = null
+    // Create file to upload.
+    let postFile = null
 
     if (!isBrowser) {
-      postImageFile = image
+      postFile = file
         ? ({
-          uri: (image as FileUriData).uri,
-          name: `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
-          type: (image as FileUriData).type,
-          size: (image as FileUriData).size,
+          uri: (file as FileUriData).uri,
+          name: `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
+          type: (file as FileUriData).type,
+          size: (file as FileUriData).size,
           file: Buffer.from(''),
         } as ShadowFile)
         : null
     } else {
-      postImageFile = image
+      postFile = file
         ? new File(
-          [convertDataUriToBlob((image as FileData).base64)],
-          `${PostPDA.toString()}.${image?.type.split('/')[1]}`,
+          [convertDataUriToBlob((file as FileData).base64)],
+          `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
         )
         : null
     }
@@ -99,7 +106,7 @@ export default async function createPost(
     if (text !== null) {
       if (!isBrowser) {
         const RNFS = require('react-native-fs')
-        const postTextPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`
+        const postTextPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.txt`
         await RNFS.writeFile(postTextPath, text, 'utf8')
         const statResult = await RNFS.stat(postTextPath)
         const file = await RNFS.readFile(postTextPath, 'utf8')
@@ -121,8 +128,8 @@ export default async function createPost(
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
 
-    if (postImageFile != null) {
-      fileSizeSummarized += postImageFile.size
+    if (postFile != null) {
+      fileSizeSummarized += postFile.size
     }
 
     if (postTextFile != null) {
@@ -131,7 +138,7 @@ export default async function createPost(
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -155,22 +162,25 @@ export default async function createPost(
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
-    // Upload post text and post image files.
-    if (postImageFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (postImageFile as ShadowFile) : (postImageFile as File),
+    const uploadPromises: Promise<ShadowUploadResponse>[] = []
+
+    console.time('Upload post files')
+    // Upload post text and post file.
+    if (postFile != null) {
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(
+          account.publicKey,
+          !isBrowser ? (postFile as ShadowFile) : (postFile as File),
+        )
       )
     }
     if (postTextFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(
+          account.publicKey,
+          !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
+        )
       )
-      if (!isBrowser) {
-        const RNFS = require('react-native-fs')
-        RNFS.unlink(`${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`)
-      }
     }
 
     // Generate the post json.
@@ -179,12 +189,13 @@ export default async function createPost(
       programId: programId.toString(),
       userId: userChain.userId.toString(),
       groupId: groupId.toString(),
+      title: title,
       text: text ? `${PostPDA.toString()}.txt` : null,
-      media: image
+      media: file
         ? [
           {
-            file: `${PostPDA.toString()}.${image.type.split('/')[1]}`,
-            type: image.type.split('/')[1],
+            file: `${PostPDA.toString()}.${file.type.split('/')[1]}`,
+            type: file.type.split('/')[1],
           } as MediaData,
         ]
         : [],
@@ -193,7 +204,7 @@ export default async function createPost(
 
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const postJSONPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.json`
+      const postJSONPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.json`
       await RNFS.writeFile(postJSONPath, JSON.stringify(postJson), 'utf8')
       const statResult = await RNFS.stat(postJSONPath)
       const file = await RNFS.readFile(postJSONPath, 'utf8')
@@ -206,16 +217,38 @@ export default async function createPost(
         size: statResult.size,
       }
 
-      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
-      await RNFS.unlink(postJSONPath)
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(account.publicKey, profileFile)
+      )
     } else {
       const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
       const postJSONFile = new File([fileToSave], `${PostPDA.toString()}.json`)
-      await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+      )
+    }
+
+    // Upload now all post files to the shadow drive.
+    await Promise.all(uploadPromises)
+    console.timeEnd('Upload post files')
+
+    // Clear files from device if its react native.
+    if (!isBrowser) {
+      const RNFS = require('react-native-fs')
+
+
+      // Remove post text file from device.
+      if (postTextFile != null) {
+        RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.txt`)
+      }
+
+      // Remove post json file from device.
+      const postJSONPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.json`
+      RNFS.unlink(postJSONPath)
     }
 
     // Find tags pda.
-    const [TagsPDA] = await web3.PublicKey.findProgramAddress(
+    const [TagsPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('tags')],
       programId,
     )
@@ -250,6 +283,7 @@ export default async function createPost(
       userId: Number(postJson.userId),
       postId: postChain.postId,
       groupId: Number(postJson.groupId),
+      title: title ? title : null,
       text: text ? text : null,
       media: getMediaDataWithUrl(postJson.media, account.publicKey),
       license: postJson.license,

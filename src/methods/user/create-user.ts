@@ -10,10 +10,15 @@ import { SocialIDL } from '../../utils/idl'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a user with the given parameters.
+ * 
  * @category User
- * @param nickname - The nickname of the user.
- * @param avatar - The image FileData of the user avatar.
- * @param biography - The biography of the user.
+ * 
+ * @param {string} nickname - The nickname of the user to be created.
+ * @param {FileData | FileUriData | null} avatar - An avatar for the new user. Can be a FileData object, a FileUriData object, or null.
+ * @param {string | null} biography - A biography for the new user. Can be a string or null.
+ * 
+ * @returns {Promise<User>} A promise that resolves to the newly created user.
  */
 export default async function createUser(
   nickname: string,
@@ -51,14 +56,14 @@ export default async function createUser(
     }
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -112,7 +117,7 @@ export default async function createUser(
     let profileFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const profileJSONPath = `${RNFS.ExternalDirectoryPath}/profile.json`
+      const profileJSONPath = `${RNFS.DocumentDirectoryPath}/profile.json`
       await RNFS.writeFile(profileJSONPath, JSON.stringify(userProfileJson), 'utf8')
       const statResult = await RNFS.stat(profileJSONPath)
       const file = await RNFS.readFile(profileJSONPath, 'utf8')
@@ -130,7 +135,7 @@ export default async function createUser(
     }
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -151,7 +156,7 @@ export default async function createUser(
 
     if (profileFile !== null && !isBrowser) {
       const RNFS = require('react-native-fs')
-      RNFS.unlink(`${RNFS.ExternalDirectoryPath}/profile.json`)
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/profile.json`)
     }
 
     // Fetch created user profile.

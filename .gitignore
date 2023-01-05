@@ -8,3 +8,4 @@ src/methods/reset-bank.ts
 src/methods/setup-bank.ts
 src/methods/setup-spling.ts
 src/methods/setup-tags.ts
+src/gql
