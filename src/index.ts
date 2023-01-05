@@ -39,7 +39,7 @@ import {
 import { AnchorWallet } from './utils/AnchorWallet'
 import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
 import PayerNotFoundError from './utils/errors/PayerNotFoundError'
-import { INDEXER_GRAPH_QP_ENDPOINT, SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
+import { INDEXER_GRAPH_QL_ENDPOINT, SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
 import { TOKEN_PROGRAM_ID } from 'react-native-project-serum-anchor/dist/cjs/utils/token'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { GraphQLClient } from 'graphql-request'
@@ -142,7 +142,7 @@ export class SocialProtocol implements SplingProtocol {
    */
   constructor(wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null, options: ProtocolOptions | null) {
     if (options.useIndexer === true) {
-      this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QP_ENDPOINT)
+      this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QL_ENDPOINT)
     }
     this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'processed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
