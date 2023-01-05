@@ -9,7 +9,15 @@ import dayjs from 'dayjs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a new group.
+ * 
  * @category Group
+ * 
+ * @param {string} name The name of the group.
+ * @param {string | null} bio An optional description of the group.
+ * @param {FileData | FileUriData | null} avatar An optional avatar for the group. Can be a FileData, FileUriData, or null.
+ * 
+ * @returns A Promise that resolves with the newly created group.
  */
 export default async function createGroup(
   name: string,
@@ -46,14 +54,14 @@ export default async function createGroup(
     }
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -105,7 +113,7 @@ export default async function createGroup(
 
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const groupJSONPath = `${RNFS.DownloadDirectoryPath}/group.json`
+      const groupJSONPath = `${RNFS.DocumentDirectoryPath}/group.json`
       await RNFS.writeFile(groupJSONPath, JSON.stringify(groupJson), 'utf8')
       const statResult = await RNFS.stat(groupJSONPath)
       const file = await RNFS.readFile(groupJSONPath, 'utf8')
@@ -127,7 +135,7 @@ export default async function createGroup(
     }
 
     // Find the group profile pda.
-    const [GroupProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [GroupProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('group_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )

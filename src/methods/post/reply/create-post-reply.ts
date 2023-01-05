@@ -10,20 +10,25 @@ import { ShadowFile } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
+ * Creates a reply to the given post.
+ * 
  * @category Post
- * @param postId - The id of the post.
- * @param text - The text of the reply.
+ * 
+ * @param {number} postId The id of the post to reply to.
+ * @param {string} text The content of the reply.
+ * 
+ * @returns {Promise<Reply>} - A promise that resolves with the new created reply.
  */
 export default async function createPostReply(postId: number, text: string): Promise<Reply> {
   try {
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -41,7 +46,7 @@ export default async function createPostReply(postId: number, text: string): Pro
     )
 
     // Find reply pda.
-    const [ReplyPDA] = await web3.PublicKey.findProgramAddress(
+    const [ReplyPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('reply'), hash.publicKey.toBuffer()],
       programId,
     )
@@ -80,7 +85,7 @@ export default async function createPostReply(postId: number, text: string): Pro
     let replyJSONFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const replyJSONPath = `${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`
+      const replyJSONPath = `${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`
       await RNFS.writeFile(replyJSONPath, JSON.stringify(replyJson), 'utf8')
       const statResult = await RNFS.stat(replyJSONPath)
       const file = await RNFS.readFile(replyJSONPath, 'utf8')
@@ -102,7 +107,7 @@ export default async function createPostReply(postId: number, text: string): Pro
 
     if (this.tokenAccount !== null) {
       // Find bank pda.
-      const [BankPDA] = await web3.PublicKey.findProgramAddress(
+      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
         [anchor.utils.bytes.utf8.encode('b')],
         programId,
       )
@@ -140,8 +145,8 @@ export default async function createPostReply(postId: number, text: string): Pro
     // Remove created device files if necessary.
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.txt`)
-      await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`)
+      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`)
+      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`)
     }
 
     // Submit the post to the anchor program.

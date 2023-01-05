@@ -7,8 +7,13 @@ import { getReplyFileData } from './helpers'
 import { getKeypairFromSeed } from '../../../utils/helpers'
 
 /**
+ * Deletes a post reply associated with the given public key.
+ * 
  * @category Post
- * @param publicKey - the PublicKey of the reply
+ * 
+ * @param {web3.PublicKey} publicKey - The public key of the post reply to be deleted.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the post reply was deleted.
  */
 export default async function deletePostReply(publicKey: web3.PublicKey): Promise<void> {
   try {
@@ -17,7 +22,7 @@ export default async function deletePostReply(publicKey: web3.PublicKey): Promis
     const replyChain = new ReplyChain(publicKey, reply)
 
     // Find the user profile pda.
-    const [UserProfilePDA] = await web3.PublicKey.findProgramAddress(
+    const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('user_profile'), this.wallet.publicKey.toBuffer()],
       programId,
     )
@@ -62,13 +67,13 @@ export default async function deletePostReply(publicKey: web3.PublicKey): Promis
     )
 
     // Find spling pda.
-    const [SplingPDA] = await web3.PublicKey.findProgramAddress(
+    const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
       programId,
     )
 
     // Find reply pda.
-    const [ReplyPDA] = await web3.PublicKey.findProgramAddress(
+    const [ReplyPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('reply'), hash.publicKey.toBuffer()],
       programId,
     )

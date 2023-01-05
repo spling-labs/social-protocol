@@ -20,6 +20,17 @@ export type UserFileData = {
   license: string | null
 }
 
+export type UserFileDataV2 = {
+  userId: number
+  timestamp: string
+  nickname: string
+  bio: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  socials: SocialData[]
+  license: string | null
+}
+
 export type User = {
   timestamp: number
   publicKey: web3.PublicKey
@@ -37,6 +48,16 @@ export type User = {
 }
 
 export type GroupFileData = {
+  timestamp: string
+  name: string
+  bio: string
+  avatar: MediaData | null
+  banner: MediaData | null
+  license: string | null
+}
+
+export type GroupFileDataV2 = {
+  groupId: number
   timestamp: string
   name: string
   bio: string
@@ -63,9 +84,27 @@ export type PostFileData = {
   programId: string
   userId: string
   groupId: string
+  title: string | null
   text: string | null
   media: MediaData[]
   license: string | null
+}
+
+export type PostFileDataV2 = {
+  postId: number
+  timestamp: string
+  programId: string
+  userId: string
+  groupId: string
+  title: string | null
+  text: string | null
+  media: MediaData[]
+  license: string | null
+}
+
+export type PostTextFileData = {
+  postId: number
+  text: string | null
 }
 
 export type PostUser = {
@@ -82,6 +121,7 @@ export type Post = {
   userId: number
   postId: number
   groupId: number
+  title: string | null
   text: string
   media: MediaData[]
   license: string | null
@@ -95,6 +135,19 @@ export type ReplyFileData = {
   userId: string
   postId: string
   text: string
+}
+
+export type ReplyFileDataV2 = {
+  publicKey: string
+  timestamp: string
+  userId: string
+  postId: string
+  text: string
+}
+
+export type ReplyTextFileData = {
+  publicKey: string
+  text: string | null
 }
 
 export type Reply = {
@@ -117,4 +170,9 @@ export interface FileUriData {
   uri: string
   type: string
   size: number
+}
+
+export interface ProtocolOptions {
+  rpcUrl: string | null
+  useIndexer: boolean
 }
