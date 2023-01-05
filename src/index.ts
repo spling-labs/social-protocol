@@ -175,7 +175,7 @@ export class SocialProtocol implements SplingProtocol {
       this.connection.getTokenAccountBalance(splingTokenAccount.address)
     ]);
 
-    if (solBalance >= 500000 && shdwBalance.value.uiAmount !== null && shdwBalance.value.uiAmount >= 0.01 && splingBalance.value.uiAmount! >= 1) return Promise.resolve();
+    if (solBalance >= 500000 && shdwBalance.value.uiAmount !== null && shdwBalance.value.uiAmount >= 0.01 && splingBalance.value.uiAmount! >= 0.05) return Promise.resolve();
 
     const [payerShdwPublicKey, payerSplingPublicKey] = await Promise.all([
       getAssociatedTokenAddress(SHDW_TOKEN_ADDRESS, this.payer.publicKey),
@@ -206,7 +206,7 @@ export class SocialProtocol implements SplingProtocol {
       payerSplingPublicKey,
       splingTokenAccount.address,
       this.payer.publicKey,
-      10 * LAMPORTS_PER_SOL,
+      1 * LAMPORTS_PER_SOL,
       [],
       TOKEN_PROGRAM_ID)
     );

@@ -113,7 +113,7 @@ export default async function createGroup(
 
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const groupJSONPath = `${RNFS.DownloadDirectoryPath}/group.json`
+      const groupJSONPath = `${RNFS.DocumentDirectoryPath}/group.json`
       await RNFS.writeFile(groupJSONPath, JSON.stringify(groupJson), 'utf8')
       const statResult = await RNFS.stat(groupJSONPath)
       const file = await RNFS.readFile(groupJSONPath, 'utf8')

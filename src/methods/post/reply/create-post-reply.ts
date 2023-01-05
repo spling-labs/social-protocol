@@ -85,7 +85,7 @@ export default async function createPostReply(postId: number, text: string): Pro
     let replyJSONFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const replyJSONPath = `${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`
+      const replyJSONPath = `${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`
       await RNFS.writeFile(replyJSONPath, JSON.stringify(replyJson), 'utf8')
       const statResult = await RNFS.stat(replyJSONPath)
       const file = await RNFS.readFile(replyJSONPath, 'utf8')
@@ -145,8 +145,8 @@ export default async function createPostReply(postId: number, text: string): Pro
     // Remove created device files if necessary.
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.txt`)
-      await RNFS.unlink(`${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.json`)
+      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`)
+      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`)
     }
 
     // Submit the post to the anchor program.

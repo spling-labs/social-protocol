@@ -117,7 +117,7 @@ export default async function createUser(
     let profileFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const profileJSONPath = `${RNFS.ExternalDirectoryPath}/profile.json`
+      const profileJSONPath = `${RNFS.DocumentDirectoryPath}/profile.json`
       await RNFS.writeFile(profileJSONPath, JSON.stringify(userProfileJson), 'utf8')
       const statResult = await RNFS.stat(profileJSONPath)
       const file = await RNFS.readFile(profileJSONPath, 'utf8')
@@ -156,7 +156,7 @@ export default async function createUser(
 
     if (profileFile !== null && !isBrowser) {
       const RNFS = require('react-native-fs')
-      RNFS.unlink(`${RNFS.ExternalDirectoryPath}/profile.json`)
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/profile.json`)
     }
 
     // Fetch created user profile.

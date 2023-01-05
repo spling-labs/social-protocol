@@ -19,7 +19,7 @@ import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
-import { ShadowFile } from 'react-native-shadow-drive'
+import { ShadowFile, ShadowUploadResponse } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
@@ -106,7 +106,7 @@ export default async function createPost(
     if (text !== null) {
       if (!isBrowser) {
         const RNFS = require('react-native-fs')
-        const postTextPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`
+        const postTextPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.txt`
         await RNFS.writeFile(postTextPath, text, 'utf8')
         const statResult = await RNFS.stat(postTextPath)
         const file = await RNFS.readFile(postTextPath, 'utf8')
@@ -162,22 +162,25 @@ export default async function createPost(
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
+    const uploadPromises: Promise<ShadowUploadResponse>[] = []
+
+    console.time('Upload post files')
     // Upload post text and post file.
     if (postFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (postFile as ShadowFile) : (postFile as File),
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(
+          account.publicKey,
+          !isBrowser ? (postFile as ShadowFile) : (postFile as File),
+        )
       )
     }
     if (postTextFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(
+          account.publicKey,
+          !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
+        )
       )
-      if (!isBrowser) {
-        const RNFS = require('react-native-fs')
-        RNFS.unlink(`${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.txt`)
-      }
     }
 
     // Generate the post json.
@@ -201,7 +204,7 @@ export default async function createPost(
 
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const postJSONPath = `${RNFS.ExternalDirectoryPath}/${PostPDA.toString()}.json`
+      const postJSONPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.json`
       await RNFS.writeFile(postJSONPath, JSON.stringify(postJson), 'utf8')
       const statResult = await RNFS.stat(postJSONPath)
       const file = await RNFS.readFile(postJSONPath, 'utf8')
@@ -214,12 +217,34 @@ export default async function createPost(
         size: statResult.size,
       }
 
-      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
-      await RNFS.unlink(postJSONPath)
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(account.publicKey, profileFile)
+      )
     } else {
       const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
       const postJSONFile = new File([fileToSave], `${PostPDA.toString()}.json`)
-      await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+      uploadPromises.push(
+        this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+      )
+    }
+
+    // Upload now all post files to the shadow drive.
+    await Promise.all(uploadPromises)
+    console.timeEnd('Upload post files')
+
+    // Clear files from device if its react native.
+    if (!isBrowser) {
+      const RNFS = require('react-native-fs')
+
+
+      // Remove post text file from device.
+      if (postTextFile != null) {
+        RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.txt`)
+      }
+
+      // Remove post json file from device.
+      const postJSONPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.json`
+      RNFS.unlink(postJSONPath)
     }
 
     // Find tags pda.

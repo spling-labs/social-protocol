@@ -42,7 +42,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
         { document: GetAllTagsByPublicKeyQueryDocument, variables: { publicKey: TagsPDA.toString() } },
         { document: GetAllPostByGroupIdQueryDocument, variables: { limit: limit, offset: offset, orderBy: orderBy, groupId: groupId } }
       ])
-      const tagList: string[] = tagsAndPosts[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist ? tagsAndPosts[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist : []
+      const tagList: string[] = tagsAndPosts[0]?.data?.splinglabs_0_1_0_decoded_tags_by_pk.taglist ?? []
       const onChainPosts: Splinglabs_0_1_0_Decoded_Post[] = tagsAndPosts[1].data.splinglabs_0_1_0_decoded_post
 
       // Get all users from posts.

@@ -37,7 +37,7 @@ export default async function getPostByPublicKey(publicKey: web3.PublicKey): Pro
         { document: GetAllTagsByPublicKeyQueryDocument, variables: { publicKey: TagsPDA.toString() } },
         { document: GetPostByPublicKeyQueryDocument, variables: { publicKey: publicKey.toString() } }
       ])
-      const tagList: string[] = tagsAndPost[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist ? tagsAndPost[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist : []
+      const tagList: string[] = tagsAndPost[0]?.data?.splinglabs_0_1_0_decoded_tags_by_pk.taglist ?? []
       const onChainPost: Splinglabs_0_1_0_Decoded_Post | null = tagsAndPost[1].data.splinglabs_0_1_0_decoded_post_by_pk
       if (onChainPost === null) throw new PostNotFoundError()
 

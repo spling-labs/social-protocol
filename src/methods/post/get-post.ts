@@ -37,7 +37,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
         { document: GetAllTagsByPublicKeyQueryDocument, variables: { publicKey: TagsPDA.toString() } },
         { document: GetPostByIdQueryDocument, variables: { postId: postId } }
       ])
-      const tagList: string[] = tagsAndPost[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist ? tagsAndPost[0].data.splinglabs_0_1_0_decoded_tags_by_pk.taglist : []
+      const tagList: string[] = tagsAndPost[0]?.data?.splinglabs_0_1_0_decoded_tags_by_pk.taglist ?? []
       if (tagsAndPost[1].data.splinglabs_0_1_0_decoded_post.length <= 0) throw new PostNotFoundError()
       const onChainPost: Splinglabs_0_1_0_Decoded_Post = tagsAndPost[1].data.splinglabs_0_1_0_decoded_post[0]
 
