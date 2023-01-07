@@ -136,35 +136,11 @@ export default async function createPost(
       fileSizeSummarized += postTextFile.size
     }
 
-    if (this.tokenAccount !== null) {
-      // Find bank pda.
-      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
-        [anchor.utils.bytes.utf8.encode('b')],
-        programId,
-      )
-
-      // Extract transaction costs from the bank.
-      await this.anchorProgram.methods
-        .extractBank(new anchor.BN(2292880))
-        .accounts({
-          user: this.wallet.publicKey,
-          spling: SplingPDA,
-          b: BankPDA,
-          receiver: this.wallet.publicKey,
-          senderTokenAccount: this.tokenAccount,
-          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
-          mint: SPLING_TOKEN_ADDRESS,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .rpc()
-    }
-
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
     const uploadPromises: Promise<ShadowUploadResponse>[] = []
 
-    console.time('Upload post files')
     // Upload post text and post file.
     if (postFile != null) {
       uploadPromises.push(
@@ -230,7 +206,6 @@ export default async function createPost(
 
     // Upload now all post files to the shadow drive.
     await Promise.all(uploadPromises)
-    console.timeEnd('Upload post files')
 
     // Clear files from device if its react native.
     if (!isBrowser) {
@@ -253,24 +228,39 @@ export default async function createPost(
       programId,
     )
 
+    // Find bank pda.
+    const [BankPDA] = web3.PublicKey.findProgramAddressSync(
+      [anchor.utils.bytes.utf8.encode('b')],
+      programId,
+    )
+
     // Submit the post to the anchor program.
+    const transactionCosts = this.tokenAccount !== null ? new anchor.BN(2292880) : null
     await this.anchorProgram.methods
-      .submitPost(groupId, hash.publicKey, tag ? tag : '')
+      .submitPost(groupId, hash.publicKey, tag ? tag : '', transactionCosts)
       .accounts({
         user: this.wallet.publicKey,
+        spling: SplingPDA,
         userProfile: UserProfilePDA,
         post: PostPDA,
         tags: TagsPDA,
         likes: LikesPDA,
-        spling: SplingPDA,
+        b: BankPDA,
+        receiver: this.wallet.publicKey,
+        senderTokenAccount: this.tokenAccount,
+        receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+        mint: SPLING_TOKEN_ADDRESS,
+        tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()
 
-    console.log(PostPDA)
+    await delay()
 
     const post = await this.anchorProgram.account.post.fetch(PostPDA)
     const postChain = new PostChain(PostPDA, post)
+
+    console.log(JSON.stringify(postChain, null));
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
@@ -301,4 +291,8 @@ export default async function createPost(
   } catch (error) {
     return Promise.reject(error)
   }
+}
+
+function delay() {
+  return new Promise(resolve => setTimeout(resolve, 1000));
 }

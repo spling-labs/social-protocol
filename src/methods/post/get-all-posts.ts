@@ -57,13 +57,17 @@ export default async function getAllPosts(groupId: number, limit: number | null 
       const usersContentPromises: Promise<UserFileDataV2>[] = users.filter((v, i, a) => a.findIndex(v2 => (v2.uid === v.uid)) === i).map(user => getUserFileDataV2(user.uid, new web3.PublicKey(user.shdw)))
 
       // Read all post and user files from shadow drives.
-      const [postsContent, usersContent] = await Promise.all([
+      let [postsContent, usersContent] = await Promise.all([
         Promise.all(postsContentPromises),
         Promise.all(usersContentPromises)
       ]);
 
+      // Filter out null values to prevent errors.
+      postsContent = postsContent.filter(value => value !== null)
+      usersContent = usersContent.filter(value => value !== null)
+
       // Read all post text files from shadow drives.
-      const postsText: PostTextFileData[] = await Promise.all(postsContent.filter(value => value !== null).map(postContent => {
+      const postsText: PostTextFileData[] = await Promise.all(postsContent.map(postContent => {
           if (postContent.text !== null) {
             const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(postContent.userId))
             return getPostTextFromFile(postContent.postId, `${shadowDriveDomain}${userChain.shdw}/${postContent.text}`)
@@ -87,16 +91,16 @@ export default async function getAllPosts(groupId: number, limit: number | null 
       for (const post of onChainPosts) {
         try {
           const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == post.uid)
-          if (userChain == undefined) throw new UserNotFoundError()
+          if (userChain === undefined) throw new UserNotFoundError()
 
           const userShdwPublicKey: web3.PublicKey = new web3.PublicKey(userChain.shdw)
           const postPublicKey: web3.PublicKey = new web3.PublicKey(post.cl_pubkey)
 
           const postFileData: PostFileDataV2 | undefined = postsContent.find(postFile => postFile.postId == post.pid)
-          if (postFileData == undefined) throw new PostNotFoundError()
+          if (postFileData === undefined) throw new PostNotFoundError()
 
           const userFileData: UserFileDataV2 | undefined = usersContent.find(userFile => userFile.userId == Number(postFileData.userId))
-          if (userFileData == undefined) throw new UserNotFoundError()
+          if (userFileData === undefined) throw new UserNotFoundError()
 
           const postTextFile: PostTextFileData | undefined = postsText.find(postText => postText.postId == post.pid)
           if (postTextFile !== undefined) {
@@ -133,7 +137,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
                   : null,
             } as PostUser,
             likes: likesChain.users,
-            tags: post.tid ? [tagList[post.tid]] : []
+            tags: post.tid > 0 && tagList.length > post.tid ? [tagList[post.tid]] : []
           } as Post)
         } catch (error) {
           // Nothing to do.
@@ -222,7 +226,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
                   : null,
             } as PostUser,
             likes: likesChain.users,
-            tags: postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : []
+            tags: postChain.tagIndex > 0 && tagsChain.tags.length > postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : []
           } as Post)
         } catch (error) {
           // Nothing to do.

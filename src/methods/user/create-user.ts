@@ -61,29 +61,6 @@ export default async function createUser(
       programId,
     )
 
-    if (this.tokenAccount !== null) {
-      // Find bank pda.
-      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
-        [anchor.utils.bytes.utf8.encode('b')],
-        programId,
-      )
-
-      // Extract transaction costs from the bank.
-      await this.anchorProgram.methods
-        .extractBank(new anchor.BN(6458000))
-        .accounts({
-          user: this.wallet.publicKey,
-          spling: SplingPDA,
-          b: BankPDA,
-          receiver: this.wallet.publicKey,
-          senderTokenAccount: this.tokenAccount,
-          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
-          mint: SPLING_TOKEN_ADDRESS,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .rpc()
-    }
-
     // Find/Create shadow drive account.
     const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
       this.shadowDrive,
@@ -140,6 +117,13 @@ export default async function createUser(
       programId,
     )
 
+    // Find bank pda.
+    const [BankPDA] = web3.PublicKey.findProgramAddressSync(
+      [anchor.utils.bytes.utf8.encode('b')],
+      programId,
+    )
+
+    const transactionCosts = this.tokenAccount !== null ? new anchor.BN(6458000) : null
     const [, ,] = await Promise.all([
       this.shadowDrive.uploadFile(
         account.publicKey,
@@ -151,6 +135,8 @@ export default async function createUser(
         account.publicKey,
         SplingPDA,
         UserProfilePDA,
+        BankPDA,
+        transactionCosts
       ),
     ])
 
@@ -192,14 +178,22 @@ async function submitUserProfileToAnchorProgram(
   accountPublicKey: web3.PublicKey,
   SplingPDA: web3.PublicKey,
   UserProfilePDA: web3.PublicKey,
+  BankPDA: web3.PublicKey,
+  transactionCosts: any
 ): Promise<string> {
   return anchorProgram.methods
-    .createUserProfile(accountPublicKey)
+    .createUserProfile(accountPublicKey, transactionCosts)
     .accounts({
       user: walletPublicKey,
       spling: SplingPDA,
       userProfile: UserProfilePDA,
       systemProgram: anchor.web3.SystemProgram.programId,
+      b: BankPDA,
+      receiver: this.wallet.publicKey,
+      senderTokenAccount: this.tokenAccount,
+      receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+      mint: SPLING_TOKEN_ADDRESS,
+      tokenProgram: TOKEN_PROGRAM_ID,
     })
     .rpc()
 }
