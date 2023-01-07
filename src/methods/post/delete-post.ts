@@ -1,10 +1,11 @@
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
 import { PostFileData } from '../../types'
 import { getPostFileData } from './helpers'
 import { getKeypairFromSeed } from '../../utils/helpers'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * Delete a post by the given public key.
@@ -92,14 +93,27 @@ export default async function deletePost(publicKey: web3.PublicKey): Promise<voi
       programId,
     )
 
+    // Find bank pda.
+    const [BankPDA] = web3.PublicKey.findProgramAddressSync(
+      [anchor.utils.bytes.utf8.encode('b')],
+      programId,
+    )
+
     // Submit the post to the anchor program.
+    const transactionCosts = this.tokenAccount !== null ? new anchor.BN(10000) : null
     await this.anchorProgram.methods
-      .deletePost(postChain.groupId, hash.publicKey)
+      .deletePost(postChain.groupId, hash.publicKey, transactionCosts)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,
         post: PostPDA,
         spling: SplingPDA,
+        b: BankPDA,
+        receiver: this.wallet.publicKey,
+        senderTokenAccount: this.tokenAccount,
+        receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+        mint: SPLING_TOKEN_ADDRESS,
+        tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()

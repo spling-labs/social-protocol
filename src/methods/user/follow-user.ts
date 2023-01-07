@@ -26,36 +26,26 @@ export default async function followUser(userId: number): Promise<void> {
       programId,
     )
 
-    if (this.tokenAccount !== null) {
-      // Find bank pda.
-      const [BankPDA] = web3.PublicKey.findProgramAddressSync(
-        [anchor.utils.bytes.utf8.encode('b')],
-        programId,
-      )
-
-      // Extract transaction costs from the bank.
-      await this.anchorProgram.methods
-        .extractBank(new anchor.BN(10000))
-        .accounts({
-          user: this.wallet.publicKey,
-          spling: SplingPDA,
-          b: BankPDA,
-          receiver: this.wallet.publicKey,
-          senderTokenAccount: this.tokenAccount,
-          receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
-          mint: SPLING_TOKEN_ADDRESS,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .rpc()
-    }
+    // Find bank pda.
+    const [BankPDA] = web3.PublicKey.findProgramAddressSync(
+      [anchor.utils.bytes.utf8.encode('b')],
+      programId,
+    )
 
     // Send follow user to the anchor program.
+    const transactionCosts = this.tokenAccount !== null ? new anchor.BN(10000) : null
     await this.anchorProgram.methods
-      .followUser(userId)
+      .followUser(userId, transactionCosts)
       .accounts({
         user: this.wallet.publicKey,
         userProfile: UserProfilePDA,
         spling: SplingPDA,
+        b: BankPDA,
+        receiver: this.wallet.publicKey,
+        senderTokenAccount: this.tokenAccount,
+        receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+        mint: SPLING_TOKEN_ADDRESS,
+        tokenProgram: TOKEN_PROGRAM_ID,
       })
       .rpc()
 

@@ -1,9 +1,10 @@
 import * as anchor from 'react-native-project-serum-anchor'
 import { web3 } from 'react-native-project-serum-anchor'
-import { programId, shadowDriveDomain } from '../../utils/constants'
+import { programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { UserChain } from '../../models'
 import { UserFileData } from '../../types'
 import { getUserFileData } from './helpers'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 /**
  * Deletes a user.
@@ -57,13 +58,26 @@ export default async function deleteUser(): Promise<void> {
       programId,
     )
 
+    // Find bank pda.
+    const [BankPDA] = web3.PublicKey.findProgramAddressSync(
+      [anchor.utils.bytes.utf8.encode('b')],
+      programId,
+    )
+
     // Delete the user profile on the anchor program.
+    const transactionCosts = this.tokenAccount !== null ? new anchor.BN(10000) : null
     await this.anchorProgram.methods
-      .deleteUserProfile(userChain.userId, userChain.shdw)
+      .deleteUserProfile(userChain.userId, userChain.shdw, transactionCosts)
       .accounts({
         user: this.wallet.publicKey,
         spling: SplingPDA,
         userProfile: UserProfilePDA,
+        b: BankPDA,
+        receiver: this.wallet.publicKey,
+        senderTokenAccount: this.tokenAccount,
+        receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
+        mint: SPLING_TOKEN_ADDRESS,
+        tokenProgram: TOKEN_PROGRAM_ID,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc()

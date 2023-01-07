@@ -68,6 +68,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -77,6 +107,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -99,6 +135,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -108,6 +174,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -130,6 +202,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -139,6 +241,12 @@ export type SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -161,6 +269,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -170,6 +308,12 @@ export type SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -192,6 +336,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -201,6 +375,12 @@ export type SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -223,6 +403,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -232,6 +442,12 @@ export type SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -269,6 +485,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -286,6 +532,12 @@ export type SocialIDL = {
         {
           'name': 'tagName',
           'type': 'string'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -323,6 +575,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -340,6 +622,12 @@ export type SocialIDL = {
         {
           'name': 'tagName',
           'type': 'string'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -372,12 +660,49 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
         }
       ],
-      'args': []
+      'args': [
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
+        }
+      ]
     },
     {
       'name': 'submitReply',
@@ -403,6 +728,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -416,6 +771,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -443,6 +804,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -456,6 +847,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -483,6 +880,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -496,6 +923,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -518,6 +951,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -531,6 +994,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -553,6 +1022,36 @@ export type SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -562,6 +1061,12 @@ export type SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -695,7 +1200,9 @@ export type SocialIDL = {
       'args': [
         {
           'name': 'amount',
-          'type': 'u64'
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     }
@@ -1024,6 +1531,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1033,6 +1570,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1055,6 +1598,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1064,6 +1637,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1086,6 +1665,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1095,6 +1704,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1117,6 +1732,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1126,6 +1771,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1148,6 +1799,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1157,6 +1838,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1179,6 +1866,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1188,6 +1905,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'address',
           'type': 'u32'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1225,6 +1948,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1242,6 +1995,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'tagName',
           'type': 'string'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1279,6 +2038,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1296,6 +2085,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'tagName',
           'type': 'string'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1328,12 +2123,49 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
         }
       ],
-      'args': []
+      'args': [
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
+        }
+      ]
     },
     {
       'name': 'submitReply',
@@ -1359,6 +2191,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1372,6 +2234,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1399,6 +2267,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1412,6 +2310,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1439,6 +2343,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1452,6 +2386,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1474,6 +2414,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1487,6 +2457,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1509,6 +2485,36 @@ export const IDL: SocialIDL = {
           'isSigner': false
         },
         {
+          'name': 'b',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiver',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'senderTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'receiverTokenAccount',
+          'isMut': true,
+          'isSigner': false
+        },
+        {
+          'name': 'mint',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
+          'name': 'tokenProgram',
+          'isMut': false,
+          'isSigner': false
+        },
+        {
           'name': 'systemProgram',
           'isMut': false,
           'isSigner': false
@@ -1518,6 +2524,12 @@ export const IDL: SocialIDL = {
         {
           'name': 'shdw',
           'type': 'publicKey'
+        },
+        {
+          'name': 'amount',
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     },
@@ -1651,7 +2663,9 @@ export const IDL: SocialIDL = {
       'args': [
         {
           'name': 'amount',
-          'type': 'u64'
+          'type': {
+            'option': 'u64'
+          }
         }
       ]
     }
