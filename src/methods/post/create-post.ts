@@ -12,8 +12,8 @@ import {
   UserFileData,
   FileUriData,
 } from '../../types'
-import * as anchor from 'react-native-project-serum-anchor'
-import { web3 } from 'react-native-project-serum-anchor'
+import * as anchor from '@project-serum/anchor'
+import { web3 } from '@project-serum/anchor'
 import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'

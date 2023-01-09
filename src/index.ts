@@ -1,4 +1,4 @@
-import { Program, Wallet, web3 } from 'react-native-project-serum-anchor'
+import { Program, Wallet, web3 } from '@project-serum/anchor'
 import { ShdwDrive } from 'react-native-shadow-drive'
 import {
   createPost,
@@ -40,7 +40,7 @@ import { AnchorWallet } from './utils/AnchorWallet'
 import { getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
 import PayerNotFoundError from './utils/errors/PayerNotFoundError'
 import { INDEXER_GRAPH_QL_ENDPOINT, SHDW_TOKEN_ADDRESS, SPLING_TOKEN_ADDRESS } from './utils/constants'
-import { TOKEN_PROGRAM_ID } from 'react-native-project-serum-anchor/dist/cjs/utils/token'
+import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { GraphQLClient } from 'graphql-request'
 import { Order_By } from './gql/graphql'

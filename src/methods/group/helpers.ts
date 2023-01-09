@@ -1,4 +1,4 @@
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { GroupNotFoundError } from '../../utils/errors'
 import { GroupFileData, GroupFileDataV2 } from '../../types'
@@ -11,8 +11,8 @@ export async function getGroupFileData(shdw: web3.PublicKey): Promise<GroupFileD
     if (response.status !== 200) throw new GroupNotFoundError()
     
     return Promise.resolve(response.data as GroupFileData)
-  } catch (error) {
-    return Promise.reject(error)
+  } catch {
+    return Promise.reject(new GroupNotFoundError())
   }
 }
 
