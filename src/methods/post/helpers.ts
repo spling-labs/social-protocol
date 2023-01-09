@@ -1,4 +1,4 @@
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostNotFoundError } from '../../utils/errors'
 import { MediaData, PostFileData, PostFileDataV2, PostTextFileData } from '../../types'

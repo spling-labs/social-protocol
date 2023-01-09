@@ -1,4 +1,4 @@
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { UserNotFoundError } from '../../utils/errors'
 import { UserFileData, UserFileDataV2 } from '../../types'

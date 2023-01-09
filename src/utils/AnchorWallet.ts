@@ -1,4 +1,4 @@
-import { Wallet } from 'react-native-project-serum-anchor'
+import { Wallet } from '@project-serum/anchor'
 import { Keypair, Transaction, PublicKey } from '@solana/web3.js'
 
 export class AnchorWallet implements Wallet {

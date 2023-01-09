@@ -3,10 +3,10 @@ import { User, UserFileData } from '../../types'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 import { UserNotFoundError } from '../../utils/errors'
-import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { GetUserByUserIdQuery, Splinglabs_0_1_0_Decoded_Userprofile } from '../../gql/graphql'
 import { GetUserByUserIdQueryDocument } from '../../utils/gql/user'
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 
 /**
  * Retrieve a user by their id.

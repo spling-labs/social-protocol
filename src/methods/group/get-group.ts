@@ -3,10 +3,10 @@ import { GroupChain } from '../../models'
 import { Group, GroupFileData } from '../../types'
 import { getGroupFileData } from './helpers'
 import { GroupNotFoundError } from '../../utils/errors'
-import { bs58 } from 'react-native-project-serum-anchor/dist/cjs/utils/bytes'
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { GetGroupByIdQuery, Splinglabs_0_1_0_Decoded_Groupprofile } from '../../gql/graphql'
 import { GetGroupByIdQueryDocument } from '../../utils/gql/group'
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 
 /**
  * Retrieves a group associated with the id.

@@ -1,5 +1,5 @@
-import * as anchor from 'react-native-project-serum-anchor'
-import { web3 } from 'react-native-project-serum-anchor'
+import * as anchor from '@project-serum/anchor'
+import { web3 } from '@project-serum/anchor'
 import { programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import { PostChain, UserChain } from '../../models'
 import { PostFileData } from '../../types'

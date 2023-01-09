@@ -1,4 +1,4 @@
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 
 export class GroupChain {
   publicKey: web3.PublicKey

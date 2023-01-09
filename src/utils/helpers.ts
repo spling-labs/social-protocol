@@ -1,4 +1,4 @@
-import * as anchor from 'react-native-project-serum-anchor'
+import * as anchor from '@project-serum/anchor'
 import {
   CreateStorageResponse,
   ShadowDriveResponse,
