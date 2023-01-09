@@ -4,7 +4,7 @@ import { Group, GroupFileData, GroupFileDataV2 } from '../../types'
 import { getGroupFileData, getGroupFileDataV2 } from './helpers'
 import { GetAllGroupsQueryDocument } from '../../utils/gql/group'
 import { GetAllGroupsQuery, Order_By, Splinglabs_0_1_0_Decoded_Groupprofile } from '../../gql/graphql'
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 import { GroupNotFoundError } from '../../utils/errors'
 
 /**

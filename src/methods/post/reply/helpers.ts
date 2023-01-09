@@ -1,4 +1,4 @@
-import { web3 } from 'react-native-project-serum-anchor'
+import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../../utils/constants'
 import { ReplyNotFoundError } from '../../../utils/errors'
 import { ReplyFileData, ReplyFileDataV2, ReplyTextFileData } from '../../../types'
