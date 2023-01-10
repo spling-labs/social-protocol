@@ -8,6 +8,7 @@ import { UserChain } from '../../../models'
 import { getUserFileData } from '../../user/helpers'
 import { ShadowFile } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * Creates a reply to the given post.
@@ -143,7 +144,7 @@ export default async function createPostReply(postId: number, text: string): Pro
         spling: SplingPDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount,
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,

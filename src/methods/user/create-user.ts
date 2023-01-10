@@ -8,6 +8,7 @@ import { UserChain } from '../../models'
 import dayjs from 'dayjs'
 import { SocialIDL } from '../../utils/idl'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * Creates a user with the given parameters.
@@ -192,7 +193,7 @@ async function submitUserProfileToAnchorProgram(
       systemProgram: anchor.web3.SystemProgram.programId,
       b: BankPDA,
       receiver: walletPublicKey,
-      senderTokenAccount: senderTokenAccount,
+      senderTokenAccount: senderTokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
       receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
       mint: SPLING_TOKEN_ADDRESS,
       tokenProgram: TOKEN_PROGRAM_ID,
