@@ -71,7 +71,7 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
         spling: SplingPDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount ?? new PublicKey("2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw"),
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,

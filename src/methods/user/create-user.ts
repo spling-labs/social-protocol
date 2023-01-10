@@ -193,7 +193,7 @@ async function submitUserProfileToAnchorProgram(
       systemProgram: anchor.web3.SystemProgram.programId,
       b: BankPDA,
       receiver: walletPublicKey,
-      senderTokenAccount: senderTokenAccount ?? new PublicKey("2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw"),
+      senderTokenAccount: senderTokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
       receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
       mint: SPLING_TOKEN_ADDRESS,
       tokenProgram: TOKEN_PROGRAM_ID,
