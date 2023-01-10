@@ -7,6 +7,7 @@ import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
 import { GroupChain } from '../../models'
 import dayjs from 'dayjs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * Creates a new group.
@@ -133,7 +134,7 @@ export default async function createGroup(
         spling: SplingPDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount,
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,

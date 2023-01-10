@@ -6,6 +6,7 @@ import { PostChain, UserChain } from '../../models'
 import { PostFileData } from 'index'
 import { getPostFileData } from './helpers'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * @category Post
@@ -70,7 +71,7 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
         spling: SplingPDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount,
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,

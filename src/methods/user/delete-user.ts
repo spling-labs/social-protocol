@@ -5,6 +5,7 @@ import { UserChain } from '../../models'
 import { UserFileData } from '../../types'
 import { getUserFileData } from './helpers'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * Deletes a user.
@@ -74,7 +75,7 @@ export default async function deleteUser(): Promise<void> {
         userProfile: UserProfilePDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount,
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,

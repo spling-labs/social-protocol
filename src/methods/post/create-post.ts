@@ -21,6 +21,7 @@ import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
 import { ShadowFile, ShadowUploadResponse } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 
 /**
  * Creates a new post in the specific group with the given parameters.
@@ -247,7 +248,7 @@ export default async function createPost(
         likes: LikesPDA,
         b: BankPDA,
         receiver: this.wallet.publicKey,
-        senderTokenAccount: this.tokenAccount,
+        senderTokenAccount: this.tokenAccount ?? new PublicKey('2cDKYNjMNcDCxxxF7rauq8DgvNXD9r9BVLzKShPrJGUw'),
         receiverTokenAccount: SPLING_TOKEN_ACCOUNT_RECEIVER,
         mint: SPLING_TOKEN_ADDRESS,
         tokenProgram: TOKEN_PROGRAM_ID,
