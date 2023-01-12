@@ -1,7 +1,6 @@
 import { web3 } from '@project-serum/anchor'
 
-export const isBrowser =
-  typeof document !== 'undefined' && !Object.prototype.hasOwnProperty.call(window.process, 'type')
+export const isBrowser = typeof document !== 'undefined'
 export const programId = new web3.PublicKey('D2mvyNuzAKFAsfmwgZpt6hCL45LJQw1Y965z6dnV15hZ')
 export const shadowDriveDomain = 'https://shdw-drive.genesysgo.net/'
 export const INDEXER_GRAPH_QL_ENDPOINT = 'https://knowing-dodo-22.hasura.app/v1/graphql'
