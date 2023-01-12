@@ -135,10 +135,11 @@ export class SocialProtocol implements SplingProtocol {
   deletePostReply = deletePostReply
 
   /**
-   *
-   * @param rpcUrl The solana rpc node url endpoint.
-   * @param wallet The wallet of the current user.
-   * @param options The options of the protocol. 
+   * Constructor for Protocol class.
+   * 
+   * @param {Wallet | web3.Keypair} wallet - The wallet or keypair of the user.
+   * @param {Wallet | web3.Keypair | null} - The wallet or keypair of the hot wallet (optional).
+   * @param {ProtocolOptions | null} [options=null] - Options for the Protocol instance (optional).
    */
   constructor(wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null, options: ProtocolOptions | null) {
     if (options.useIndexer === true) {

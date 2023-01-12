@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/spling-labs/social-protocol/main/assets/spling_header.jpg?token=GHSAT0AAAAAAB4FIHEKUMMNZX5LXPGD3SLYY5XG2RA" />
+  <img src="https://raw.githubusercontent.com/spling-labs/social-protocol-react-native-template/main/assets/spling_header.jpg" />
 
   <h1>Social Protocol</h1>
    <p>
