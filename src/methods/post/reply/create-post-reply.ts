@@ -56,7 +56,7 @@ export default async function createPostReply(postId: number, text: string): Pro
     let replyTextFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      const replyTextPath = `${RNFS.DownloadDirectoryPath}/${ReplyPDA.toString()}.txt`
+      const replyTextPath = `${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`
       await RNFS.writeFile(replyTextPath, text, 'utf8')
       const statResult = await RNFS.stat(replyTextPath)
       const file = await RNFS.readFile(replyTextPath, 'utf8')
@@ -110,21 +110,22 @@ export default async function createPostReply(postId: number, text: string): Pro
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
     // Upload reply text and reply json file.
-    await this.shadowDrive.uploadFile(
-      account.publicKey,
-      !isBrowser ? (replyTextFile as ShadowFile) : (replyTextFile as File),
-    )
-
-    await this.shadowDrive.uploadFile(
-      account.publicKey,
-      !isBrowser ? (replyJSONFile as ShadowFile) : (replyJSONFile as File),
-    )
+    await Promise.all([
+      this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (replyTextFile as ShadowFile) : (replyTextFile as File),
+      ),
+      this.shadowDrive.uploadFile(
+        account.publicKey,
+        !isBrowser ? (replyJSONFile as ShadowFile) : (replyJSONFile as File),
+      )
+    ])
 
     // Remove created device files if necessary.
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`)
-      await RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`)
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`)
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`)
     }
 
     // Find bank pda.

@@ -7,6 +7,8 @@ import { PostFileData } from 'index'
 import { getPostFileData } from './helpers'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
+import bs58 from 'bs58'
+import { UserNotFoundError } from '../../utils/errors'
 
 /**
  * @category Post
@@ -29,9 +31,22 @@ export default async function likePost(publicKey: web3.PublicKey): Promise<void>
       programId,
     )
 
-    // Fetch the user id.
-    const fetchedUserProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
-    const userChain = new UserChain(fetchedUserProfile)
+    // Fetch the user profile.
+    const onChainProfiles = await this.anchorProgram.account.userProfile.all([
+      {
+        memcmp: {
+          offset:
+            8 + // Discriminator
+            8 + // Timestamp
+            32, // user
+          bytes: bs58.encode(Uint8Array.from([postChain.userId])),
+        },
+      },
+    ])
+    if (onChainProfiles.length === 0) throw new UserNotFoundError()
+
+    const profile = onChainProfiles[0]
+    const userChain = new UserChain(profile.account)
 
     // Get the post file data.
     const postFileData: PostFileData = await getPostFileData(publicKey, userChain.shdw)
