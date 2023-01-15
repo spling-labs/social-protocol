@@ -11,8 +11,8 @@ export async function getUserFileData(shdw: web3.PublicKey): Promise<UserFileDat
     if (response.status !== 200) throw new UserNotFoundError()
     
     return Promise.resolve(response.data as UserFileData)
-  } catch (error) {
-    return Promise.reject(error)
+  } catch {
+    return Promise.reject(new UserNotFoundError())
   }
 }
 
