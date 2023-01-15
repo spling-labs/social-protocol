@@ -124,23 +124,22 @@ export default async function createUser(
       programId,
     )
 
+    await this.shadowDrive.uploadFile(
+      account.publicKey,
+      !isBrowser ? (profileFile as ShadowFile) : (profileFile as File)
+    )
+
     const transactionCosts = this.tokenAccount !== null ? new anchor.BN(6458000) : null
-    const [, ,] = await Promise.all([
-      this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (profileFile as ShadowFile) : (profileFile as File),
-      ),
-      submitUserProfileToAnchorProgram(
-        this.anchorProgram,
-        this.wallet.publicKey,
-        account.publicKey,
-        this.tokenAccount,
-        SplingPDA,
-        UserProfilePDA,
-        BankPDA,
-        transactionCosts
-      ),
-    ])
+    await submitUserProfileToAnchorProgram(
+      this.anchorProgram,
+      this.wallet.publicKey,
+      account.publicKey,
+      this.tokenAccount,
+      SplingPDA,
+      UserProfilePDA,
+      BankPDA,
+      transactionCosts
+    )
 
     if (profileFile !== null && !isBrowser) {
       const RNFS = require('react-native-fs')
