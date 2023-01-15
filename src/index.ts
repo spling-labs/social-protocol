@@ -97,7 +97,6 @@ export class SocialProtocol implements SplingProtocol {
   private anchorProgram: Program<SocialIDL>
   private shadowDrive: ShdwDrive
   private connection: web3.Connection
-  private shdwConnection: web3.Connection
   private wallet: any
   private payer: Wallet | null = null
   private tokenAccount: web3.PublicKey | null = null
@@ -146,8 +145,7 @@ export class SocialProtocol implements SplingProtocol {
     if (options.useIndexer === true) {
       this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QL_ENDPOINT)
     }
-    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'processed')
-    this.shdwConnection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'confirmed')
+    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'confirmed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
     this.payer = payer ? new AnchorWallet(payer) : null
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
@@ -155,7 +153,7 @@ export class SocialProtocol implements SplingProtocol {
 
   public async init(): Promise<SocialProtocol> {
     if (!this.wallet && !this.wallet.publicKey) return
-    this.shadowDrive = await new ShdwDrive(this.shdwConnection, this.wallet).init()
+    this.shadowDrive = await new ShdwDrive(this.connection, this.wallet).init()
     return this
   }
 
