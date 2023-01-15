@@ -97,7 +97,7 @@ export class SocialProtocol implements SplingProtocol {
   private anchorProgram: Program<SocialIDL>
   private shadowDrive: ShdwDrive
   private connection: web3.Connection
-  private wallet: Wallet
+  private wallet: any
   private payer: Wallet | null = null
   private tokenAccount: web3.PublicKey | null = null
   private graphQLClient: GraphQLClient | null = null
@@ -137,17 +137,17 @@ export class SocialProtocol implements SplingProtocol {
   /**
    * Constructor for Protocol class.
    * 
-   * @param {Wallet | web3.Keypair} wallet - The wallet or keypair of the user.
-   * @param {Wallet | web3.Keypair | null} - The wallet or keypair of the hot wallet (optional).
+   * @param {any} wallet - The wallet (useWallet() function from solana wallet-adapter) or keypair of the user.
+   * @param {web3.Keypair | null} - The wallet or keypair of the hot wallet (optional).
    * @param {ProtocolOptions | null} [options=null] - Options for the Protocol instance (optional).
    */
-  constructor(wallet: Wallet | web3.Keypair, payer: Wallet | web3.Keypair | null = null, options: ProtocolOptions | null) {
+  constructor(wallet: any, payer: web3.Keypair | null = null, options: ProtocolOptions | null) {
     if (options.useIndexer === true) {
       this.graphQLClient = new GraphQLClient(INDEXER_GRAPH_QL_ENDPOINT)
     }
-    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'processed')
+    this.connection = new web3.Connection(options.rpcUrl ? options.rpcUrl : 'https://api.mainnet-beta.solana.com/', 'confirmed')
     this.wallet = wallet instanceof web3.Keypair ? new AnchorWallet(wallet) : wallet
-    this.payer = payer instanceof web3.Keypair ? new AnchorWallet(payer) : payer
+    this.payer = payer ? new AnchorWallet(payer) : null
     this.anchorProgram = createSocialProtocolProgram(this.connection, this.wallet)
   }
 

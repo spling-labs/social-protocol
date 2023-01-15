@@ -19,7 +19,7 @@ import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'
 import { getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
-import { ShadowFile, ShadowUploadResponse } from 'react-native-shadow-drive'
+import { ShadowFile } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 
@@ -140,24 +140,12 @@ export default async function createPost(
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
-    const uploadPromises: Promise<ShadowUploadResponse>[] = []
-
     // Upload post text and post file.
     if (postFile != null) {
-      uploadPromises.push(
-        this.shadowDrive.uploadFile(
-          account.publicKey,
-          !isBrowser ? (postFile as ShadowFile) : (postFile as File),
-        )
-      )
+      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (postFile as ShadowFile) : (postFile as File))
     }
     if (postTextFile != null) {
-      uploadPromises.push(
-        this.shadowDrive.uploadFile(
-          account.publicKey,
-          !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File),
-        )
-      )
+      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File))
     }
 
     // Generate the post json.
@@ -193,25 +181,16 @@ export default async function createPost(
         name: `${PostPDA.toString()}.json`,
         size: statResult.size,
       }
-
-      uploadPromises.push(
-        this.shadowDrive.uploadFile(account.publicKey, profileFile)
-      )
+      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
     } else {
       const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
       const postJSONFile = new File([fileToSave], `${PostPDA.toString()}.json`)
-      uploadPromises.push(
-        this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
-      )
+      await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
     }
-
-    // Upload now all post files to the shadow drive.
-    await Promise.all(uploadPromises)
 
     // Clear files from device if its react native.
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
-
 
       // Remove post text file from device.
       if (postTextFile != null) {
