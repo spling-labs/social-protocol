@@ -67,13 +67,16 @@ export default async function getAllPosts(groupId: number, limit: number | null 
       usersContent = usersContent.filter(value => value !== null)
 
       // Read all post text files from shadow drives.
-      const postsText: PostTextFileData[] = await Promise.all(postsContent.map(postContent => {
+      let postsText: PostTextFileData[] = await Promise.all(postsContent.map(postContent => {
           if (postContent.text !== null) {
             const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(postContent.userId))
             return getPostTextFromFile(postContent.postId, `${shadowDriveDomain}${userChain.shdw}/${postContent.text}`)
           }
           return null
       }))
+
+      // Filter out null values to prevent errors.
+      postsText = postsText.filter(value => value !== null)
 
       // Get all likes from posts.
       const onChainLikes: GetAllLikesByPublicKeysQuery = await this.graphQLClient.request(GetAllLikesByPublicKeysQueryDocument, {
