@@ -5,6 +5,7 @@ import {
   createGroup,
   createUser,
   getAllPosts,
+  getAllPostsByUserId,
   getAllGroups,
   getUserGroup,
   joinGroup,
@@ -83,6 +84,7 @@ interface SplingProtocol {
   getPost(postId: number): Promise<Post | null>
   getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>
   getAllPosts(groupId: number, limit: number | null, offset: number | null, orderBy: Order_By | null): Promise<Post[]>
+  getAllPostsByUserId(userId: number, limit: number | null, offset: number | null, orderBy: Order_By | null): Promise<Post[]>
   deletePost(publicKey: web3.PublicKey): Promise<void>
   likePost(publicKey: web3.PublicKey): Promise<void>
 
@@ -125,6 +127,7 @@ export class SocialProtocol implements SplingProtocol {
   getPost = getPost
   getPostByPublicKey = getPostByPublicKey
   getAllPosts = getAllPosts
+  getAllPostsByUserId = getAllPostsByUserId
   deletePost = deletePost
   likePost = likePost
 

@@ -3,13 +3,27 @@ import { graphql } from '../../gql/gql';
 export const GetAllPostByGroupIdQueryDocument = graphql(`
     query GetAllPostByGroupId($limit: Int, $offset: Int, $groupId: bigint!, $orderBy: order_by) {
         splinglabs_0_1_0_decoded_post(limit: $limit, offset: $offset, where: {gid: {_eq: $groupId}}, order_by: {ts: $orderBy}) {
-        cl_pubkey    
-        gid
-        pid
-        st
-        tid
-        ts
-        uid
+            cl_pubkey    
+            gid
+            pid
+            st
+            tid
+            ts
+            uid
+        }
+    }      
+`);
+
+export const GetAllPostByUserIdQueryDocument = graphql(`
+    query GetAllPostByUserId($limit: Int, $offset: Int, $userId: bigint!, $orderBy: order_by) {
+        splinglabs_0_1_0_decoded_post(limit: $limit, offset: $offset, where: {uid: {_eq: $userId}}, order_by: {ts: $orderBy}) {
+            cl_pubkey    
+            gid
+            pid
+            st
+            tid
+            ts
+            uid
         }
     }      
 `);
