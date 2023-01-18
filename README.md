@@ -12,6 +12,8 @@
 
 Spling Labs - Social Protocol for building a solana on-chain social media platform.
 
+If you have any questions about the SDK, join our [Discord](https://discord.gg/7e3QN3Hy64) to get help!
+
 ## Quick Setup
 
 ### Install
@@ -19,15 +21,13 @@ Spling Labs - Social Protocol for building a solana on-chain social media platfo
 Install these dependencies over:
 
 npm:
-
 ```shell
 npm install @spling/social-protocol
 ```
 
-yarn:
-
+If you plan to install the package in your react.js or next.js project, keep in mind that you need to install this package with the --no-optiona flag:
 ```shell
-yarn add @spling/social-protocol
+npm install @spling/social-protocol --no-optional
 ```
 
 ### Setup (React Example)
@@ -36,15 +36,15 @@ yarn add @spling/social-protocol
 import React, { useEffect } from 'react'
 import * as anchor from '@project-serum/anchor'
 import { SocialProtocol } from '@spling/social-protocol'
-import { AnchorWallet, useAnchorWallet, Keypair } from '@solana/wallet-adapter-react'
+import { AnchorWallet, useWallet, Keypair } from '@solana/wallet-adapter-react'
 
 export default function SocialProtocol() {
-  const wallet = useAnchorWallet()
-  const payerWallet: Keypair = Keypair.generate()
+  const wallet = useWallet()
 
   useEffect(() => {
     ;(async () => {
       if (wallet?.publicKey) {
+        const payerWallet: Keypair = Keypair.generate()
         const options = { 
           rpcUrl: "https://api.mainnet-beta.solana.com/", 
           useIndexer: true
@@ -109,25 +109,11 @@ const socialProtocol = await new SocialProtocol(wallet, payerWallet, options).in
 const user = await socialProtocol.getUser(42) 
 ```
 
-### Examples
+### Starter templates
+The starter template makes it easier for all developers to get started with their first on-chain social app. With the template you can directly start to develop your next social app based on our social protocol! [@spling/social-protocol](https://www.npmjs.com/package/@spling/social-protocol)
 
 | package                                                                        | description                                               |
 | ------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| [node](https://github.com/spling-labs/social-protocol/tree/main/examples/node) | Using @spling/protocol in a nodejs environment components |
-| [react](https://github.com/spling-labs/social-protocol/tree/main/examples/react) | Using @spling/protocol in a react/browser environment   |
-| [react-native](https://github.com/spling-labs/social-protocol/tree/main/examples/react-native) | Using @spling/protocol in a react-native environment |
-
-### Build From Source
-
-Clone the project:
-
-```shell
-git clone https://github.com/spling-labs/social-protocol.git
-```
-
-Install dependencies:
-
-```shell
-cd social-protocol
-npm install
-```
+| [next.js](https://github.com/spling-labs/social-protocol-nextjs-template) | Next.js - Starter Template |
+| [react.js](https://github.com/spling-labs/social-protocol-react-template) | React.js - Starter Template |
+| [react-native](https://github.com/spling-labs/social-protocol-react-native-template) | React Native - Starter Template |

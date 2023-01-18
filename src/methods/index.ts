@@ -21,6 +21,7 @@ import createPost from './post/create-post'
 import getPost from './post/get-post'
 import getPostByPublicKey from './post/get-post-by-public-key'
 import getAllPosts from './post/get-all-posts'
+import getAllPostsByUserId from './post/get-all-posts-by-user-id'
 import deletePost from './post/delete-post'
 import likePost from './post/like-post'
 
@@ -49,6 +50,7 @@ export {
   getPost,
   getPostByPublicKey,
   getAllPosts,
+  getAllPostsByUserId,
   deletePost,
   likePost,
   createPostReply,
