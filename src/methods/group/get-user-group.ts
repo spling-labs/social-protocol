@@ -48,6 +48,7 @@ export default async function getUserGroup(publicKey: web3.PublicKey): Promise<G
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     } else {
       // Fetch the group profile.
@@ -70,6 +71,7 @@ export default async function getUserGroup(publicKey: web3.PublicKey): Promise<G
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     }
   } catch (error) {

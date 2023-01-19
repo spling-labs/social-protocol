@@ -52,6 +52,7 @@ interface SplingProtocol {
     username: string,
     avatar: FileData | FileUriData | null,
     biography: string,
+    metadata: any | null,
   ): Promise<User>
   getUser(userId: number): Promise<User | null>
   getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null>
@@ -64,6 +65,7 @@ interface SplingProtocol {
     name: string,
     bio: string | null,
     avatar: FileData | FileUriData | null,
+    metadata: any | null,
   ): Promise<Group>
   getGroup(groupId: number): Promise<Group | null>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
@@ -79,7 +81,8 @@ interface SplingProtocol {
     title: string | null,
     text: string | null,
     image: FileData | FileUriData | null,
-    tag: string | null
+    tag: string | null,
+    metadata: any | null,
   ): Promise<Post>
   getPost(postId: number): Promise<Post | null>
   getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>
@@ -89,7 +92,7 @@ interface SplingProtocol {
   likePost(publicKey: web3.PublicKey): Promise<void>
 
   // REPLY METHODS
-  createPostReply(postId: number, text: string): Promise<Reply>
+  createPostReply(postId: number, text: string, metadata: any | null): Promise<Reply>
   getPostReply(publicKey: web3.PublicKey): Promise<Reply | null>
   getAllPostReplies(postId: number): Promise<Reply[]>
   deletePostReply(publicKey: web3.PublicKey): Promise<void>

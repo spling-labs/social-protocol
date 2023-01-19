@@ -94,6 +94,7 @@ export default async function getAllPostReplies(postId: number, limit: number | 
                   ? `${shadowDriveDomain}${userChain.shdw}/${userFileData.avatar.file}`
                   : null,
             } as PostUser,
+            metadata: replyFileData.metadata
           } as Reply)
         } catch (error) {
           // Nothing to do.
@@ -159,6 +160,7 @@ export default async function getAllPostReplies(postId: number, limit: number | 
                   ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
                   : null,
             } as PostUser,
+            metadata: replyFileData.metadata
           } as Reply)
         } catch (error) {
           // Nothing to do.

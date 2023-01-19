@@ -33,17 +33,23 @@ import { PublicKey } from '@solana/web3.js'
  * @param {string | null} text - The text (content) of the post
  * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
+ * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the post.
  * 
  * @returns {Promise<Post>} - A promise that resolves to the newly created post.
  */
 export default async function createPost(
   groupId: number,
-  title: string | null,
-  text: string | null,
-  file: FileData | FileUriData | null,
-  tag: string | null = null
+  title: string | null = null,
+  text: string | null = null,
+  file: FileData | FileUriData | null = null,
+  tag: string | null = null,
+  metadata: any | null = null,
 ): Promise<Post> {
   try {
+    // Check if metadata object is a valid json.
+    const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
+    if(typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
     // Find spling pda.
     const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
@@ -165,6 +171,7 @@ export default async function createPost(
         ]
         : [],
       license: null,
+      metadata: metadataObject
     }
 
     if (!isBrowser) {
@@ -235,12 +242,16 @@ export default async function createPost(
       })
       .rpc()
 
-    await delay()
-
-    const post = await this.anchorProgram.account.post.fetch(PostPDA)
+    // Fetch the post from the anchor program.
+    let post = null
+    while (post == null) {
+      try {
+        post =  await this.anchorProgram.account.post.fetch(PostPDA)
+      } catch (error) {
+        // Nothing to do here.
+      }
+    }
     const postChain = new PostChain(PostPDA, post)
-
-    console.log(JSON.stringify(postChain, null));
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
@@ -266,13 +277,10 @@ export default async function createPost(
             : null,
       } as PostUser,
       likes: [],
-      tags: tag ? [tag] : []
+      tags: tag ? [tag] : [],
+      metadata: metadataObject
     } as Post)
   } catch (error) {
     return Promise.reject(error)
   }
-}
-
-function delay() {
-  return new Promise(resolve => setTimeout(resolve, 1000));
 }
