@@ -235,12 +235,16 @@ export default async function createPost(
       })
       .rpc()
 
-    await delay()
-
-    const post = await this.anchorProgram.account.post.fetch(PostPDA)
+    // Fetch the post from the anchor program.
+    let post = null
+    while (post == null) {
+      try {
+        post =  await this.anchorProgram.account.post.fetch(PostPDA)
+      } catch (error) {
+        // Nothing to do here.
+      }
+    }
     const postChain = new PostChain(PostPDA, post)
-
-    console.log(JSON.stringify(postChain, null));
 
     // Get user profile json file from the shadow drive.
     const userProfileJson: UserFileData = await getUserFileData(userChain.shdw)
@@ -271,8 +275,4 @@ export default async function createPost(
   } catch (error) {
     return Promise.reject(error)
   }
-}
-
-function delay() {
-  return new Promise(resolve => setTimeout(resolve, 1000));
 }

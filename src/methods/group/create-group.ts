@@ -61,17 +61,11 @@ export default async function createGroup(
     )
 
     // Find/Create shadow drive account.
-    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
-      this.shadowDrive,
-      fileSizeSummarized,
-    )
+    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
     // Upload avatar file to shadow drive.
     if (avatarUploadFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (avatarUploadFile as ShadowFile) : (avatarUploadFile as File),
-      )
+      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (avatarUploadFile as ShadowFile) : (avatarUploadFile as File))
     }
 
     // Generate the group json.

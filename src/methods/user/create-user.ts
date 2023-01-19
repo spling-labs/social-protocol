@@ -146,8 +146,15 @@ export default async function createUser(
       RNFS.unlink(`${RNFS.DocumentDirectoryPath}/profile.json`)
     }
 
-    // Fetch created user profile.
-    const userProfile = this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+    // Fetch the user profile from the anchor program.
+    let userProfile = null
+    while (userProfile == null) {
+      try {
+        userProfile = await this.anchorProgram.account.userProfile.fetch(UserProfilePDA)
+      } catch (error) {
+        // Nothing to do here.
+      }
+    }
     const userChain = new UserChain(userProfile)
 
     return Promise.resolve({
