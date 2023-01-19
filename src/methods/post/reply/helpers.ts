@@ -14,8 +14,8 @@ export async function getReplyFileData(
     if (response.status !== 200) throw new ReplyNotFoundError()
 
     return Promise.resolve(response.data as ReplyFileData)
-  } catch (error) {
-    return Promise.reject(error)
+  } catch {
+    return Promise.reject(new ReplyNotFoundError())
   }
 }
 
