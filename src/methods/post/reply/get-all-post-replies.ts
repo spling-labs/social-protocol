@@ -36,7 +36,8 @@ export default async function getAllPostReplies(postId: number, limit: number | 
 
       // Get all post and user profile json file from the shadow drives.
       const repliesContentPromises: Promise<ReplyFileDataV2>[] = onChainReplies.map(post => {
-        const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == post.uid)
+        const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == post.uid)
+        if (userChain === undefined) return null
         return getReplyFileDataV2(post.cl_pubkey, userChain.shdw)
       })
       const usersContentPromises: Promise<UserFileDataV2>[] = users.filter((v, i, a) => a.findIndex(v2 => (v2.uid === v.uid)) === i).map(user => getUserFileDataV2(user.uid, new web3.PublicKey(user.shdw)))
@@ -54,7 +55,8 @@ export default async function getAllPostReplies(postId: number, limit: number | 
       // Read all reply text files from shadow drives.
       const repliesText: ReplyTextFileData[] = await Promise.all(repliesContent.map(replyContent => {
         if (replyContent.text !== null) {
-          const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(replyContent.userId))
+          const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == Number(replyContent.userId))
+          if (userChain === undefined) return null
           return getReplyTextFromFile(replyContent.publicKey, `${shadowDriveDomain}${userChain.shdw.toString()}/${replyContent.text}`)
         }
         return null

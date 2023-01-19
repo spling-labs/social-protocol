@@ -51,7 +51,8 @@ export default async function getAllPosts(groupId: number, limit: number | null 
 
       // Get all post and user profile json file from the shadow drives.
       const postsContentPromises: Promise<PostFileDataV2>[] = onChainPosts.map(post => {
-        const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == post.uid)
+        const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == post.uid)
+        if (userChain === undefined) return null
         return getPostFileDataV2(post.pid, new web3.PublicKey(post.cl_pubkey), new web3.PublicKey(userChain.shdw))
       })
       const usersContentPromises: Promise<UserFileDataV2>[] = users.filter((v, i, a) => a.findIndex(v2 => (v2.uid === v.uid)) === i).map(user => getUserFileDataV2(user.uid, new web3.PublicKey(user.shdw)))
@@ -68,11 +69,12 @@ export default async function getAllPosts(groupId: number, limit: number | null 
 
       // Read all post text files from shadow drives.
       let postsText: PostTextFileData[] = await Promise.all(postsContent.map(postContent => {
-          if (postContent.text !== null) {
-            const userChain: Splinglabs_0_1_0_Decoded_Userprofile = users.find(user => user.uid == Number(postContent.userId))
-            return getPostTextFromFile(postContent.postId, `${shadowDriveDomain}${userChain.shdw}/${postContent.text}`)
-          }
-          return null
+        if (postContent.text !== null) {
+          const userChain: Splinglabs_0_1_0_Decoded_Userprofile | undefined = users.find(user => user.uid == Number(postContent.userId))
+          if (userChain === undefined) return null
+          return getPostTextFromFile(postContent.postId, `${shadowDriveDomain}${userChain.shdw}/${postContent.text}`)
+        }
+        return null
       }))
 
       // Filter out null values to prevent errors.
