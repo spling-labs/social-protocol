@@ -18,6 +18,7 @@ import { PublicKey } from '@solana/web3.js'
  * @param {string} nickname - The nickname of the user to be created.
  * @param {FileData | FileUriData | null} avatar - An avatar for the new user. Can be a FileData object, a FileUriData object, or null.
  * @param {string | null} biography - A biography for the new user. Can be a string or null.
+ * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the user.
  * 
  * @returns {Promise<User>} A promise that resolves to the newly created user.
  */
@@ -25,8 +26,13 @@ export default async function createUser(
   nickname: string,
   avatar: FileData | FileUriData | null,
   biography: string | null,
+  metadata: any | null = null,
 ): Promise<User> {
   try {
+    // Check if metadata object is a valid json.
+    const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
+    if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
     // Generate avatar file to upload.
     let userAvatarFile = null
 
@@ -90,6 +96,7 @@ export default async function createUser(
       banner: null,
       socials: [],
       license: null,
+      metadata: metadataObject
     }
 
     let profileFile
@@ -173,6 +180,7 @@ export default async function createUser(
       banner: null,
       socials: userProfileJson.socials,
       license: userProfileJson.license,
+      metadata: metadataObject
     } as User)
   } catch (error) {
     return Promise.reject(error)

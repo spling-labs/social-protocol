@@ -17,7 +17,7 @@ import { PublicKey } from '@solana/web3.js'
  * 
  * @param {number} postId The id of the post to reply to.
  * @param {string} text The content of the reply.
- * @param {string | null} metadata - An json object string containing any relevant metadata to be associated with the reply.
+ * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the reply.
  * 
  * @returns {Promise<Reply>} - A promise that resolves with the new created reply.
  */

@@ -33,7 +33,7 @@ import { PublicKey } from '@solana/web3.js'
  * @param {string | null} text - The text (content) of the post
  * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
- * @param {string | null} metadata - An json object string containing any relevant metadata to be associated with the post.
+ * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the post.
  * 
  * @returns {Promise<Post>} - A promise that resolves to the newly created post.
  */

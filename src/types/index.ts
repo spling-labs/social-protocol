@@ -18,6 +18,7 @@ export type UserFileData = {
   banner: MediaData | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type UserFileDataV2 = {
@@ -29,6 +30,7 @@ export type UserFileDataV2 = {
   banner: MediaData | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type User = {
@@ -45,6 +47,7 @@ export type User = {
   banner: string | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type GroupFileData = {
@@ -54,6 +57,7 @@ export type GroupFileData = {
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
+  metadata: any | null
 }
 
 export type GroupFileDataV2 = {
@@ -64,6 +68,7 @@ export type GroupFileDataV2 = {
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
+  metadata: any | null
 }
 
 export type Group = {
@@ -77,6 +82,7 @@ export type Group = {
   avatar: string | null
   banner: string | null
   license: string | null
+  metadata: any | null
 }
 
 export type PostFileData = {

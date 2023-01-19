@@ -41,6 +41,7 @@ export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Pr
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     } else {
       // Fetch the group by public key.
@@ -63,6 +64,7 @@ export default async function getGroupByPublicKey(publicKey: web3.PublicKey): Pr
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     }
   } catch (error) {

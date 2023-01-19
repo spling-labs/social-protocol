@@ -42,6 +42,7 @@ export default async function getGroup(groupId: number): Promise<Group | null> {
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     } else {
       // Fetch the group by groupId.
@@ -77,6 +78,7 @@ export default async function getGroup(groupId: number): Promise<Group | null> {
             : null,
         banner: null,
         license: groupFileData.license,
+        metadata: groupFileData.metadata,
       } as Group)
     }
   } catch (error) {

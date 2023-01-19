@@ -17,6 +17,7 @@ import { PublicKey } from '@solana/web3.js'
  * @param {string} name The name of the group.
  * @param {string | null} bio An optional description of the group.
  * @param {FileData | FileUriData | null} avatar An optional avatar for the group. Can be a FileData, FileUriData, or null.
+ * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the group.
  * 
  * @returns A Promise that resolves with the newly created group.
  */
@@ -24,8 +25,13 @@ export default async function createGroup(
   name: string,
   bio: string | null,
   avatar: FileData | FileUriData | null,
+  metadata: any | null = null,
 ): Promise<Group> {
   try {
+    // Check if metadata object is a valid json.
+    const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
+    if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
     // Generate avatar file to upload.
     let avatarUploadFile
     if (!isBrowser) {
@@ -81,6 +87,7 @@ export default async function createGroup(
         : null,
       banner: null,
       license: null,
+      metadata: metadataObject
     }
 
     if (!isBrowser) {
@@ -160,6 +167,7 @@ export default async function createGroup(
         : null,
       banner: null,
       license: groupJson.license,
+      metadata: metadataObject
     } as Group)
   } catch (error) {
     return Promise.reject(error)

@@ -52,6 +52,7 @@ interface SplingProtocol {
     username: string,
     avatar: FileData | FileUriData | null,
     biography: string,
+    metadata: any | null,
   ): Promise<User>
   getUser(userId: number): Promise<User | null>
   getUserByPublicKey(publicKey: web3.PublicKey): Promise<User | null>
@@ -64,6 +65,7 @@ interface SplingProtocol {
     name: string,
     bio: string | null,
     avatar: FileData | FileUriData | null,
+    metadata: any | null,
   ): Promise<Group>
   getGroup(groupId: number): Promise<Group | null>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>

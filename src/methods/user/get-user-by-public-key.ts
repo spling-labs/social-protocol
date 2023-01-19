@@ -53,6 +53,7 @@ export default async function getUserByPublicKey(publicKey: web3.PublicKey): Pro
         banner: null,
         socials: userProfileJson.socials,
         license: userProfileJson.license,
+        metadata: userProfileJson.metadata,
       } as User)
     } else {
       // Fetch the user profile from the anchor program.
@@ -79,6 +80,7 @@ export default async function getUserByPublicKey(publicKey: web3.PublicKey): Pro
         banner: null,
         socials: userProfileJson.socials,
         license: userProfileJson.license,
+        metadata: userProfileJson.metadata,
       } as User)
     }
   } catch (error) {
