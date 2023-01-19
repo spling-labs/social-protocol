@@ -53,6 +53,7 @@ export default async function getAllGroups(limit: number | null = null, offset: 
                 : null,
             banner: null,
             license: groupFileData.license,
+            metadata: groupFileData.metadata,
           } as Group)
         } catch (error) {
           // Nothing to do.
@@ -83,6 +84,7 @@ export default async function getAllGroups(limit: number | null = null, offset: 
                 : null,
             banner: null,
             license: groupFileData.license,
+            metadata: groupFileData.metadata,
           } as Group)
         } catch (error) {
           // Nothing to do.

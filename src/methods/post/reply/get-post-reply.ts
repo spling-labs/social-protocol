@@ -59,6 +59,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
               ? `${shadowDriveDomain}${userChain.shdw}/${userProfileJson.avatar.file}`
               : null,
         } as PostUser,
+        metadata: replyFileData.metadata
       } as Reply)
     } else {
       // Fetch the post from the anchor program.
@@ -107,6 +108,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
               ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
               : null,
         } as PostUser,
+        metadata: replyFileData.metadata
       } as Reply)
     }
   } catch (error) {

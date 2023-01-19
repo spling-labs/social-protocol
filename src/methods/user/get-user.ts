@@ -47,6 +47,7 @@ export default async function getUser(userId: number): Promise<User | null> {
         banner: null,
         socials: userProfileJson.socials,
         license: userProfileJson.license,
+        metadata: userProfileJson.metadata,
       } as User)
     } else {
       // Fetch the user profile.
@@ -86,6 +87,7 @@ export default async function getUser(userId: number): Promise<User | null> {
         banner: null,
         socials: userProfileJson.socials,
         license: userProfileJson.license,
+        metadata: userProfileJson.metadata,
       } as User)
     }
   } catch (error) {

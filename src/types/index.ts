@@ -18,6 +18,7 @@ export type UserFileData = {
   banner: MediaData | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type UserFileDataV2 = {
@@ -29,6 +30,7 @@ export type UserFileDataV2 = {
   banner: MediaData | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type User = {
@@ -45,6 +47,7 @@ export type User = {
   banner: string | null
   socials: SocialData[]
   license: string | null
+  metadata: any | null
 }
 
 export type GroupFileData = {
@@ -54,6 +57,7 @@ export type GroupFileData = {
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
+  metadata: any | null
 }
 
 export type GroupFileDataV2 = {
@@ -64,6 +68,7 @@ export type GroupFileDataV2 = {
   avatar: MediaData | null
   banner: MediaData | null
   license: string | null
+  metadata: any | null
 }
 
 export type Group = {
@@ -77,6 +82,7 @@ export type Group = {
   avatar: string | null
   banner: string | null
   license: string | null
+  metadata: any | null
 }
 
 export type PostFileData = {
@@ -88,6 +94,7 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
+  metadata: any | null
 }
 
 export type PostFileDataV2 = {
@@ -100,6 +107,7 @@ export type PostFileDataV2 = {
   text: string | null
   media: MediaData[]
   license: string | null
+  metadata: any | null
 }
 
 export type PostTextFileData = {
@@ -128,6 +136,7 @@ export type Post = {
   user: PostUser
   likes: number[]
   tags: string[]
+  metadata: any | null
 }
 
 export type ReplyFileData = {
@@ -135,6 +144,7 @@ export type ReplyFileData = {
   userId: string
   postId: string
   text: string
+  metadata: any | null
 }
 
 export type ReplyFileDataV2 = {
@@ -143,6 +153,7 @@ export type ReplyFileDataV2 = {
   userId: string
   postId: string
   text: string
+  metadata: any | null
 }
 
 export type ReplyTextFileData = {
@@ -158,6 +169,7 @@ export type Reply = {
   postId: number
   text: string
   user: PostUser
+  metadata: any | null
 }
 
 export interface FileData {

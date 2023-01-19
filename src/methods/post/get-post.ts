@@ -91,7 +91,8 @@ export default async function getPost(postId: number): Promise<Post | null> {
               : null,
         } as PostUser,
         likes: likesChain.users,
-        tags: onChainPost.tid > 0 && tagList.length > onChainPost.tid ? [tagList[onChainPost.tid]] : []
+        tags: onChainPost.tid > 0 && tagList.length > onChainPost.tid ? [tagList[onChainPost.tid]] : [],
+        metadata: postFileData.metadata
       } as Post)
     } else {
       // Fetch the post.
@@ -175,7 +176,8 @@ export default async function getPost(postId: number): Promise<Post | null> {
               : null,
         } as PostUser,
         likes: likesChain.users,
-        tags: postChain.tagIndex > 0 && tagsChain.tags.length > postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : []
+        tags: postChain.tagIndex > 0 && tagsChain.tags.length > postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : [],
+        metadata: postFileData.metadata
       } as Post)
     }
   } catch (error) {
