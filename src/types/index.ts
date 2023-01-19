@@ -138,6 +138,7 @@ export type ReplyFileData = {
   userId: string
   postId: string
   text: string
+  metadata: any | null
 }
 
 export type ReplyFileDataV2 = {
@@ -146,6 +147,7 @@ export type ReplyFileDataV2 = {
   userId: string
   postId: string
   text: string
+  metadata: any | null
 }
 
 export type ReplyTextFileData = {
@@ -161,6 +163,7 @@ export type Reply = {
   postId: number
   text: string
   user: PostUser
+  metadata: any | null
 }
 
 export interface FileData {

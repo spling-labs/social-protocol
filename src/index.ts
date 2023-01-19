@@ -90,7 +90,7 @@ interface SplingProtocol {
   likePost(publicKey: web3.PublicKey): Promise<void>
 
   // REPLY METHODS
-  createPostReply(postId: number, text: string): Promise<Reply>
+  createPostReply(postId: number, text: string, metadata: any | null): Promise<Reply>
   getPostReply(publicKey: web3.PublicKey): Promise<Reply | null>
   getAllPostReplies(postId: number): Promise<Reply[]>
   deletePostReply(publicKey: web3.PublicKey): Promise<void>

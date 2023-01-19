@@ -48,7 +48,7 @@ export default async function createPost(
   try {
     // Check if metadata object is a valid json.
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
-    if(typeof metadataObject !== 'object') throw new Error("Invalid JSON object")
+    if(typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
 
     // Find spling pda.
     const [SplingPDA] = web3.PublicKey.findProgramAddressSync(

@@ -17,11 +17,16 @@ import { PublicKey } from '@solana/web3.js'
  * 
  * @param {number} postId The id of the post to reply to.
  * @param {string} text The content of the reply.
+ * @param {string | null} metadata - An json object string containing any relevant metadata to be associated with the reply.
  * 
  * @returns {Promise<Reply>} - A promise that resolves with the new created reply.
  */
-export default async function createPostReply(postId: number, text: string): Promise<Reply> {
+export default async function createPostReply(postId: number, text: string, metadata: any | null = null): Promise<Reply> {
   try {
+    // Check if metadata object is a valid json.
+    const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
+    if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
     // Find spling pda.
     const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
       [anchor.utils.bytes.utf8.encode('spling')],
@@ -81,6 +86,7 @@ export default async function createPostReply(postId: number, text: string): Pro
       userId: userChain.userId.toString(),
       postId: postId.toString(),
       text: `${ReplyPDA.toString()}.txt`,
+      metadata: metadataObject
     }
 
     let replyJSONFile
@@ -170,6 +176,7 @@ export default async function createPostReply(postId: number, text: string): Pro
             ? `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`
             : null,
       } as PostUser,
+      metadata: metadataObject
     } as Reply)
   } catch (error) {
     return Promise.reject(error)
