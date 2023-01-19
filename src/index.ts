@@ -79,7 +79,8 @@ interface SplingProtocol {
     title: string | null,
     text: string | null,
     image: FileData | FileUriData | null,
-    tag: string | null
+    tag: string | null,
+    metadata: any | null,
   ): Promise<Post>
   getPost(postId: number): Promise<Post | null>
   getPostByPublicKey(publicKey: web3.PublicKey): Promise<Post | null>

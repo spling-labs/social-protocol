@@ -140,7 +140,8 @@ export default async function getAllPosts(groupId: number, limit: number | null 
                   : null,
             } as PostUser,
             likes: likesChain.users,
-            tags: post.tid > 0 && tagList.length > post.tid ? [tagList[post.tid]] : []
+            tags: post.tid > 0 && tagList.length > post.tid ? [tagList[post.tid]] : [],
+            metadata: postFileData.metadata
           } as Post)
         } catch (error) {
           // Nothing to do.
@@ -229,7 +230,8 @@ export default async function getAllPosts(groupId: number, limit: number | null 
                   : null,
             } as PostUser,
             likes: likesChain.users,
-            tags: postChain.tagIndex > 0 && tagsChain.tags.length > postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : []
+            tags: postChain.tagIndex > 0 && tagsChain.tags.length > postChain.tagIndex ? [tagsChain.tags[postChain.tagIndex]] : [],
+            metadata: postFileData.metadata
           } as Post)
         } catch (error) {
           // Nothing to do.

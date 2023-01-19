@@ -88,6 +88,7 @@ export type PostFileData = {
   text: string | null
   media: MediaData[]
   license: string | null
+  metadata: any | null
 }
 
 export type PostFileDataV2 = {
@@ -100,6 +101,7 @@ export type PostFileDataV2 = {
   text: string | null
   media: MediaData[]
   license: string | null
+  metadata: any | null
 }
 
 export type PostTextFileData = {
@@ -128,6 +130,7 @@ export type Post = {
   user: PostUser
   likes: number[]
   tags: string[]
+  metadata: any | null
 }
 
 export type ReplyFileData = {
