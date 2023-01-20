@@ -118,3 +118,11 @@ export async function getTextFromFile(url: string): Promise<string | null> {
     return Promise.resolve(null)
   }
 }
+
+export function convertTextToOptionalString(text: string): string | null {
+  return isValidJSON(text) ? JSON.stringify(text) : text
+}
+
+function isValidJSON(str: string): boolean {
+  return /^[\s\n\r]*[{].*[}][\s\n\r]*$/.test(JSON.stringify(str))
+}

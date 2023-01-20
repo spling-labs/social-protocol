@@ -2,7 +2,7 @@ import { shadowDriveDomain } from '../../../utils/constants'
 import { ReplyChain, UserChain } from '../../../models'
 import { PostUser, ReplyFileDataV2, ReplyTextFileData, UserFileDataV2 } from '../../../types'
 import { getReplyFileData, getReplyFileDataV2, getReplyTextFromFile } from './helpers'
-import { getTextFromFile } from '../../../utils/helpers'
+import { convertTextToOptionalString, getTextFromFile } from '../../../utils/helpers'
 import { ReplyNotFoundError, UserNotFoundError } from '../../../utils/errors'
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { getUserFileData, getUserFileDataV2 } from '../../user/helpers'
@@ -87,7 +87,7 @@ export default async function getAllPostReplies(postId: number, limit: number | 
             status: onChainReply.st,
             userId: Number(replyFileData.userId),
             postId: postId,
-            text: replyFileData.text,
+            text: convertTextToOptionalString(replyFileData.text),
             user: {
               publicKey: new web3.PublicKey(userChain.username),
               nickname: userFileData.nickname,
@@ -153,7 +153,7 @@ export default async function getAllPostReplies(postId: number, limit: number | 
             status: replyChain.status,
             userId: Number(replyFileData.userId),
             postId: postId,
-            text: replyFileData.text,
+            text: convertTextToOptionalString(replyFileData.text),
             user: {
               publicKey: userChain.publicKey,
               nickname: userProfileJson.nickname,

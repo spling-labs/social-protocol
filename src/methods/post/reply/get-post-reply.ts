@@ -3,7 +3,7 @@ import { shadowDriveDomain } from '../../../utils/constants'
 import { ReplyChain, UserChain } from '../../../models'
 import { Reply, PostUser } from '../../../types'
 import { getReplyFileData } from './helpers'
-import { getTextFromFile } from '../../../utils/helpers'
+import { convertTextToOptionalString, getTextFromFile } from '../../../utils/helpers'
 import { ReplyNotFoundError, UserNotFoundError } from '../../../utils/errors'
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../../user/helpers'
@@ -50,7 +50,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
         status: replyChain.st,
         userId: Number(replyFileData.userId),
         postId: replyChain.pid,
-        text: replyFileData.text,
+        text: convertTextToOptionalString(replyFileData.text),
         user: {
           publicKey: new web3.PublicKey(userChain.username),
           nickname: userProfileJson.nickname,
@@ -99,7 +99,7 @@ export default async function getPostReply(publicKey: web3.PublicKey): Promise<R
         status: replyChain.status,
         userId: Number(replyFileData.userId),
         postId: replyChain.postId,
-        text: replyFileData.text,
+        text: convertTextToOptionalString(replyFileData.text),
         user: {
           publicKey: userChain.publicKey,
           nickname: userProfileJson.nickname,

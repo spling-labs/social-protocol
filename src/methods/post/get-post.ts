@@ -4,7 +4,7 @@ import { programId, shadowDriveDomain } from '../../utils/constants'
 import { LikesChain, PostChain, TagsChain, UserChain } from '../../models'
 import { Post, PostUser } from '../../types'
 import { getMediaDataWithUrl, getPostFileData } from './helpers'
-import { getTextFromFile } from '../../utils/helpers'
+import { convertTextToOptionalString, getTextFromFile } from '../../utils/helpers'
 import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { getUserFileData } from '../user/helpers'
@@ -79,7 +79,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
         userId: Number(postFileData.userId),
         groupId: Number(postFileData.groupId),
         title: postFileData.title,
-        text: postFileData.text,
+        text: convertTextToOptionalString(postFileData.text),
         media: getMediaDataWithUrl(postFileData.media, userShdwPublicKey),
         license: postFileData.license,
         user: {
@@ -164,7 +164,7 @@ export default async function getPost(postId: number): Promise<Post | null> {
         userId: Number(postFileData.userId),
         postId: postChain.postId,
         groupId: Number(postFileData.groupId),
-        text: postFileData.text,
+        text: convertTextToOptionalString(postFileData.text),
         media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
         license: postFileData.license,
         user: {

@@ -2,7 +2,7 @@ import { programId, shadowDriveDomain } from '../../utils/constants'
 import { LikesChain, PostChain, TagsChain, UserChain } from '../../models'
 import { Post, PostFileDataV2, PostTextFileData, PostUser, UserFileDataV2 } from '../../types'
 import { getMediaDataWithUrl, getPostFileData, getPostFileDataV2, getPostTextFromFile } from './helpers'
-import { getTextFromFile } from '../../utils/helpers'
+import { convertTextToOptionalString, getTextFromFile } from '../../utils/helpers'
 import { PostNotFoundError, UserNotFoundError } from '../../utils/errors'
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
 import { getUserFileData, getUserFileDataV2 } from '../user/helpers'
@@ -130,7 +130,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
             userId: Number(postFileData.userId),
             groupId: Number(postFileData.groupId),
             title: postFileData.title,
-            text: postFileData.text,
+            text: convertTextToOptionalString(postFileData.text),
             media: getMediaDataWithUrl(postFileData.media, userShdwPublicKey),
             license: postFileData.license,
             user: {
@@ -220,7 +220,7 @@ export default async function getAllPosts(groupId: number, limit: number | null 
             userId: Number(postFileData.userId),
             groupId: Number(postFileData.groupId),
             title: postFileData.title,
-            text: postFileData.text,
+            text: convertTextToOptionalString(postFileData.text),
             media: getMediaDataWithUrl(postFileData.media, userChain.shdw),
             license: postFileData.license,
             user: {
