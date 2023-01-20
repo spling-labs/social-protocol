@@ -4,6 +4,7 @@ import {
   createPost,
   createGroup,
   createUser,
+  updateUser,
   getAllPosts,
   getAllPostsByUserId,
   getAllGroups,
@@ -52,6 +53,12 @@ interface SplingProtocol {
     username: string,
     avatar: FileData | FileUriData | null,
     biography: string,
+    metadata: any | null,
+  ): Promise<User>
+  updateUser(
+    username: string | null,
+    avatar: FileData | FileUriData | null,
+    biography: string | null,
     metadata: any | null,
   ): Promise<User>
   getUser(userId: number): Promise<User | null>
@@ -109,6 +116,7 @@ export class SocialProtocol implements SplingProtocol {
 
   // USER METHODS
   createUser = createUser
+  updateUser = updateUser
   getUser = getUser
   getUserByPublicKey = getUserByPublicKey
   deleteUser = deleteUser
