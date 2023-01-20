@@ -1,5 +1,6 @@
 // USER METHODS
 import createUser from './user/create-user'
+import updateUser from './user/update-user'
 import getUser from './user/get-user'
 import getUserByPublicKey from './user/get-user-by-public-key'
 import deleteUser from './user/delete-user'
@@ -33,6 +34,7 @@ import deletePostReply from './post/reply/delete-post-reply'
 
 export {
   createUser,
+  updateUser,
   getUser,
   getUserByPublicKey,
   deleteUser,
