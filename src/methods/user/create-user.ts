@@ -33,33 +33,26 @@ export default async function createUser(
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
     if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
 
-    // Generate avatar file to upload.
-    let userAvatarFile = null
+    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
+    const filesToUpload: any[] = []
 
-    if (!isBrowser) {
-      userAvatarFile = avatar
-        ? ({
+    if (avatar !== null) {
+      fileSizeSummarized += avatar.size
+
+      if (!isBrowser) {
+        filesToUpload.push({
           uri: (avatar as FileUriData).uri,
           name: `profile-avatar.${avatar.type.split('/')[1]}`,
           type: (avatar as FileUriData).type,
           size: (avatar as FileUriData).size,
           file: Buffer.from(''),
         } as ShadowFile)
-        : null
-    } else {
-      userAvatarFile = avatar
-        ? new File(
+      } else {
+        filesToUpload.push(new File(
           [convertDataUriToBlob((avatar as FileData).base64)],
           `profile-avatar.${avatar.type.split('/')[1]}`,
-        )
-        : null
-    }
-
-    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
-
-    // Summarize size of files.
-    if (userAvatarFile != null) {
-      fileSizeSummarized += avatar.size
+        ))
+      }
     }
 
     // Find spling pda.
@@ -69,25 +62,14 @@ export default async function createUser(
     )
 
     // Find/Create shadow drive account.
-    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(
-      this.shadowDrive,
-      fileSizeSummarized,
-    )
-
-    // Upload image file to shadow drive.
-    if (userAvatarFile != null) {
-      await this.shadowDrive.uploadFile(
-        account.publicKey,
-        !isBrowser ? (userAvatarFile as ShadowFile) : (userAvatarFile as File),
-      )
-    }
+    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
     // Generate the user profile json.
     const userProfileJson: UserFileData = {
       timestamp: dayjs().unix().toString(),
       nickname: nickname,
       bio: biography ? biography : '',
-      avatar: userAvatarFile
+      avatar: avatar
         ? ({
           file: `profile-avatar.${avatar.type.split('/')[1]}`,
           type: avatar.type.split('/')[1],
@@ -99,7 +81,6 @@ export default async function createUser(
       metadata: metadataObject
     }
 
-    let profileFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
       const profileJSONPath = `${RNFS.DocumentDirectoryPath}/profile.json`
@@ -107,16 +88,16 @@ export default async function createUser(
       const statResult = await RNFS.stat(profileJSONPath)
       const file = await RNFS.readFile(profileJSONPath, 'utf8')
 
-      profileFile = {
+      filesToUpload.push({
         uri: `file://${profileJSONPath}`,
         type: 'application/json',
         file: Buffer.from(file, 'utf8'),
         name: 'profile.json',
         size: statResult.size,
-      } as ShadowFile
+      } as ShadowFile)
     } else {
       const fileToSave = new Blob([JSON.stringify(userProfileJson)], { type: 'application/json' })
-      profileFile = new File([fileToSave], 'profile.json')
+      filesToUpload.push(new File([fileToSave], 'profile.json'))
     }
 
     // Find the user profile pda.
@@ -131,10 +112,14 @@ export default async function createUser(
       programId,
     )
 
-    await this.shadowDrive.uploadFile(
-      account.publicKey,
-      !isBrowser ? (profileFile as ShadowFile) : (profileFile as File)
-    )
+    // Upload all files to shadow drive once.
+    await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
+
+    // Remove created .json file on mobile device.
+    if (!isBrowser) {
+      const RNFS = require('react-native-fs')
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/profile.json`)
+    }
 
     const transactionCosts = this.tokenAccount !== null ? new anchor.BN(6458000) : null
     await submitUserProfileToAnchorProgram(
@@ -147,11 +132,6 @@ export default async function createUser(
       BankPDA,
       transactionCosts
     )
-
-    if (profileFile !== null && !isBrowser) {
-      const RNFS = require('react-native-fs')
-      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/profile.json`)
-    }
 
     // Fetch the user profile from the anchor program.
     let userProfile = null
@@ -174,7 +154,7 @@ export default async function createUser(
       groups: [],
       nickname: nickname,
       bio: biography ? biography : '',
-      avatar: userAvatarFile
+      avatar: avatar
         ? `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar.file}`
         : null,
       banner: null,
