@@ -32,32 +32,27 @@ export default async function createGroup(
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
     if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
 
+    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
+    const filesToUpload: any[] = []
+
     // Generate avatar file to upload.
-    let avatarUploadFile
-    if (!isBrowser) {
-      avatarUploadFile = avatar
-        ? ({
+    if (avatar !== null) {
+      fileSizeSummarized += avatar.size
+
+      if (!isBrowser) {
+        filesToUpload.push({
           uri: (avatar as FileUriData).uri,
           name: `group-avatar.${avatar?.type.split('/')[1]}`,
           type: (avatar as FileUriData).type,
           size: (avatar as FileUriData).size,
           file: Buffer.from(''),
         } as ShadowFile)
-        : null
-    } else {
-      avatarUploadFile = avatar
-        ? new File(
+      } else {
+        filesToUpload.push(new File(
           [convertDataUriToBlob((avatar as FileData).base64)],
           `group-avatar.${avatar?.type.split('/')[1]}`,
-        )
-        : null
-    }
-
-    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the group.json.
-
-    // Summarize size of files.
-    if (avatarUploadFile != null) {
-      fileSizeSummarized += avatarUploadFile.size
+        ))
+      }
     }
 
     // Find spling pda.
@@ -69,17 +64,12 @@ export default async function createGroup(
     // Find/Create shadow drive account.
     const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
-    // Upload avatar file to shadow drive.
-    if (avatarUploadFile != null) {
-      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (avatarUploadFile as ShadowFile) : (avatarUploadFile as File))
-    }
-
     // Generate the group json.
     const groupJson: GroupFileData = {
       timestamp: dayjs().unix().toString(),
       name: name,
       bio: bio ? bio : '',
-      avatar: avatarUploadFile
+      avatar: avatar
         ? ({
           file: `group-avatar.${avatar.type.split('/')[1]}`,
           type: avatar.type.split('/')[1],
@@ -97,20 +87,25 @@ export default async function createGroup(
       const statResult = await RNFS.stat(groupJSONPath)
       const file = await RNFS.readFile(groupJSONPath, 'utf8')
 
-      const profileFile: ShadowFile = {
+      filesToUpload.push({
         uri: `file://${groupJSONPath}`,
         type: 'application/json',
         file: Buffer.from(file, 'utf8'),
         name: 'group.json',
         size: statResult.size,
-      }
-
-      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
-      await RNFS.unlink(groupJSONPath)
+      } as ShadowFile)
     } else {
       const fileToSave = new Blob([JSON.stringify(groupJson)], { type: 'application/json' })
-      const groupJSONFile = new File([fileToSave], 'group.json')
-      await this.shadowDrive.uploadFile(account.publicKey, groupJSONFile)
+      filesToUpload.push(new File([fileToSave], 'group.json'))
+    }
+
+    // Upload all files to shadow drive once.
+    await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
+
+    // Remove created .json file on mobile device.
+    if (!isBrowser) {
+      const RNFS = require('react-native-fs')
+      RNFS.unlink(`${RNFS.DocumentDirectoryPath}/group.json`)
     }
 
     // Find the group profile pda.
@@ -162,7 +157,7 @@ export default async function createGroup(
       shdw: account.publicKey,
       name: name,
       bio: bio,
-      avatar: avatarUploadFile
+      avatar: avatar
         ? `${shadowDriveDomain}${account.publicKey}/${groupJson.avatar.file}`
         : null,
       banner: null,
