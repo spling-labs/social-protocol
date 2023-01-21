@@ -48,7 +48,7 @@ export default async function createPost(
   try {
     // Check if metadata object is a valid json.
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
-    if(typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+    if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
 
     // Find spling pda.
     const [SplingPDA] = web3.PublicKey.findProgramAddressSync(
@@ -134,6 +134,7 @@ export default async function createPost(
     }
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
+    const filesToUpload: any[] = []
 
     if (postFile != null) {
       fileSizeSummarized += postFile.size
@@ -148,10 +149,10 @@ export default async function createPost(
 
     // Upload post text and post file.
     if (postFile != null) {
-      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (postFile as ShadowFile) : (postFile as File))
+      filesToUpload.push(!isBrowser ? (postFile as ShadowFile) : (postFile as File))
     }
     if (postTextFile != null) {
-      await this.shadowDrive.uploadFile(account.publicKey, !isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File))
+      filesToUpload.push(!isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File))
     }
 
     // Generate the post json.
@@ -188,12 +189,15 @@ export default async function createPost(
         name: `${PostPDA.toString()}.json`,
         size: statResult.size,
       }
-      await this.shadowDrive.uploadFile(account.publicKey, profileFile)
+      filesToUpload.push(profileFile)
     } else {
       const fileToSave = new Blob([JSON.stringify(postJson)], { type: 'application/json' })
       const postJSONFile = new File([fileToSave], `${PostPDA.toString()}.json`)
-      await this.shadowDrive.uploadFile(account.publicKey, postJSONFile)
+      filesToUpload.push(postJSONFile)
     }
+
+    // Upload all files to shadow drive once.
+    await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
 
     // Clear files from device if its react native.
     if (!isBrowser) {
@@ -246,7 +250,7 @@ export default async function createPost(
     let post = null
     while (post == null) {
       try {
-        post =  await this.anchorProgram.account.post.fetch(PostPDA)
+        post = await this.anchorProgram.account.post.fetch(PostPDA)
       } catch (error) {
         // Nothing to do here.
       }

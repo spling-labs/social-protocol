@@ -57,8 +57,11 @@ export default async function createPostReply(postId: number, text: string, meta
       programId,
     )
 
-    // Create text tile to upload.
-    let replyTextFile
+    // 1024 bytes will be reserved for the reply.json.
+    let fileSizeSummarized = 1024
+    const filesToUpload: any[] = []
+
+    // Create text file to upload.
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
       const replyTextPath = `${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.txt`
@@ -66,18 +69,20 @@ export default async function createPostReply(postId: number, text: string, meta
       const statResult = await RNFS.stat(replyTextPath)
       const file = await RNFS.readFile(replyTextPath, 'utf8')
 
-      replyTextFile = {
+      fileSizeSummarized += statResult.size
+
+      filesToUpload.push({
         uri: `file://${replyTextPath}`,
         type: 'text/plain',
         file: Buffer.from(file, 'utf8'),
         name: `${ReplyPDA.toString()}.txt`,
         size: statResult.size,
-      } as ShadowFile
+      } as ShadowFile)
     } else {
-      replyTextFile = new File(
+      filesToUpload.push(new File(
         [new Blob([text], { type: 'text/plain' })],
         `${ReplyPDA.toString()}.txt`,
-      )
+      ))
     }
 
     // Generate the reply json to upload.
@@ -97,34 +102,23 @@ export default async function createPostReply(postId: number, text: string, meta
       const statResult = await RNFS.stat(replyJSONPath)
       const file = await RNFS.readFile(replyJSONPath, 'utf8')
 
-      replyJSONFile = {
+      filesToUpload.push({
         uri: `file://${replyJSONPath}`,
         type: 'application/json',
         file: Buffer.from(file, 'utf8'),
         name: `${ReplyPDA.toString()}.json`,
         size: statResult.size,
-      } as ShadowFile
+      } as ShadowFile)
     } else {
       const fileToSave = new Blob([JSON.stringify(replyJson)], { type: 'application/json' })
-      replyJSONFile = new File([fileToSave], `${ReplyPDA.toString()}.json`)
+      filesToUpload.push(new File([fileToSave], `${ReplyPDA.toString()}.json`))
     }
-
-    // 1024 bytes will be reserved for the reply.json.
-    const fileSizeSummarized = 1024 + replyTextFile.size
 
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
-    // Upload reply text and reply json file.
-    await this.shadowDrive.uploadFile(
-      account.publicKey,
-      !isBrowser ? (replyTextFile as ShadowFile) : (replyTextFile as File),
-    )
-
-    await this.shadowDrive.uploadFile(
-      account.publicKey,
-      !isBrowser ? (replyJSONFile as ShadowFile) : (replyJSONFile as File),
-    )
+    // Upload all files to shadow drive once.
+    await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
 
     // Remove created device files if necessary.
     if (!isBrowser) {
