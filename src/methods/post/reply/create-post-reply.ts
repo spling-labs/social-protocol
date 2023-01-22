@@ -94,7 +94,6 @@ export default async function createPostReply(postId: number, text: string, meta
       metadata: metadataObject
     }
 
-    let replyJSONFile
     if (!isBrowser) {
       const RNFS = require('react-native-fs')
       const replyJSONPath = `${RNFS.DocumentDirectoryPath}/${ReplyPDA.toString()}.json`

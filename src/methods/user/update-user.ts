@@ -1,9 +1,9 @@
-import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils/helpers'
+import { convertDataUriToBlob } from '../../utils/helpers'
 import { FileData, FileUriData, MediaData, User, UserFileData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
 import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
-import { ShadowFile, StorageAccountResponse } from 'react-native-shadow-drive'
+import { ShadowFile } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
 
@@ -46,48 +46,39 @@ export default async function updateUser(
     // Generate avatar file to upload.
     let userAvatarFile = null
 
-    if (!isBrowser) {
-      userAvatarFile = avatar
-        ? ({
+    if (avatar !== null) {
+      if (!isBrowser) {
+        const RNFS = require('react-native-fs')
+        const readedFile = await RNFS.readFile((avatar as FileUriData).uri, 'base64')
+
+        userAvatarFile = {
           uri: (avatar as FileUriData).uri,
           name: `profile-avatar.${avatar.type.split('/')[1]}`,
           type: (avatar as FileUriData).type,
           size: (avatar as FileUriData).size,
-          file: Buffer.from(''),
-        } as ShadowFile)
-        : null
-    } else {
-      userAvatarFile = avatar
-        ? new File(
+          file: Buffer.from(readedFile, 'base64'),
+        } as ShadowFile
+      } else {
+        userAvatarFile = new File(
           [convertDataUriToBlob((avatar as FileData).base64)],
           `profile-avatar.${avatar.type.split('/')[1]}`,
         )
-        : null
+      }
     }
-
-    let fileSizeSummarized = 0
-
-    // Summarize size of files.
-    if (userAvatarFile != null && userProfileJson.avatar === null) {
-      fileSizeSummarized += avatar.size
-    }
-
-    // Find/Create shadow drive account.
-    const account: StorageAccountResponse = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
 
     if (userAvatarFile != null) {
       // Edit avatar image from shadow drive.
       if (userProfileJson.avatar !== null && userProfileJson.avatar.type === avatar.type.split('/')[1]) {
-        this.shadowDrive.editFile(
-          account.publicKey,
-          `${shadowDriveDomain}${account.publicKey}/${userProfileJson.avatar.file}`,
+        await this.shadowDrive.editFile(
+          userChain.shdw,
+          `${shadowDriveDomain}${userChain.shdw.toString()}/${userProfileJson.avatar.file}`,
           !isBrowser ? (userAvatarFile as ShadowFile) : (userAvatarFile as File),
           'v2'
         )
       } else {
         // Upload avatar image file to shadow drive.
         await this.shadowDrive.uploadFile(
-          account.publicKey,
+          userChain.shdw,
           !isBrowser ? (userAvatarFile as ShadowFile) : (userAvatarFile as File),
         )
       }
@@ -137,8 +128,8 @@ export default async function updateUser(
 
     // Edit current profile.json from 
     await this.shadowDrive.editFile(
-      account.publicKey,
-      `${shadowDriveDomain}${account.publicKey}/profile.json`,
+      userChain.shdw,
+      `${shadowDriveDomain}${userChain.shdw.toString()}/profile.json`,
       !isBrowser ? (profileFile as ShadowFile) : (profileFile as File),
       'v2'
     )
@@ -153,7 +144,7 @@ export default async function updateUser(
       publicKey: userChain.publicKey,
       userId: userChain.userId,
       status: userChain.status,
-      shdw: account.publicKey,
+      shdw: userChain.shdw,
       following: userChain.following,
       groups: userChain.groups,
       nickname: userProfileJson.nickname,
