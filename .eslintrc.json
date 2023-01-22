@@ -24,6 +24,7 @@
     "spaced-comment": "error",
     "quotes": ["error", "single"],
     "no-duplicate-imports": "error",
-    "@typescript-eslint/no-var-requires": 0
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-explicit-any": ["off"]
   }
 }

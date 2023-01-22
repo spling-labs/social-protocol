@@ -87,7 +87,7 @@ interface SplingProtocol {
     groupId: number,
     title: string | null,
     text: string | null,
-    image: FileData | FileUriData | null,
+    files: FileData[] | FileUriData[] | null,
     tag: string | null,
     metadata: any | null,
   ): Promise<Post>

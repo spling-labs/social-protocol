@@ -7,7 +7,6 @@ import {
   FileData,
   Post,
   PostFileData,
-  MediaData,
   PostUser,
   UserFileData,
   FileUriData,
@@ -17,9 +16,9 @@ import { web3 } from '@project-serum/anchor'
 import { isBrowser, programId, shadowDriveDomain, SPLING_TOKEN_ACCOUNT_RECEIVER, SPLING_TOKEN_ADDRESS } from '../../utils/constants'
 import dayjs from 'dayjs'
 import { PostChain, UserChain } from '../../models'
-import { getMediaDataWithUrl } from './helpers'
+import { convertFilesToMediaData, getMediaDataWithUrl } from './helpers'
 import { getUserFileData } from '../user/helpers'
-import { ShadowFile } from 'react-native-shadow-drive'
+import { ShadowFile, ShadowUploadResponse } from 'react-native-shadow-drive'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 
@@ -31,7 +30,7 @@ import { PublicKey } from '@solana/web3.js'
  * @param {number} groupId - The id of the group to post to.
  * @param {string | null} title - The title of the post
  * @param {string | null} text - The text (content) of the post
- * @param {FileData | FileUriData | null} file - The file to be posted (e.g. image / gif / video).
+ * @param {FileData[] | FileUriData[] | null} files - The file(s) to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
  * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the post.
  * 
@@ -41,7 +40,7 @@ export default async function createPost(
   groupId: number,
   title: string | null = null,
   text: string | null = null,
-  file: FileData | FileUriData | null = null,
+  files: FileData[] | FileUriData[] | null = null,
   tag: string | null = null,
   metadata: any | null = null,
 ): Promise<Post> {
@@ -86,30 +85,36 @@ export default async function createPost(
       programId,
     )
 
-    // Create file to upload.
-    let postFile = null
+    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
+    const filesToUpload: any[] = []
 
-    if (!isBrowser) {
-      postFile = file
-        ? ({
+    // Create file(s) to upload.
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+
+      fileSizeSummarized += file.size
+
+      if (!isBrowser) {
+        const RNFS = require('react-native-fs')
+        const readedFile = await RNFS.readFile((file as FileUriData).uri, 'base64')
+
+        filesToUpload.push({
           uri: (file as FileUriData).uri,
           name: `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
           type: (file as FileUriData).type,
           size: (file as FileUriData).size,
-          file: Buffer.from(''),
+          file: Buffer.from(readedFile, 'base64'),
         } as ShadowFile)
-        : null
-    } else {
-      postFile = file
-        ? new File(
+      } else {
+        filesToUpload.push(new File(
           [convertDataUriToBlob((file as FileData).base64)],
           `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
-        )
-        : null
+        ))
+      }
     }
 
     // Create text tile to upload.
-    let postTextFile = null
+    let postTextFile
     if (text !== null) {
       if (!isBrowser) {
         const RNFS = require('react-native-fs')
@@ -125,35 +130,20 @@ export default async function createPost(
           name: `${PostPDA.toString()}.txt`,
           size: statResult.size,
         } as ShadowFile
+        fileSizeSummarized += postTextFile.size
+        filesToUpload.push(postTextFile)
       } else {
         postTextFile = new File(
           [new Blob([text], { type: 'text/plain' })],
           `${PostPDA.toString()}.txt`,
         )
+        fileSizeSummarized += postTextFile.size
+        filesToUpload.push(postTextFile)
       }
-    }
-
-    let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the post.json.
-    const filesToUpload: any[] = []
-
-    if (postFile != null) {
-      fileSizeSummarized += postFile.size
-    }
-
-    if (postTextFile != null) {
-      fileSizeSummarized += postTextFile.size
     }
 
     // Find/Create shadow drive account.
     const account = await getOrCreateShadowDriveAccount(this.shadowDrive, fileSizeSummarized)
-
-    // Upload post text and post file.
-    if (postFile != null) {
-      filesToUpload.push(!isBrowser ? (postFile as ShadowFile) : (postFile as File))
-    }
-    if (postTextFile != null) {
-      filesToUpload.push(!isBrowser ? (postTextFile as ShadowFile) : (postTextFile as File))
-    }
 
     // Generate the post json.
     const postJson: PostFileData = {
@@ -163,14 +153,7 @@ export default async function createPost(
       groupId: groupId.toString(),
       title: title,
       text: text ? `${PostPDA.toString()}.txt` : null,
-      media: file
-        ? [
-          {
-            file: `${PostPDA.toString()}.${file.type.split('/')[1]}`,
-            type: file.type.split('/')[1],
-          } as MediaData,
-        ]
-        : [],
+      media: convertFilesToMediaData(PostPDA, files),
       license: null,
       metadata: metadataObject
     }
@@ -197,7 +180,7 @@ export default async function createPost(
     }
 
     // Upload all files to shadow drive once.
-    await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
+    const uploadResult: ShadowUploadResponse = await this.shadowDrive.uploadFiles(account.publicKey, !isBrowser ? filesToUpload as ShadowFile[] : filesToUpload as File[])
 
     // Clear files from device if its react native.
     if (!isBrowser) {
@@ -211,6 +194,14 @@ export default async function createPost(
       // Remove post json file from device.
       const postJSONPath = `${RNFS.DocumentDirectoryPath}/${PostPDA.toString()}.json`
       RNFS.unlink(postJSONPath)
+    }
+
+    // Throw error if one file was failing while uploading to cancel post creation process.
+    if (uploadResult.upload_errors.length > 0) {
+      for (let index = 0; index < uploadResult.finalized_locations.length; index++) {
+        await this.shadowDrive.deleteFile(account.publicKey, uploadResult.finalized_locations[index], 'v2')
+      }
+      throw new Error('An error occurred while uploading the files.')
     }
 
     // Find tags pda.

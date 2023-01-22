@@ -1,7 +1,7 @@
 import { web3 } from '@project-serum/anchor'
 import { shadowDriveDomain } from '../../utils/constants'
 import { PostNotFoundError } from '../../utils/errors'
-import { MediaData, PostFileData, PostFileDataV2, PostTextFileData } from '../../types'
+import { FileData, FileUriData, MediaData, PostFileData, PostFileDataV2, PostTextFileData } from '../../types'
 import axios from 'axios';
 
 export async function getPostFileData(
@@ -57,6 +57,19 @@ export function getMediaDataWithUrl(
     return {
       file: `${shadowDriveDomain}${shdwPublicKey.toString()}/${media.file}`,
       type: media.type,
+    } as MediaData
+  })
+}
+
+
+export function convertFilesToMediaData(
+  postPDA: web3.PublicKey,
+  files: FileData[] | FileUriData[],
+): MediaData[] {
+  return files.map((file) => {
+    return {
+      file: `${postPDA.toString()}.${file.type.split('/')[1]}`,
+      type: file.type.split('/')[1],
     } as MediaData
   })
 }

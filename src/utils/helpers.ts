@@ -3,6 +3,7 @@ import {
   CreateStorageResponse,
   ShadowDriveResponse,
   ShdwDrive,
+  StorageAccountInfo,
   StorageAccountResponse,
 } from 'react-native-shadow-drive'
 import { programId } from './constants'
@@ -47,8 +48,10 @@ export async function getOrCreateShadowDriveAccount(
     let account: StorageAccountResponse | null = null
     account = await getShadowDriveAccount(shadowDrive)
     if (account != null) {
-      if (account.account.immutable) throw new Error('Storage account is immutable!')
-      if (account.account.storage.valueOf() >= spaceNeeded) return Promise.resolve(account)
+      const accountInfo: StorageAccountInfo = await shadowDrive.getStorageAccount(account.publicKey)
+      const available: number = accountInfo.reserved_bytes - accountInfo.current_usage 
+      if (accountInfo.immutable) throw new Error('Storage account is immutable!')
+      if (available >= spaceNeeded) return Promise.resolve(account)
       await addShadowDriveAccountStorage(shadowDrive, account.publicKey)
       return Promise.resolve(account)
     }
