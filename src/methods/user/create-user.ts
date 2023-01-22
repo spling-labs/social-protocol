@@ -40,12 +40,15 @@ export default async function createUser(
       fileSizeSummarized += avatar.size
 
       if (!isBrowser) {
+        const RNFS = require('react-native-fs')
+        const readedFile = await RNFS.readFile((avatar as FileUriData).uri, 'base64')
+
         filesToUpload.push({
           uri: (avatar as FileUriData).uri,
           name: `profile-avatar.${avatar.type.split('/')[1]}`,
           type: (avatar as FileUriData).type,
           size: (avatar as FileUriData).size,
-          file: Buffer.from(''),
+          file: Buffer.from(readedFile, 'base64'),
         } as ShadowFile)
       } else {
         filesToUpload.push(new File(
