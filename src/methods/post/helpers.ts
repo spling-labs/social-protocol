@@ -66,9 +66,9 @@ export function convertFilesToMediaData(
   postPDA: web3.PublicKey,
   files: FileData[] | FileUriData[],
 ): MediaData[] {
-  return files.map((file) => {
+  return files.map((file, index) => {
     return {
-      file: `${postPDA.toString()}.${file.type.split('/')[1]}`,
+      file: `${postPDA.toString()}-${index+1}.${file.type.split('/')[1]}`,
       type: file.type.split('/')[1],
     } as MediaData
   })
