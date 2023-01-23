@@ -1,4 +1,4 @@
-import { convertDataUriToBlob } from '../../utils/helpers'
+import { convertDataUriToBlob, isValidAvatar } from '../../utils/helpers'
 import { FileData, FileUriData, MediaData, User, UserFileData } from '../../types'
 import * as anchor from '@project-serum/anchor'
 import { web3 } from '@project-serum/anchor'
@@ -6,9 +6,10 @@ import { isBrowser, programId, shadowDriveDomain } from '../../utils/constants'
 import { ShadowFile } from 'react-native-shadow-drive'
 import { UserChain } from '../../models'
 import { getUserFileData } from './helpers'
+import InvalidAvatarType from '../../utils/errors/InvalidAvatarType'
 
 /**
- * Creates a user with the given parameters.
+ * Update a user with the given parameters.
  * 
  * @category User
  * 
@@ -29,6 +30,9 @@ export default async function updateUser(
     // Check if metadata object is a valid json.
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
     if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
+    // Check if avatar file type is valid.
+    if (avatar !== null && !isValidAvatar(avatar)) throw new InvalidAvatarType()
 
     // Find the user profile pda.
     const [UserProfilePDA] = web3.PublicKey.findProgramAddressSync(
