@@ -9,6 +9,7 @@ import unfollowUser from './user/unfollow-user'
 
 // GROUP METHODS
 import createGroup from './group/create-group'
+import updateGroup from './group/update-group'
 import getGroup from './group/get-group'
 import getGroupByPublicKey from './group/get-group-by-public-key'
 import getAllGroups from './group/get-all-groups'
@@ -41,6 +42,7 @@ export {
   followUser,
   unfollowUser,
   createGroup,
+  updateGroup,
   getGroup,
   getGroupByPublicKey,
   getAllGroups,

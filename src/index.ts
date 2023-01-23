@@ -3,6 +3,7 @@ import { ShdwDrive } from 'react-native-shadow-drive'
 import {
   createPost,
   createGroup,
+  updateGroup,
   createUser,
   updateUser,
   getAllPosts,
@@ -74,6 +75,12 @@ interface SplingProtocol {
     avatar: FileData | FileUriData | null,
     metadata: any | null,
   ): Promise<Group>
+  updateGroup(
+    name: string | null,
+    avatar: FileData | FileUriData | null,
+    biography: string | null,
+    metadata: any | null,
+  ): Promise<Group>
   getGroup(groupId: number): Promise<Group | null>
   getGroupByPublicKey(publicKey: web3.PublicKey): Promise<Group | null>
   getUserGroup(publicKey: web3.PublicKey): Promise<Group | null>
@@ -125,6 +132,7 @@ export class SocialProtocol implements SplingProtocol {
 
   // GROUP METHODS
   createGroup = createGroup
+  updateGroup = updateGroup
   getGroup = getGroup
   getGroupByPublicKey = getGroupByPublicKey
   getUserGroup = getUserGroup
