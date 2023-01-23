@@ -1,4 +1,4 @@
-import { convertDataUriToBlob, getOrCreateShadowDriveAccount } from '../../utils/helpers'
+import { convertDataUriToBlob, getOrCreateShadowDriveAccount, isValidAvatar } from '../../utils/helpers'
 import { FileData, FileUriData, Group, GroupFileData, MediaData } from '../../types'
 import { web3 } from '@project-serum/anchor'
 import * as anchor from '@project-serum/anchor'
@@ -8,6 +8,7 @@ import { GroupChain } from '../../models'
 import dayjs from 'dayjs'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
+import InvalidAvatarType from '../../utils/errors/InvalidAvatarType'
 
 /**
  * Creates a new group.
@@ -31,6 +32,9 @@ export default async function createGroup(
     // Check if metadata object is a valid json.
     const metadataObject: any | null = metadata ? JSON.parse(JSON.stringify(metadata)) : null
     if (typeof metadataObject !== 'object') throw new Error('Invalid JSON object')
+
+    // Check if avatar file type is valid.
+    if (avatar !== null && !isValidAvatar(avatar)) throw new InvalidAvatarType()
 
     let fileSizeSummarized = 1024 // 1024 bytes will be reserved for the userProfile.json.
     const filesToUpload: any[] = []

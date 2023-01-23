@@ -100,7 +100,7 @@ export default async function createPost(
 
         filesToUpload.push({
           uri: (file as FileUriData).uri,
-          name: `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
+          name: `${PostPDA.toString()}-${index+1}.${file?.type.split('/')[1]}`,
           type: (file as FileUriData).type,
           size: (file as FileUriData).size,
           file: Buffer.from(readedFile, 'base64'),
@@ -108,7 +108,7 @@ export default async function createPost(
       } else {
         filesToUpload.push(new File(
           [convertDataUriToBlob((file as FileData).base64)],
-          `${PostPDA.toString()}.${file?.type.split('/')[1]}`,
+          `${PostPDA.toString()}-${index+1}.${file?.type.split('/')[1]}`,
         ))
       }
     }

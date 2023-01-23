@@ -10,6 +10,7 @@ import { programId } from './constants'
 import { StorageAccountNotFoundError } from './errors'
 import { IDL, SocialIDL } from './idl'
 import axios from 'axios';
+import { FileData, FileUriData } from 'index'
 
 /**
  * @param wallet The wallet used to pay for and sign all transactions.
@@ -50,7 +51,7 @@ export async function getOrCreateShadowDriveAccount(
     if (account != null) {
       const accountInfo: StorageAccountInfo = await shadowDrive.getStorageAccount(account.publicKey)
       const available: number = accountInfo.reserved_bytes - accountInfo.current_usage 
-      if (accountInfo.immutable) throw new Error('Storage account is immutable!')
+      if (accountInfo.immutable) throw new Error('Spling storage account is immutable!')
       if (available >= spaceNeeded) return Promise.resolve(account)
       await addShadowDriveAccountStorage(shadowDrive, account.publicKey)
       return Promise.resolve(account)
@@ -73,8 +74,11 @@ async function getShadowDriveAccount(
   try {
     const storageAccounts: StorageAccountResponse[] = await shadowDrive.getStorageAccounts('v2')
     if (storageAccounts.length == 0) return Promise.resolve(null)
-    else if (storageAccounts.length == 1) return Promise.resolve(storageAccounts[0])
-    else throw new Error('To many storage accounts found!')
+    for (let index = 0; index < storageAccounts.length; index++) {
+      const storageAccount = storageAccounts[index];
+      if (storageAccount.account.identifier === 'Spling') return Promise.resolve(storageAccount)
+    }
+    return null
   } catch (error) {
     return Promise.reject(error)
   }
@@ -120,6 +124,10 @@ export async function getTextFromFile(url: string): Promise<string | null> {
   } catch (error) {
     return Promise.resolve(null)
   }
+}
+
+export function isValidAvatar(file: FileData | FileUriData): boolean {
+  return ['jpg', 'jpeg', 'png', 'gif'].includes(file.type.split('/')[1]);
 }
 
 export function convertTextToOptionalString(text: string): string | null {
