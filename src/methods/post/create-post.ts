@@ -24,16 +24,16 @@ import { PublicKey } from '@solana/web3.js'
 
 /**
  * Creates a new post in the specific group with the given parameters.
- * 
+ *
  * @category Post
- * 
+ *
  * @param {number} groupId - The id of the group to post to.
  * @param {string | null} title - The title of the post
  * @param {string | null} text - The text (content) of the post
  * @param {FileData[] | FileUriData[] | null} files - The file(s) to be posted (e.g. image / gif / video).
  * @param {string | null} tag - The tag to be associated with the post.
  * @param {any | null} metadata - An json object containing any relevant metadata to be associated with the post.
- * 
+ *
  * @returns {Promise<Post>} - A promise that resolves to the newly created post.
  */
 export default async function createPost(
@@ -89,27 +89,29 @@ export default async function createPost(
     const filesToUpload: any[] = []
 
     // Create file(s) to upload.
-    for (let index = 0; index < files.length; index++) {
-      const file = files[index];
+    if (files?.length) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
 
-      fileSizeSummarized += file.size
+        fileSizeSummarized += file.size
 
-      if (!isBrowser) {
-        const RNFS = require('react-native-fs')
-        const readedFile = await RNFS.readFile((file as FileUriData).uri, 'base64')
+        if (!isBrowser) {
+          const RNFS = require('react-native-fs')
+          const readedFile = await RNFS.readFile((file as FileUriData).uri, 'base64')
 
-        filesToUpload.push({
-          uri: (file as FileUriData).uri,
-          name: `${PostPDA.toString()}-${index+1}.${file?.type.split('/')[1]}`,
-          type: (file as FileUriData).type,
-          size: (file as FileUriData).size,
-          file: Buffer.from(readedFile, 'base64'),
-        } as ShadowFile)
-      } else {
-        filesToUpload.push(new File(
-          [convertDataUriToBlob((file as FileData).base64)],
-          `${PostPDA.toString()}-${index+1}.${file?.type.split('/')[1]}`,
-        ))
+          filesToUpload.push({
+            uri: (file as FileUriData).uri,
+            name: `${PostPDA.toString()}-${index + 1}.${file?.type.split('/')[1]}`,
+            type: (file as FileUriData).type,
+            size: (file as FileUriData).size,
+            file: Buffer.from(readedFile, 'base64'),
+          } as ShadowFile)
+        } else {
+          filesToUpload.push(new File(
+            [convertDataUriToBlob((file as FileData).base64)],
+            `${PostPDA.toString()}-${index + 1}.${file?.type.split('/')[1]}`,
+          ))
+        }
       }
     }
 
